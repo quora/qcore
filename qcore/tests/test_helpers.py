@@ -15,9 +15,10 @@
 from __future__ import print_function
 import qcore
 from qcore.asserts import (
-    assert_eq, assert_is, assert_ne, assert_gt, assert_is_not,
+    assert_eq, assert_is, assert_ne, assert_is_not,
     assert_is_substring, AssertRaises
 )
+import six
 
 v = qcore.ScopedValue('a')
 
@@ -250,3 +251,17 @@ def test_safe_representation():
     assert_eq('\'a\'', qcore.safe_repr('a'))
     assert_eq('\'...', qcore.safe_repr('2.192842', max_length=4))
     assert_eq('<n/a: repr...', qcore.safe_repr(TestObject(), max_length=13))
+
+
+def test_marker_object():
+    assert_eq('text', six.text_type(qcore.MarkerObject('text')))
+
+    # bytes should work in py2 but not py3
+    if six.PY2:
+        assert_eq(b'bytes', six.text_type(qcore.MarkerObject(b'bytes')))
+    else:
+        with AssertRaises(TypeError):
+            qcore.MarkerObject(b'bytes')
+
+    # MarkerObjects should be unique
+    assert_ne(qcore.MarkerObject('name'), qcore.MarkerObject('name'))

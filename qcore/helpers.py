@@ -19,6 +19,8 @@ Various small helper classes and routines.
 """
 
 import inspect
+import six
+import warnings
 
 from . import inspectable_class
 
@@ -45,6 +47,9 @@ class MarkerObject(object):
 
     """
     def __init__(self, name):
+        if six.PY2 and isinstance(name, six.binary_type):
+            warnings.warnpy3k('MarkerObject does not support bytes names in Python 3')
+            name = name.decode('utf-8')
         self.name = name
 
     def __str__(self):
@@ -53,10 +58,10 @@ class MarkerObject(object):
     def __repr__(self):
         return self.name
 
-none = MarkerObject('none')
-miss = MarkerObject('miss')
-same = MarkerObject('same')
-unspecified = MarkerObject('unspecified')
+none = MarkerObject(u'none')
+miss = MarkerObject(u'miss')
+same = MarkerObject(u'same')
+unspecified = MarkerObject(u'unspecified')
 globals()['none'] = none
 globals()['miss'] = miss
 globals()['same'] = same
