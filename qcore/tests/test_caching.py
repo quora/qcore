@@ -186,7 +186,7 @@ class TestLRUCache(object):
 
         assert_eq(keys, list(cache))
 
-        assert_eq(keys, cache.keys())
+        assert_eq(keys, list(cache.keys()))
 
         assert_eq(values, list(cache.values()))
 
