@@ -16,7 +16,7 @@ from __future__ import print_function
 import qcore
 from qcore.asserts import (
     assert_eq, assert_is, assert_ne, assert_is_not,
-    assert_is_substring, AssertRaises
+    assert_is_substring, AssertRaises, assert_is_instance
 )
 import six
 
@@ -255,10 +255,12 @@ def test_safe_representation():
 
 def test_marker_object():
     assert_eq('text', six.text_type(qcore.MarkerObject('text')))
+    assert_is_instance(six.text_type(qcore.MarkerObject('text')), six.text_type)
 
     # bytes should work in py2 but not py3
     if six.PY2:
-        assert_eq(b'bytes', six.text_type(qcore.MarkerObject(b'bytes')))
+        assert_eq(u'bytes', six.text_type(qcore.MarkerObject(b'bytes')))
+        assert_eq(b'bytes', six.binary_type(qcore.MarkerObject(b'bytes')))
     else:
         with AssertRaises(TypeError):
             qcore.MarkerObject(b'bytes')
