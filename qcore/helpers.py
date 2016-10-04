@@ -52,8 +52,15 @@ class MarkerObject(object):
             name = name.decode('utf-8')
         self.name = name
 
-    def __str__(self):
-        return self.name
+    if six.PY2:
+        def __str__(self):
+            return unicode(self).encode('utf-8')
+
+        def __unicode__(self):
+            return self.name
+    else:
+        def __str__(self):
+            return self.name
 
     def __repr__(self):
         return self.name
