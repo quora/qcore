@@ -14,7 +14,9 @@ qcore.asserts
 When a normal Python assert fails, it only indicates that there was a failure,
 not what the bad values were that caused the assert to fail. This module
 provides rich assertion helpers that automatically produce better error
-messages. For example::
+messages. For example:
+
+.. code-block:: python
 
     >>> from qcore.asserts import assert_eq
     >>> assert 5 == 2 * 2
@@ -35,7 +37,9 @@ functions.
 qcore.caching
 -------------
 
-This provides helpers for caching data. Some examples include::
+This provides helpers for caching data. Some examples include:
+
+.. code-block:: python
 
     from qcore.caching import cached_per_instance, lazy_constant
 
@@ -65,7 +69,9 @@ This module provides an abstraction for class-based decorators that supports
 transparently decorating functions, methods, classmethods, and staticmethods
 while also providing the option to add additional custom attributes. For
 example, it could be used to provide a caching decorator that adds a ``.dirty``
-attribute to decorated functions to dirty their cache::
+attribute to decorated functions to dirty their cache:
+
+.. code-block:: python
 
     from qcore.decorators import DecoratorBase, DecoratorBinder, decorate
 
@@ -103,7 +109,9 @@ qcore.enum
 ----------
 
 This module provides an abstraction for defining enums. You can define an enum
-as follows::
+as follows:
+
+.. code-block:: python
 
     from qcore.enum import Enum
 
@@ -122,7 +130,9 @@ qcore.events
 ------------
 
 This provides an abstraction for registering events and running callbacks.
-Example usage::
+Example usage:
+
+.. code-block:: python
 
     >>> from qcore.events import EventHook
     >>> event = EventHook()
@@ -142,7 +152,9 @@ qcore.inspectable_class
 -----------------------
 
 This provides a base class that automatically provides hashing, equality
-checks, and a readable ``repr()`` result. Example usage::
+checks, and a readable ``repr()`` result. Example usage:
+
+.. code-block:: python
 
     >>> from qcore.inspectable_class import InspectableClass
     >>> class Pair(InspectableClass):
