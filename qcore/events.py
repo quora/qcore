@@ -22,6 +22,7 @@ import inspect
 import six
 
 from .enum import EnumType, EnumBase
+from .errors import prepare_for_reraise, reraise
 
 
 class EventHook(object):
@@ -68,9 +69,10 @@ class EventHook(object):
                 handler(*args)
             except BaseException as e:
                 if error is None:
+                    prepare_for_reraise(e)
                     error = e
         if error is not None:
-            raise error
+            reraise(error)
 
     def trigger(self, *args):
         """Triggers the event by invoking all its handlers
