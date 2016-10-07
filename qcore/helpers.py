@@ -47,9 +47,12 @@ class MarkerObject(object):
 
     """
     def __init__(self, name):
-        if six.PY2 and isinstance(name, six.binary_type):
-            warnings.warnpy3k('MarkerObject does not support bytes names in Python 3')
-            name = name.decode('utf-8')
+        if isinstance(name, six.binary_type):
+            if six.PY2:
+                warnings.warnpy3k('MarkerObject does not support bytes names in Python 3')
+                name = name.decode('utf-8')
+            else:
+                raise TypeError("name must be str, not bytes")
         self.name = name
 
     if six.PY2:
