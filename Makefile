@@ -28,6 +28,6 @@ clean:
 	rm -f qcore/*.c
 
 test:
-	/usr/bin/python setup.py build_ext --inplace
+	python setup.py build_ext --inplace
 	mv *.so qcore/
-	/usr/bin/python -m nose
+	python -m nose
