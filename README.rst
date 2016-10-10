@@ -1,6 +1,8 @@
 *****
 qcore
 *****
+.. image:: https://travis-ci.org/quora/qcore.svg?branch=master
+    :target: https://travis-ci.org/quora/qcore
 
 ``qcore`` is a library of common utility functions used at Quora. It is used to
 abstract out common functionality for other Quora libraries like `asynq <https://github.com/quora/asynq>`_.
