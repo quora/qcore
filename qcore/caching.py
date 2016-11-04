@@ -321,7 +321,7 @@ def memoize(fun):
 
     """
     argspec = inspect.getargspec(fun)
-    arg_names = argspec.args[1:]  # remove self
+    arg_names = argspec.args
     kwargs_defaults = get_kwargs_defaults(argspec)
 
     def cache_key(args, kwargs):
@@ -359,7 +359,7 @@ def memoize_with_ttl(ttl_secs=60 * 60 * 24):
 
     def cache_fun(fun):
         argspec = inspect.getargspec(fun)
-        arg_names = argspec.args[1:]  # remove self
+        arg_names = argspec.args
         kwargs_defaults = get_kwargs_defaults(argspec)
 
         def cache_key(args, kwargs):
