@@ -363,11 +363,7 @@ def memoize_with_ttl(ttl_secs=60 * 60 * 24):
         kwargs_defaults = get_kwargs_defaults(argspec)
 
         def cache_key(args, kwargs):
-            return get_args_tuple(args, kwargs, arg_names, kwargs_defaults)
-
-        def cache_key(args, kwargs):
-            locals_dict = inspect.getcallargs(fun, *args, **kwargs)
-            return repr(sorted(locals_dict.items()))
+            return repr(get_args_tuple(args, kwargs, arg_names, kwargs_defaults))
 
         @functools.wraps(fun)
         def new_fun(*args, **kwargs):
