@@ -269,6 +269,13 @@ class Flags(EnumBase):
             return '%s(%s)' % (self.__class__.__name__, self.value)
 
 
+class IntEnum(int, Enum):
+    """Enum subclass that offers more compatibility with int."""
+
+    def __repr__(self):
+        return Enum.__repr__(self)
+
+
 class EnumValueGenerator(object):
     def __init__(self, start=1):
         self._next_value = start

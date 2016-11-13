@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from qcore.enum import Enum, Flags, EnumValueGenerator
+import json
+from qcore.enum import Enum, Flags, IntEnum, EnumValueGenerator
 from qcore.asserts import (
-    assert_eq, assert_is, assert_ne, assert_raises, assert_in, assert_not_in
+    assert_eq, assert_is, assert_ne, assert_raises, assert_in, assert_not_in,
+    assert_is_instance
 )
 
 
@@ -266,6 +268,17 @@ def test_instances():
     assert_eq(0, na1)
     assert_eq(0, na2)
     assert_eq(0, na3)
+
+
+class Python(IntEnum):
+    two = 2
+    three = 3
+
+
+def test_intenum():
+    assert_is_instance(Python.two, int)
+    assert_eq('Python.two', repr(Python.two))
+    assert_eq('2', json.dumps(Python.two))
 
 
 def test_generator():
