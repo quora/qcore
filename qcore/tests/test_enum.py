@@ -16,7 +16,7 @@ import json
 from qcore.enum import Enum, Flags, IntEnum, EnumValueGenerator
 from qcore.asserts import (
     assert_eq, assert_is, assert_ne, assert_raises, assert_in, assert_not_in,
-    assert_is_instance
+    assert_is_instance, assert_unordered_list_eq
 )
 
 
@@ -43,6 +43,8 @@ def _assert_equality_both_directions(left, right, not_equal):
 def test_gender():
     assert_eq([2, 1], Gender._flag_values)
     assert_eq(3, len(Gender.get_members()))
+    assert_unordered_list_eq(['female', 'male', 'undefined'], Gender.get_names())
+    assert_eq(3, len(Gender))
 
     _assert_equality_both_directions(0, Gender.undefined, 1)
     _assert_equality_both_directions(1, Gender.male, 2)
@@ -93,10 +95,12 @@ def test_property():
 def test_create():
     def test_exact_gender(cls):
         assert_eq(len(cls.get_members()), 2)
+        assert_unordered_list_eq(list(cls), [cls.male, cls.female])
         assert_eq(cls.male, 1)
         assert_eq(cls.female, 2)
         assert_eq(cls.male, Gender.male)
         assert_eq(cls.female, Gender.female)
+        assert_in(cls.male, cls)
 
     class ExactGender(Enum):
         male = Gender.male
@@ -279,6 +283,9 @@ def test_intenum():
     assert_is_instance(Python.two, int)
     assert_eq('Python.two', repr(Python.two))
     assert_eq('2', json.dumps(Python.two))
+    assert_in(Python.two, Python)
+    assert_in(2, Python)
+    assert_not_in(4, Python)
 
 
 def test_generator():
