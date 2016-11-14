@@ -43,8 +43,7 @@ class EnumType(type):
         return len(self._members)
 
     def __iter__(self):
-        for member in self._members:
-            yield member
+        return iter(self._members)
 
     @staticmethod
     def process(cls):
