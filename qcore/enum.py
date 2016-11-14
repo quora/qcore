@@ -18,7 +18,7 @@ Enum implementation.
 
 """
 
-__all__ = ['Enum', 'EnumType', 'EnumValueGenerator', 'Flags']
+__all__ = ['Enum', 'EnumType', 'EnumValueGenerator', 'Flags', 'IntEnum']
 
 import inspect
 import six
@@ -35,6 +35,16 @@ class EnumType(type):
     def __init__(cls, what, bases=None, dict=None):
         super(EnumType, cls).__init__(what, bases, dict)
         EnumType.process(cls)
+
+    def __contains__(self, k):
+        return k in self._value_to_name
+
+    def __len__(self):
+        return len(self._members)
+
+    def __iter__(self):
+        for member in self._members:
+            yield member
 
     @staticmethod
     def process(cls):
@@ -124,6 +134,11 @@ class EnumBase(six.with_metaclass(EnumType)):
             return self.__class__.__name__ + '.' + self.short_name
         else:
             return '%s(%s)' % (self.__class__.__name__, self.value)
+
+    @classmethod
+    def get_names(cls):
+        """Returns the names of all members of this enum."""
+        return list(cls._name_to_value.keys())
 
     @classmethod
     def get_members(cls):
