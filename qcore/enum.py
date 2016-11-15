@@ -200,6 +200,7 @@ class EnumBase(six.with_metaclass(EnumType)):
 
     @classmethod
     def parse(cls, value, default=_no_default):
+        """Parses a value into a member of this enum."""
         raise NotImplementedError
 
 
@@ -214,6 +215,28 @@ class Enum(EnumBase):
 
     @classmethod
     def parse(cls, value, default=_no_default):
+        """Parses an enum member name or value into an enum member.
+
+        Accepts the following types:
+        - Members of this enum class. These are returned directly.
+        - Integers. If there is an enum member with the integer as a value, that member is returned.
+        - Strings. If there is an enum member with the string as its name, that member is returned.
+        For integers and strings that don't correspond to an enum member, default is returned; if
+        no default is given the function raises KeyError instead.
+
+        Examples:
+
+        >>> class Color(Enum):
+        ...     red = 1
+        ...     blue = 2
+        >>> Color.parse(Color.red)
+        Color.red
+        >>> Color.parse(1)
+        Color.red
+        >>> Color.parse('blue')
+        Color.blue
+
+        """
         if isinstance(value, cls):
             return value
         elif isinstance(value, six.integer_types):
@@ -253,6 +276,27 @@ class Flags(EnumBase):
 
     @classmethod
     def parse(cls, value, default=_no_default):
+        """Parses a flag integer or string into a Flags instance.
+
+        Accepts the following types:
+        - Members of this enum class. These are returned directly.
+        - Integers. These are converted directly into a Flags instance with the given name.
+        - Strings. The function accepts a comma-delimited list of flag names, corresponding to
+          members of the enum. These are all ORed together.
+
+        Examples:
+
+        >>> class Car(Flags):
+        ...     is_big = 1
+        ...     has_wheels = 2
+        >>> Car.parse(1)
+        Car.is_big
+        >>> Car.parse(3)
+        Car.parse('has_wheels,is_big')
+        >>> Car.parse('is_big,has_wheels')
+        Car.parse('has_wheels,is_big')
+
+        """
         if isinstance(value, cls):
             return value
         elif isinstance(value, int):
