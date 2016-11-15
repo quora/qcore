@@ -28,7 +28,13 @@ __all__ = [
     'decorator_of_context_manager',
 ]
 
-import cython
+# make sure qcore is still importable if this module has not been compiled with Cython and Cython
+# is not installed
+try:
+    from cython import compiled
+except ImportError:
+    compiled = False
+
 import functools
 import inspect
 from six.moves import xrange
@@ -68,7 +74,7 @@ class DecoratorBinder(object):
     # Cythonized and non-Cythonized Python 2 and 3. In pure-Python compiled classes, Cython only
     # supports overriding __richcmp__, not __eq__ (https://github.com/cython/cython/issues/690),
     # but if __eq__ is defined it throws an error.
-    if cython.compiled:
+    if compiled:
         def __richcmp__(self, other, op):
             """Compare objects for equality (so we can run tests that do an equality check)."""
             if op in (2, 3): # ==, !=
@@ -85,7 +91,7 @@ class DecoratorBinder(object):
         return hash(self.decorator) ^ hash(self.instance)
 
 
-if not cython.compiled:
+if not compiled:
     def __eq__(self, other):
         return self.__class__ is other.__class__ and self.decorator == other.decorator and \
             self.instance == other.instance
