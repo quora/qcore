@@ -35,7 +35,7 @@ class EnumType(type):
 
     def __init__(cls, what, bases=None, dict=None):
         super(EnumType, cls).__init__(what, bases, dict)
-        EnumType.process(cls)
+        cls.process()
 
     def __contains__(self, k):
         return k in self._value_to_name
@@ -46,37 +46,53 @@ class EnumType(type):
     def __iter__(self):
         return iter(self._members)
 
-    @staticmethod
-    def process(cls):
-        name_to_value = {}
+    def __call__(self, value, default=_no_default):
+        """Instantiating an Enum always produces an existing value or throws an exception."""
+        return self.parse(value, default=default)
+
+    def process(self):
+        name_to_member = {}
+        value_to_member = {}
         value_to_name = {}
         flag_values = []
         members = []
-        for k, v in list(inspect.getmembers(cls)):
+        for k, v in list(inspect.getmembers(self)):
             # ensure that names are unicode, even in py2
             if isinstance(k, bytes):
                 k = k.decode('ascii')
             if isinstance(type(v), EnumType):
                 v = v.value  # For inherited members
-            if isinstance(v, int):
-                assert v not in value_to_name, \
+            if isinstance(v, six.integer_types):
+                assert v not in value_to_member, \
                     'Duplicate enum value: %s (class: %s).' % \
-                    (v, inspection.get_full_name(cls))
-                name_to_value[k] = v
+                    (v, inspection.get_full_name(self))
+                member = self._make_value(v)
+
+                name_to_member[k] = member
+                value_to_member[v] = member
                 value_to_name[v] = k
                 if v != 0:
                     flag_values.append(v)
-                members.append(cls(v))
-        cls._name_to_value = name_to_value
-        cls._value_to_name = value_to_name
-        cls._flag_values = list(reversed(sorted(flag_values)))
-        cls._members = members
+
+                members.append(member)
+        self._name_to_member = name_to_member
+        self._value_to_member = value_to_member
+        self._value_to_name = value_to_name
+        self._flag_values = list(reversed(sorted(flag_values)))
+        self._members = sorted(members, key=lambda m: m.value)
         for m in members:
-            setattr(cls, value_to_name[m.value], m)
+            setattr(self, m.short_name, m)
+
+    def _make_value(self, value):
+        """Instantiates an enum with an arbitrary value."""
+        member = self.__new__(self, value)
+        member.__init__(value)
+        return member
 
 
 class EnumBase(six.with_metaclass(EnumType)):
-    _name_to_value = {}
+    _name_to_member = {}
+    _value_to_member = {}
     _value_to_name = {}
     _flag_values = []
     _members = []
@@ -87,7 +103,7 @@ class EnumBase(six.with_metaclass(EnumType)):
     @property
     def short_name(self):
         """Returns the enum member's name, like "foo"."""
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @property
     def long_name(self):
@@ -105,7 +121,7 @@ class EnumBase(six.with_metaclass(EnumType)):
         return '%s.%s' % (self.__class__.__module__, self.long_name)
 
     def is_valid(self):
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def assert_valid(self):
         if not self.is_valid():
@@ -141,7 +157,7 @@ class EnumBase(six.with_metaclass(EnumType)):
     @classmethod
     def get_names(cls):
         """Returns the names of all members of this enum."""
-        return list(cls._name_to_value.keys())
+        return [m.short_name for m in cls._members]
 
     @classmethod
     def get_members(cls):
@@ -179,13 +195,17 @@ class EnumBase(six.with_metaclass(EnumType)):
                     "a list of (name, value) tuples, " +
                     "or a list of EnumBase instances.")
 
-        EnumType.process(NewEnum)
+        NewEnum.process()
         return NewEnum
+
+    @classmethod
+    def parse(cls, value, default=_no_default):
+        raise NotImplementedError
 
 
 class Enum(EnumBase):
     def is_valid(self):
-        return self.value in self._value_to_name
+        return self.value in self._value_to_member
 
     @property
     def short_name(self):
@@ -197,16 +217,10 @@ class Enum(EnumBase):
         if isinstance(value, cls):
             return value
         elif isinstance(value, six.integer_types):
-            e = cls(value)
+            e = cls._value_to_member.get(value, _no_default)
         else:
-            e = cls._name_to_value.get(value, _no_default)
-            if e is _no_default:
-                if default is _no_default:
-                    raise _create_invalid_value_error(cls, value)
-                return default
-            else:
-                e = cls(e)
-        if not e.is_valid():
+            e = cls._name_to_member.get(value, _no_default)
+        if e is _no_default or not e.is_valid():
             if default is _no_default:
                 raise _create_invalid_value_error(cls, value)
             return default
@@ -239,22 +253,24 @@ class Flags(EnumBase):
 
     @classmethod
     def parse(cls, value, default=_no_default):
-        if isinstance(value, int):
-            e = cls(value)
+        if isinstance(value, cls):
+            return value
+        elif isinstance(value, int):
+            e = cls._make_value(value)
         else:
             if not value:
-                e = cls(0)
+                e = cls._make_value(0)
             else:
                 r = 0
                 for k in value.split(','):
-                    v = cls._name_to_value.get(k, _no_default)
+                    v = cls._name_to_member.get(k, _no_default)
                     if v is _no_default:
                         if default is _no_default:
                             raise _create_invalid_value_error(cls, value)
                         else:
                             return default
-                    r |= v
-                e = cls(r)
+                    r |= v.value
+                e = cls._make_value(r)
         if not e.is_valid():
             if default is _no_default:
                 raise _create_invalid_value_error(cls, value)
