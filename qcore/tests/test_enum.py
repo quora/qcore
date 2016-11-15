@@ -334,4 +334,3 @@ class LongEnum(Enum):
 
 def test_long_enum():
     assert_is_instance(LongEnum.x, LongEnum)
-    assert_is_instance(LongEnum.x.value, _long_type)
