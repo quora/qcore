@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import unicode_literals
 __doc__ = """
 
 Enum implementation.
@@ -52,6 +53,9 @@ class EnumType(type):
         flag_values = []
         members = []
         for k, v in list(inspect.getmembers(cls)):
+            # ensure that names are unicode, even in py2
+            if isinstance(k, bytes):
+                k = k.decode('ascii')
             if isinstance(type(v), EnumType):
                 v = v.value  # For inherited members
             if isinstance(v, int):
@@ -276,7 +280,7 @@ class Flags(EnumBase):
         if self.is_valid():
             name = self.short_name
             if ',' in name:
-                return '%s.parse(%r)' % (self.__class__.__name__, self.short_name)
+                return "%s.parse('%s')" % (self.__class__.__name__, self.short_name)
             else:
                 return self.__class__.__name__ + '.' + self.short_name
         else:
