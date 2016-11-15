@@ -26,7 +26,7 @@ import six
 from . import helpers
 from . import inspection
 
-_no_default = helpers.MarkerObject('no_default @ enums')
+_no_default = helpers.MarkerObject(u'no_default @ enums')
 
 
 class EnumType(type):

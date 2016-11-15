@@ -43,7 +43,7 @@ from . import helpers
 
 
 miss = helpers.miss
-not_computed = helpers.MarkerObject('not_computed @ qcore.caching')
+not_computed = helpers.MarkerObject(u'not_computed @ qcore.caching')
 globals()['miss'] = miss
 globals()['not_computed'] = not_computed
 
