@@ -239,7 +239,7 @@ class Enum(EnumBase):
         """
         if isinstance(value, cls):
             return value
-        elif isinstance(value, six.integer_types):
+        elif isinstance(value, six.integer_types) and not isinstance(value, EnumBase):
             e = cls._value_to_member.get(value, _no_default)
         else:
             e = cls._name_to_member.get(value, _no_default)

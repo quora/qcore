@@ -33,6 +33,12 @@ class Gender(Enum):
         return Gender(3 - self.value)
 
 
+class SeparateEnum(IntEnum):
+    undefined = 0
+    male = 1
+    female = 2
+
+
 def _assert_equality_both_directions(left, right, not_equal):
     assert_eq(left, right)
     assert_eq(right, left)
@@ -66,6 +72,7 @@ def test_gender():
 
     assert_is(None, Gender.parse('na', None))
     assert_raises(lambda: Gender.parse('na'), KeyError)
+    assert_raises(lambda: Gender.parse(SeparateEnum.undefined), KeyError)
 
     assert_eq('undefined', Gender(0).short_name)
     assert_eq('male', Gender(1).short_name)
