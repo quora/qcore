@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import json
+import pickle
 from qcore.enum import Enum, Flags, IntEnum, EnumValueGenerator
 from qcore.asserts import (
     assert_eq, assert_is, assert_ne, assert_raises, assert_in, assert_not_in,
@@ -341,3 +342,11 @@ class LongEnum(Enum):
 
 def test_long_enum():
     assert_is_instance(LongEnum.x, LongEnum)
+
+
+DynamicEnum = Enum.create('DynamicEnum', [Gender.male, Gender.female])
+
+
+def test_pickling():
+    assert_eq(Gender.female, pickle.loads(pickle.dumps(Gender.female)))
+    assert_eq(DynamicEnum.male, pickle.loads(pickle.dumps(DynamicEnum.male)))
