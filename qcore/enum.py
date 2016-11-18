@@ -23,6 +23,7 @@ __all__ = ['Enum', 'EnumType', 'EnumValueGenerator', 'Flags', 'IntEnum']
 
 import inspect
 import six
+import sys
 
 from . import helpers
 from . import inspection
@@ -177,10 +178,8 @@ class EnumBase(six.with_metaclass(EnumType)):
         :return: newly created enum type.
 
         """
-        class NewEnum(cls):
-            pass
+        NewEnum = type(name, (cls,), {})
 
-        NewEnum.__name__ = name
         if isinstance(members, dict):
             members = members.items()
         for member in members:
@@ -196,6 +195,14 @@ class EnumBase(six.with_metaclass(EnumType)):
                     "or a list of EnumBase instances.")
 
         NewEnum.process()
+
+        # needed for pickling to work (hopefully); taken from the namedtuple implementation in the
+        # standard library
+        try:
+            NewEnum.__module__ = sys._getframe(1).f_globals.get('__name__', '__main__')
+        except (AttributeError, ValueError):
+            pass
+
         return NewEnum
 
     @classmethod
