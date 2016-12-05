@@ -77,6 +77,3 @@ cpdef object safe_repr(object source, int max_length=?)
 
 
 cpdef dict_to_object(dict source)
-
-cdef class DisallowInheritance(type):
-    pass
