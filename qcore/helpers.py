@@ -24,6 +24,9 @@ import warnings
 
 from . import inspectable_class
 
+# export it here for backward compatibility
+from .disallow_inheritance import DisallowInheritance
+
 
 empty_tuple = ()
 empty_list = []
@@ -272,17 +275,6 @@ def object_from_string(st):
     func_name = st[pos + 1:]
     mod = __import__(module_name, fromlist=[func_name], level=0)
     return getattr(mod, func_name)
-
-
-class DisallowInheritance(type):
-    """Metaclass that disallows inheritance from classes using it."""
-    def __init__(self, cl_name, bases, namespace):
-        for cls in bases:
-            if isinstance(cls, DisallowInheritance):
-                message = 'Class %s cannot be used as a base for newly defined class %s' % \
-                    (cls, cl_name)
-                raise TypeError(message)
-        super(DisallowInheritance, self).__init__(cl_name, bases, namespace)
 
 
 def catchable_exceptions(exceptions):
