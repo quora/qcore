@@ -185,21 +185,6 @@ def test_cached_hash_wrapper():
     assert_ne(hash(w1b), hash(w2a))
 
 
-# using six.with_metaclass doesn't work here on Python 2, maybe because DisallowInheritance is
-# cythonized
-try:
-    exec("class Foo(metaclass=qcore.helpers.DisallowInheritance): pass")
-except SyntaxError:
-    class Foo(object):
-        __metaclass__ = qcore.helpers.DisallowInheritance
-
-
-def test_disallow_inheritance():
-    with AssertRaises(TypeError):
-        class Bar(Foo):
-            pass
-
-
 def _stub_serializable_func():
     pass
 

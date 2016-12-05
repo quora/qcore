@@ -12,19 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import inspection
-from .inspection import get_original_fn, get_full_name
-from .errors import *
-from .helpers import *
-from .enum import *
-from .microtime import *
-from . import events
-from .events import EventHook, EventHub, EnumBasedEventHub, \
-    EventInterceptor, sinking_event_hook
-from .decorators import *
-from .caching import *
-from . import debug
-from . import testing
-from . import asserts
-from .inspectable_class import InspectableClass
-from .disallow_inheritance import DisallowInheritance
+__doc__ = """
+
+Provides a metaclass that prevents inheritance from its instances.
+
+"""
+
+
+class DisallowInheritance(type):
+    """Metaclass that disallows inheritance from classes using it."""
+    def __init__(self, cl_name, bases, namespace):
+        for cls in bases:
+            if isinstance(cls, DisallowInheritance):
+                message = 'Class %s cannot be used as a base for newly defined class %s' % \
+                    (cls, cl_name)
+                raise TypeError(message)
+        super(DisallowInheritance, self).__init__(cl_name, bases, namespace)
