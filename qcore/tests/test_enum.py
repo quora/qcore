@@ -74,6 +74,10 @@ def test_gender():
     assert_is(None, Gender.parse('na', None))
     assert_raises(lambda: Gender.parse('na'), KeyError)
     assert_raises(lambda: Gender.parse(SeparateEnum.undefined), KeyError)
+    assert_raises(lambda: Gender.parse(b'ni\xc3\xb1o'), KeyError)
+    assert_raises(lambda: Gender.parse(u'ni\xf1o'), KeyError)
+    assert_raises(lambda: Gender.parse(b'ni\xff\xffo'), KeyError)
+    assert_raises(lambda: Gender.parse(u'\xe4\xb8\xad\xe6\x96\x87'), KeyError)
 
     assert_eq('undefined', Gender(0).short_name)
     assert_eq('male', Gender(1).short_name)

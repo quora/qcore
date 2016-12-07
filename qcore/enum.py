@@ -384,4 +384,4 @@ class EnumValueGenerator(object):
 
 def _create_invalid_value_error(cls, value):
     return KeyError(
-        "Invalid %s value: %s" % (inspection.get_full_name(cls), value))
+        "Invalid %s value: %r" % (inspection.get_full_name(cls), value))
