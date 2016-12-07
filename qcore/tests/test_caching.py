@@ -265,6 +265,8 @@ class TestLRUCache(object):
 
 
 class TestClass(object):
+    __hash__ = None  # not hashable
+
     def __init__(self, val):
         self.val = val
         self.x = 0
@@ -281,6 +283,11 @@ class TestClass(object):
 
 
 def test_cached_per_instance():
+    get_x_cache = TestClass.get_x.__cached_per_instance_cache__
+    with_kwargs_cache = TestClass.with_kwargs.__cached_per_instance_cache__
+    assert_eq(0, len(get_x_cache), extra=repr(get_x_cache))
+    assert_eq(0, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
+
     object1 = TestClass(1)
     object2 = TestClass(2)
 
@@ -288,14 +295,23 @@ def test_cached_per_instance():
     assert_eq(object2.x, 0)
 
     assert_eq(object1.get_x(), 1)
+    assert_eq(1, len(get_x_cache), extra=repr(get_x_cache))
+    assert_eq(0, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
+
     assert_eq(object1.x, 1)
     assert_eq(object2.x, 0)
 
     assert_eq(object1.get_x(), 1)
+    assert_eq(1, len(get_x_cache), extra=repr(get_x_cache))
+    assert_eq(0, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
+
     assert_eq(object1.x, 1)
     assert_eq(object2.x, 0)
 
     assert_eq(object2.get_x(), 2)
+    assert_eq(2, len(get_x_cache), extra=repr(get_x_cache))
+    assert_eq(0, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
+
     assert_eq(object1.x, 1)
     assert_eq(object2.x, 2)
 
@@ -303,6 +319,17 @@ def test_cached_per_instance():
     assert_eq(7, object1.with_kwargs(x=1))
     assert_eq(7, object1.with_kwargs())
     assert_eq(16, object1.with_kwargs(x=3, y=3, z=3))
+
+    assert_eq(2, len(get_x_cache), extra=repr(get_x_cache))
+    assert_eq(1, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
+
+    del object1
+    assert_eq(1, len(get_x_cache), extra=repr(get_x_cache))
+    assert_eq(0, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
+
+    del object2
+    assert_eq(0, len(get_x_cache), extra=repr(get_x_cache))
+    assert_eq(0, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
 
 
 class PickleTestClass(object):
@@ -317,31 +344,30 @@ def test_cached_per_instance_pickling():
 
     obj = PickleTestClass()
     obj.attr = 'spam'
-    assert_is(False, hasattr(obj, '__lib_cache'))
+    assert_eq(set(), set(PickleTestClass.f.__cached_per_instance_cache__.keys()))
     obj.f('my hovercraft is full of eels')
-    assert_eq(1, len(obj.__lib_cache))
+    assert_eq({id(obj)}, set(PickleTestClass.f.__cached_per_instance_cache__.keys()))
 
     serialized = pickle.dumps(obj)
     assert_not_in(b'my hovercraft is full of eels', serialized)
     assert_in(b'spam', serialized)
 
     restored = pickle.loads(serialized)
-    assert_is(False, hasattr(restored, '__lib_cache'))
+    assert_eq({id(obj)}, set(PickleTestClass.f.__cached_per_instance_cache__.keys()))
     restored.f('my hovercraft is full of eels')
-    assert_eq(1, len(restored.__lib_cache))
+    assert_eq({id(obj), id(restored)}, set(PickleTestClass.f.__cached_per_instance_cache__.keys()))
     assert_eq('spam', obj.attr)
 
-    # make sure we can't use this with a custom __getstate__
+    # make sure we can use this with a custom __getstate__
 
-    with AssertRaises(AssertionError):
-        class X(object):
-            @cached_per_instance()
-            def f(self, x):
-                return x
+    class X(object):
+        @cached_per_instance()
+        def f(self, x):
+            return x
 
-            def __getstate__(self):
-                return {}
-        X().f(1)
+        def __getstate__(self):
+            return {}
+    X().f(1)
 
 
 x = 0

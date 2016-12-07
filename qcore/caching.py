@@ -37,6 +37,7 @@ import inspect
 import six
 import time
 import types
+import weakref
 
 from .asserts import assert_is_instance, assert_gt
 from . import helpers
@@ -234,8 +235,7 @@ class LRUCache(object):
 def cached_per_instance():
     """Decorator that adds caching to an instance method.
 
-    Unlike l0cache, the cached value is stored in the instance so that it gets
-    garbage collected together with the instance.
+    The cached value is stored so that it gets garbage collected together with the instance.
 
     The cached values are not stored when the object is pickled.
 
@@ -244,47 +244,31 @@ def cached_per_instance():
         argspec = inspect.getargspec(fun)
         arg_names = argspec.args[1:]  # remove self
         kwargs_defaults = get_kwargs_defaults(argspec)
+        cache = {}
 
         def cache_key(args, kwargs):
-            args = get_args_tuple(args, kwargs, arg_names, kwargs_defaults)
-            return (fun.__module__, fun.__name__, args)
+            return get_args_tuple(args, kwargs, arg_names, kwargs_defaults)
+
+        def clear_cache(instance_key, ref):
+            del cache[instance_key]
 
         @functools.wraps(fun)
         def new_fun(self, *args, **kwargs):
-            if not hasattr(self, '__lib_cache'):
-                self.__lib_cache = {}
-                set_cached_per_instance_getstate(self)
+            instance_key = id(self)
+            if instance_key not in cache:
+                ref = weakref.ref(self, functools.partial(clear_cache, instance_key))
+                cache[instance_key] = (ref, {})
+            instance_cache = cache[instance_key][1]
 
             k = cache_key(args, kwargs)
-            if k not in self.__lib_cache:
-                self.__lib_cache[k] = fun(self, *args, **kwargs)
-            return self.__lib_cache[k]
+            if k not in instance_cache:
+                instance_cache[k] = fun(self, *args, **kwargs)
+            return instance_cache[k]
+
+        # just so unit tests can check that this is cleaned up correctly
+        new_fun.__cached_per_instance_cache__ = cache
         return new_fun
     return cache_fun
-
-
-def set_cached_per_instance_getstate(obj):
-    """Sets the cached_per_instance-specific __getstate__ method."""
-    # unfortunately this setup has to be at call time rather
-    # than at decoration time because the class object hasn't been
-    # created yet when the decorator is called
-    assert (not hasattr(obj, '__getstate__') or
-            obj.__getstate__.__func__ is _cached_per_instance_getstate), \
-        'Classes that have methods with @cached_per_instance cannot define ' + \
-        'their own __getstate__ function.'
-    try:
-        method = types.MethodType(_cached_per_instance_getstate, obj, obj.__class__)
-    except TypeError:
-        # Python 3
-        method = _cached_per_instance_getstate.__get__(obj, obj.__class__)
-    obj.__getstate__ = method
-
-
-def _cached_per_instance_getstate(self):
-    state = dict(self.__dict__)
-    del state['__lib_cache']
-    del state['__getstate__']
-    return state
 
 
 def get_args_tuple(args, kwargs, arg_names, kwargs_defaults):
