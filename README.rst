@@ -182,14 +182,6 @@ qcore.microtime
 This includes helpers for dealing with time, represented as an integer number
 of microseconds since the Unix epoch.
 
-qcore.p64
----------
-
-This module supports importing the same package containing compiled Cython
-code using both 32-bit and 64-bit Python binaries. This is done using a
-``lib64`` dummy subpackage that contains symlinked Python files and separate
-compiled Cython files.
-
 qcore.testing
 -------------
 
