@@ -353,6 +353,22 @@ def cached_fn(y, z=4):
     x += 1
     return y * z
 
+memoize_fns = [cached_fn]
+
+
+try:
+    exec("""
+@memoize
+def cached_fn_with_annotations(y: int, z: int=4) -> int:
+    global x
+    x += 1
+    return y * z
+""")
+except SyntaxError:
+    pass
+else:
+    memoize_fns.append(cached_fn_with_annotations)
+
 
 @memoize_with_ttl(ttl_secs=500)
 def cached_fn_with_ttl(y, z=4):
@@ -371,21 +387,22 @@ def cached_fn_with_ttl_unhashable(y, z={'a': 1, 'b': 2, 'c': 3}):
 def test_memoize():
     """Test Caching with no Time-To-Live (TTL)."""
     global x
-    x = 0
-    assert_eq(4, cached_fn(1))
-    assert_eq(1, x)
+    for fn in memoize_fns:
+        x = 0
+        assert_eq(4, fn(1))
+        assert_eq(1, x)
 
-    assert_eq(8, cached_fn(2, 4))
-    assert_eq(2, x)
-    # should not result in another call
-    assert_eq(8, cached_fn(2, z=4))
-    assert_eq(2, x)
-    assert_eq(8, cached_fn(y=2, z=4))
-    assert_eq(2, x)
+        assert_eq(8, fn(2, 4))
+        assert_eq(2, x)
+        # should not result in another call
+        assert_eq(8, fn(2, z=4))
+        assert_eq(2, x)
+        assert_eq(8, fn(y=2, z=4))
+        assert_eq(2, x)
 
-    cached_fn.clear_cache()
-    assert_eq(4, cached_fn(1))
-    assert_eq(3, x)
+        fn.clear_cache()
+        assert_eq(4, fn(1))
+        assert_eq(3, x)
 
 
 def test_memoize_with_ttl():

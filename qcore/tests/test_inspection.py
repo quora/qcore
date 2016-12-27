@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import qcore
-from qcore.asserts import assert_eq, assert_ne, assert_unordered_list_eq
+from qcore.asserts import assert_eq, assert_ne, assert_unordered_list_eq, AssertRaises
 import inspect
 
 
@@ -70,8 +70,34 @@ def test_getargspec():
     assert_eq(empty, qcore.inspection.getargspec(test_get_subclass_tree))
     assert_eq(empty, qcore.inspection.getargspec(qcore.inspection.lazy_stack))
 
+    emptymethod = inspect.ArgSpec(args=['self'], varargs=None, keywords=None, defaults=None)
+    assert_eq(emptymethod, qcore.inspection.getargspec(X.myinstancemethod))
+    assert_eq(emptymethod, qcore.inspection.getargspec(X().myinstancemethod))
+
+    emptyclsmethod = inspect.ArgSpec(args=['cls'], varargs=None, keywords=None, defaults=None)
+    assert_eq(emptyclsmethod, qcore.inspection.getargspec(X.myclassmethod))
+
     spec = inspect.ArgSpec(args=['a', 'b', 'c', 'd'], varargs=None, keywords='f', defaults=('e',))
     assert_eq(spec, qcore.inspection.getargspec(fun_with_args))
+
+
+try:
+    exec("""
+def fun_with_annotations(a: int, b: str, *args) -> None:
+    pass
+
+
+def fun_with_kwonly_args(a=1, *, b, c=3):
+    pass
+""")
+except SyntaxError:
+    pass
+else:
+    def test_getargspec_py3_only():
+        spec = inspect.ArgSpec(args=['a', 'b'], varargs='args', keywords=None, defaults=None)
+        assert_eq(spec, qcore.inspection.getargspec(fun_with_annotations))
+        with AssertRaises(ValueError):
+            qcore.inspection.getargspec(fun_with_kwonly_args)
 
 
 class X(object):

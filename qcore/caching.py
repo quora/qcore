@@ -33,13 +33,13 @@ __all__ = [
 from collections import OrderedDict
 import threading
 import functools
-import inspect
 import six
 import time
 import types
 
 from .asserts import assert_is_instance, assert_gt
 from . import helpers
+from . import inspection
 
 
 miss = helpers.miss
@@ -241,7 +241,7 @@ def cached_per_instance():
 
     """
     def cache_fun(fun):
-        argspec = inspect.getargspec(fun)
+        argspec = inspection.getargspec(fun)
         arg_names = argspec.args[1:]  # remove self
         kwargs_defaults = get_kwargs_defaults(argspec)
 
@@ -320,7 +320,7 @@ def memoize(fun):
     is called on the function.
 
     """
-    argspec = inspect.getargspec(fun)
+    argspec = inspection.getargspec(fun)
     arg_names = argspec.args
     kwargs_defaults = get_kwargs_defaults(argspec)
 
@@ -358,7 +358,7 @@ def memoize_with_ttl(ttl_secs=60 * 60 * 24):
     assert_gt(ttl_secs, 0, error_msg)
 
     def cache_fun(fun):
-        argspec = inspect.getargspec(fun)
+        argspec = inspection.getargspec(fun)
         arg_names = argspec.args
         kwargs_defaults = get_kwargs_defaults(argspec)
 
