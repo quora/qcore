@@ -71,6 +71,9 @@ class _Anything(object):
     def __repr__(self):
         return '<Anything>'
 
+    def __hash__(self):
+        return 0
+
 Anything = _Anything()
 
 
