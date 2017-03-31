@@ -258,21 +258,32 @@ def copy_public_attrs(source_obj, dest_obj):
             setattr(dest_obj, name, value)
 
 
-def object_from_string(st):
+def object_from_string(name):
     """Creates a Python class or function from its fully qualified name.
 
-    :param st: A fully qualified name of a class or a function.
+    :param name: A fully qualified name of a class or a function. In Python 3 this
+        is only allowed to be of text type (unicode). In Python 2, both bytes and unicode
+        are allowed.
     :return: A function or class object.
 
     This method is used by serialization code to create a function or class
     from a fully qualified name.
 
     """
-    pos = st.rfind('.')
+    if six.PY3:
+        if not isinstance(name, str):
+            raise TypeError('name must be str, not %r' % type(name))
+    else:
+        if isinstance(name, unicode):
+            name = name.encode('ascii')
+        if not isinstance(name, (str, unicode)):
+            raise TypeError('name must be bytes or unicode, got %r' % type(name))
+
+    pos = name.rfind('.')
     if pos < 0:
-        raise ValueError('Invalid function or class name %s' % st)
-    module_name = st[:pos]
-    func_name = st[pos + 1:]
+        raise ValueError('Invalid function or class name %s' % name)
+    module_name = name[:pos]
+    func_name = name[pos + 1:]
     mod = __import__(module_name, fromlist=[func_name], level=0)
     return getattr(mod, func_name)
 
