@@ -190,19 +190,29 @@ def _stub_serializable_func():
 
 
 def test_object_from_string():
+    def check(name, expected):
+        actual = qcore.object_from_string(name)
+        assert_eq(expected, actual)
+        if six.PY2:
+            name = unicode(name)
+            actual = qcore.object_from_string(name)
+            assert_eq(expected, actual)
+        elif six.PY3:
+            name = name.encode('ascii')
+            with AssertRaises(TypeError):
+                qcore.object_from_string(name)
+
     with AssertRaises(ValueError):
         # Not a fully qualified name
         qcore.object_from_string('FooBar')
 
-    actual = qcore.object_from_string(
-        'test_helpers._stub_serializable_func')
-    assert_eq(_stub_serializable_func, actual)
-
-    actual = qcore.object_from_string(
-        'socket.gethostname')
-
+    check('test_helpers._stub_serializable_func', _stub_serializable_func)
     import socket
-    assert_eq(socket.gethostname, actual)
+    check('socket.gethostname', socket.gethostname)
+
+    with AssertRaises(TypeError):
+        # invalid type
+        qcore.object_from_string({'name': 'socket.gethostname'})
 
 
 def test_catchable_exceptions():
