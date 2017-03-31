@@ -271,12 +271,12 @@ def object_from_string(name):
 
     """
     if six.PY3:
-        if not isinstance(name, six.text_type):
+        if not isinstance(name, str):
             raise TypeError('name must be str, not %r' % type(name))
     else:
         if isinstance(name, unicode):
             name = name.encode('ascii')
-        if not isinstance(name, six.string_types):
+        if not isinstance(name, (str, unicode)):
             raise TypeError('name must be bytes or unicode, got %r' % type(name))
 
     pos = name.rfind('.')
