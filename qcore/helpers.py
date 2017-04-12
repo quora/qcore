@@ -290,14 +290,11 @@ def object_from_string(name):
         # Hail mary. if the from import doesn't work, then just import the top level module
         # and do getattr on it, one level at a time. This will handle cases where imports are
         # done like `from . import submodule as another_name`
-        module_name, func_name = name.split('.', 1)
-        mod = __import__(module_name, level=0)
-        while True:
-            pos = func_name.find('.')
-            if pos < 0:
-                return getattr(mod, func_name)
-            submodule = getattr(mod, func_name[:pos])
-            func_name = func_name[pos+1:]
+        parts = name.split('.')
+        mod = __import__(parts[0], level=0)
+        for i in range(1, len(parts)):
+            mod = getattr(mod, parts[i])
+        return mod
 
     else:
         return getattr(mod, func_name)
