@@ -20,6 +20,9 @@ from qcore.asserts import (
 )
 import six
 
+# this import is just for test_object_from_string
+from qcore import asserts as asserts_
+
 v = qcore.ScopedValue('a')
 
 
@@ -213,6 +216,9 @@ def test_object_from_string():
     with AssertRaises(TypeError):
         # invalid type
         qcore.object_from_string({'name': 'socket.gethostname'})
+
+    # test the case when the from import fails
+    check('test_helpers.asserts_.assert_eq', assert_eq)
 
 
 def test_catchable_exceptions():

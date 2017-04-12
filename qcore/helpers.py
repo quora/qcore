@@ -284,8 +284,20 @@ def object_from_string(name):
         raise ValueError('Invalid function or class name %s' % name)
     module_name = name[:pos]
     func_name = name[pos + 1:]
-    mod = __import__(module_name, fromlist=[func_name], level=0)
-    return getattr(mod, func_name)
+    try:
+        mod = __import__(module_name, fromlist=[func_name], level=0)
+    except ImportError:
+        # Hail mary. if the from import doesn't work, then just import the top level module
+        # and do getattr on it, one level at a time. This will handle cases where imports are
+        # done like `from . import submodule as another_name`
+        parts = name.split('.')
+        mod = __import__(parts[0], level=0)
+        for i in range(1, len(parts)):
+            mod = getattr(mod, parts[i])
+        return mod
+
+    else:
+        return getattr(mod, func_name)
 
 
 def catchable_exceptions(exceptions):
