@@ -290,9 +290,7 @@ def object_from_string(name):
         # Hail mary. if the from import doesn't work, then just import the top level module
         # and do getattr on it, one level at a time. This will handle cases where imports are
         # done like `from . import submodule as another_name`
-        pos = name.find('.')
-        module_name = name[:pos]
-        func_name = name[pos + 1:]
+        module_name, func_name = name.split('.', 1)
         mod = __import__(module_name, level=0)
         while True:
             pos = func_name.find('.')
