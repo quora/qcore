@@ -33,14 +33,13 @@ __all__ = [
 from collections import OrderedDict
 import threading
 import functools
+import inspect2
 import six
 import time
-import types
 import weakref
 
 from .asserts import assert_is_instance, assert_gt
 from . import helpers
-from . import inspection
 
 
 miss = helpers.miss
@@ -241,8 +240,8 @@ def cached_per_instance():
 
     """
     def cache_fun(fun):
-        argspec = inspection.getargspec(fun)
-        arg_names = argspec.args[1:]  # remove self
+        argspec = inspect2.getfullargspec(fun)
+        arg_names = argspec.args[1:] + argspec.kwonlyargs  # remove self
         kwargs_defaults = get_kwargs_defaults(argspec)
         cache = {}
 
@@ -276,13 +275,16 @@ def get_args_tuple(args, kwargs, arg_names, kwargs_defaults):
     args_list = list(args)
     args_len = len(args)
     all_args_len = len(arg_names)
-    while args_len < all_args_len:
-        arg_name = arg_names[args_len]
-        if arg_name in kwargs_defaults:
-            args_list.append(kwargs.get(arg_name, kwargs_defaults[arg_name]))
-        else:
-            args_list.append(kwargs[arg_name])
-        args_len += 1
+    try:
+        while args_len < all_args_len:
+            arg_name = arg_names[args_len]
+            if arg_name in kwargs_defaults:
+                args_list.append(kwargs.get(arg_name, kwargs_defaults[arg_name]))
+            else:
+                args_list.append(kwargs[arg_name])
+            args_len += 1
+    except KeyError as e:
+        raise TypeError('Missing argument %r' % (e.args[0],))
     return tuple(args_list)
 
 
@@ -294,6 +296,8 @@ def get_kwargs_defaults(argspec):
     kwargs_defaults = {}
     for i, default_value in enumerate(defaults):
         kwargs_defaults[arg_names[num_args + i]] = default_value
+    if getattr(argspec, 'kwonlydefaults', None):
+        kwargs_defaults.update(argspec.kwonlydefaults)
     return kwargs_defaults
 
 
@@ -304,8 +308,8 @@ def memoize(fun):
     is called on the function.
 
     """
-    argspec = inspection.getargspec(fun)
-    arg_names = argspec.args
+    argspec = inspect2.getfullargspec(fun)
+    arg_names = argspec.args + argspec.kwonlyargs
     kwargs_defaults = get_kwargs_defaults(argspec)
 
     def cache_key(args, kwargs):
@@ -342,8 +346,8 @@ def memoize_with_ttl(ttl_secs=60 * 60 * 24):
     assert_gt(ttl_secs, 0, error_msg)
 
     def cache_fun(fun):
-        argspec = inspection.getargspec(fun)
-        arg_names = argspec.args
+        argspec = inspect2.getfullargspec(fun)
+        arg_names = argspec.args + argspec.kwonlyargs
         kwargs_defaults = get_kwargs_defaults(argspec)
 
         def cache_key(args, kwargs):
