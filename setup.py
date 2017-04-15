@@ -18,8 +18,6 @@ from Cython.Build import cythonize
 
 import codecs
 import os
-import subprocess
-import sys
 
 
 CYTHON_MODULES = ['helpers', 'microtime', 'events', 'decorators', 'caching', 'inspection']
@@ -52,21 +50,21 @@ if __name__ == '__main__':
         long_description=long_description,
         url='https://github.com/quora/qcore',
         license='Apache Software License',
-        classifiers = [
+        classifiers=[
             'License :: OSI Approved :: Apache Software License',
 
             'Programming Language :: Python',
-            'Programming Language :: Python :: 2.6',
             'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3.3',
             'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
+            'Programming Language :: Python :: 3.6',
         ],
         keywords='quora core common utility',
         packages=find_packages(),
         package_data={'qcore': DATA_FILES},
-        ext_modules = cythonize(EXTENSIONS),
-        install_requires=['six'],
+        ext_modules=cythonize(EXTENSIONS),
+        install_requires=['Cython', 'setuptools', 'six'],
     )
 
     os.system('rm -rf ./build ./qcore.egg-info')
