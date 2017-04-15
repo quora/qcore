@@ -64,7 +64,7 @@ if __name__ == '__main__':
         packages=find_packages(),
         package_data={'qcore': DATA_FILES},
         ext_modules=cythonize(EXTENSIONS),
-        install_requires=['Cython', 'setuptools', 'six'],
+        install_requires=['Cython', 'inspect2', 'setuptools', 'six'],
     )
 
     os.system('rm -rf ./build ./qcore.egg-info')

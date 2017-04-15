@@ -135,7 +135,7 @@ def getargspec(func):
 
     This function works for Cythonized, non-cpdef functions, which expose argspec information but
     are not accepted by getargspec. It also works for Python 3 functions that use annotations, which
-    are simply ignoered. However, keyword-only arguments are not supported.
+    are simply ignored. However, keyword-only arguments are not supported.
 
     """
     if inspect.ismethod(func):
