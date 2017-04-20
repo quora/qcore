@@ -30,10 +30,14 @@ class InspectableClass(object):
 
     def _filtered_dict(self):
         excluded = self._excluded_attributes
-        return sorted(
-            ((k, v) for k, v in self.__dict__.items() if k not in excluded),
-            key=lambda pair: pair[0]
-        )
+        typ = type(self)
+        if hasattr(typ, '__slots__'):
+            items = ((slot, getattr(self, slot)) for slot in typ.__slots__)
+        else:
+            items = self.__dict__.items()
+        if excluded:
+            items = ((k, v) for k, v in items if k not in excluded)
+        return sorted(items, key=lambda pair: pair[0])
 
     def __repr__(self):
         return '%s(%s)' % (
