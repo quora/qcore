@@ -39,6 +39,13 @@ class ObjectWithExcludedAttributes(InspectableClass):
         self.attr2 = attr2
 
 
+class ObjectWithSlots(InspectableClass):
+    __slots__ = ('oid',)
+
+    def __init__(self, oid):
+        self.oid = oid
+
+
 class TestObjectWithDictComparison(object):
     def _check_repr_and_str(self, expected, obj):
         assert_eq(expected, repr(obj))
@@ -113,3 +120,12 @@ class TestObjectWithDictComparison(object):
         self._check_repr_and_str('ObjectWithExcludedAttributes(attr2=1)', obj1)
         self._check_repr_and_str('ObjectWithExcludedAttributes(attr2=1)', obj2)
         self._check_repr_and_str('ObjectWithExcludedAttributes(attr2=2)', obj3)
+
+    def test_slots(self):
+        obj1 = ObjectWithSlots(1)
+        obj2 = ObjectWithSlots(2)
+        obj3 = ObjectWithSlots(1)
+        assert_eq(obj1, obj3)
+        assert_eq(obj1, obj1)
+        assert_ne(obj1, obj2)
+        self._check_repr_and_str('ObjectWithSlots(oid=1)', obj1)
