@@ -354,3 +354,8 @@ DynamicEnum = Enum.create('DynamicEnum', [Gender.male, Gender.female])
 def test_pickling():
     assert_eq(Gender.female, pickle.loads(pickle.dumps(Gender.female)))
     assert_eq(DynamicEnum.male, pickle.loads(pickle.dumps(DynamicEnum.male)))
+    # results of pickling Gender.male in Python 3 with protocol 0 and 2
+    proto0 = b'c__builtin__\ngetattr\np0\n(ctest_enum\nGender\np1\nVparse\np2\ntp3\nRp4\n(L1L\ntp5\nRp6\n.'
+    proto2 = b'\x80\x02c__builtin__\ngetattr\nq\x00ctest_enum\nGender\nq\x01X\x05\x00\x00\x00parseq\x02\x86q\x03Rq\x04K\x01\x85q\x05Rq\x06.'
+    assert_eq(Gender.male, pickle.loads(proto0))
+    assert_eq(Gender.male, pickle.loads(proto2))
