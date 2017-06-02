@@ -210,6 +210,11 @@ class EnumBase(six.with_metaclass(EnumType)):
         """Parses a value into a member of this enum."""
         raise NotImplementedError
 
+    # This is necessary for things to unpickle correctly from Python 3 to 2
+    if six.PY3:
+        def __reduce__(self):
+            return (type(self).parse, (self.value,))
+
 
 class Enum(EnumBase):
     def is_valid(self):
