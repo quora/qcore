@@ -1,6 +1,11 @@
+## 0.4.0
+* Add support for some new features in py3 (e.g. keyword-only args).
+* Make pickling/unpickling of enums work across py2 and py3.
+* Make helpers.object_from_string handle more cases.
+
 ## 0.3.0
-* Various enum improvements. Invalid values are now disallowed, methods like 
-  get_names() return members in consistent order, there is a new IntEnum 
+* Various enum improvements. Invalid values are now disallowed, methods like
+  get_names() return members in consistent order, there is a new IntEnum
   class, and some new methods were added.
 * Cython is no longer required to import qcore if it has not been compiled with
   Cython.
@@ -8,7 +13,7 @@
 
 ## 0.2.1
 * MarkerObject names are now always text
-* Fix equality for DecoratorBinder objects to work correctly in compiled and 
+* Fix equality for DecoratorBinder objects to work correctly in compiled and
   non-compiled Python 2 and 3.
 * Errors run during event handlers are now reraised with a meaningful
   traceback.
