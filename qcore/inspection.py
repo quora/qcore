@@ -65,14 +65,24 @@ def get_full_name(src):
         # It's a short-living object, so we don't cache result
     elif hasattr(src, '__module__') and hasattr(src, '__name__'):
         # Func or class
-        _full_name_ = ('<unknown module>' if src.__module__ is None else src.__module__) + \
-            '.' + src.__name__
+        if src.__module__ is not None:
+            module_name = src.__module__
+        elif hasattr(src, '__self__') and is_cython_function(src):
+            module_name = get_full_name(src.__self__)
+        elif hasattr(src, '__wrapped__'):
+            module_name = get_full_name(src.__wrapped__)
+        else:
+            module_name = '<unknown module>'
+        _full_name_ = '%s.%s' % (module_name, src.__name__)
         try:
             src._full_name_ = _full_name_
         except AttributeError:
             pass
         except TypeError:
             pass
+    elif hasattr(src, '__pyx_vtable__'):
+        # Cython extention class
+        _full_name_ = str(src)
     else:
         # Something else
         _full_name_ = str(get_original_fn(src))
