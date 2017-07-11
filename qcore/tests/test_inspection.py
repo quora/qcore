@@ -175,3 +175,35 @@ def test_get_function_call_repr():
 
     assert_eq('test_inspection.dummy_function(\'x\',k=\'v\')', function_repr_kv)
     assert_ne(function_repr_kv, function_repr_kr)
+
+
+class TestClass(qcore.caching.LazyConstant):
+    pass
+
+
+def func():
+    return 1
+
+
+def test_get_full_name():
+    if qcore.caching.__file__.endswith('.so'):
+
+        x = TestClass(func)
+        cythonized_class = x
+        assert_eq(False, hasattr(cythonized_class, '__name__'))
+        assert_eq(True, hasattr(cythonized_class, '__pyx_vtable__'))
+        assert_eq(
+            'test_inspection.TestClass',
+            qcore.inspection.get_full_name(cythonized_class)
+        )
+
+        cythonized_method = x.compute
+        assert_eq(True, hasattr(cythonized_method, '__module__'))
+        assert_eq(True, hasattr(cythonized_method, '__name__'))
+        assert_eq(None, cythonized_method.__module__)
+        assert_eq(True, hasattr(cythonized_method, '__self__'))
+        assert_eq(True, qcore.inspection.is_cython_function(cythonized_method))
+        assert_eq(
+            'test_inspection.TestClass.compute',
+            qcore.inspection.get_full_name(cythonized_method)
+        )

@@ -82,7 +82,7 @@ def get_full_name(src):
             pass
     elif hasattr(src, '__pyx_vtable__'):
         # Cython extention class
-        _full_name_ = str(src)
+        _full_name_ = get_full_name(src.__class__)
     else:
         # Something else
         _full_name_ = str(get_original_fn(src))
