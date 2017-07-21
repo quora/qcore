@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import qcore
-from qcore.asserts import assert_eq, assert_ne, assert_unordered_list_eq, AssertRaises
+from qcore.asserts import assert_eq, assert_is, assert_ne, assert_unordered_list_eq, AssertRaises
 import inspect
 
 
@@ -190,19 +190,19 @@ def test_get_full_name():
 
         x = TestClass(func)
         cythonized_class = x
-        assert_eq(False, hasattr(cythonized_class, '__name__'))
-        assert_eq(True, hasattr(cythonized_class, '__pyx_vtable__'))
+        assert_is(False, hasattr(cythonized_class, '__name__'))
+        assert_is(True, hasattr(cythonized_class, '__pyx_vtable__'))
         assert_eq(
             'test_inspection.TestClass',
             qcore.inspection.get_full_name(cythonized_class)
         )
 
         cythonized_method = x.compute
-        assert_eq(True, hasattr(cythonized_method, '__module__'))
-        assert_eq(True, hasattr(cythonized_method, '__name__'))
-        assert_eq(None, cythonized_method.__module__)
-        assert_eq(True, hasattr(cythonized_method, '__self__'))
-        assert_eq(True, qcore.inspection.is_cython_function(cythonized_method))
+        assert_is(True, hasattr(cythonized_method, '__module__'))
+        assert_is(True, hasattr(cythonized_method, '__name__'))
+        assert_is(None, cythonized_method.__module__)
+        assert_is(True, hasattr(cythonized_method, '__self__'))
+        assert_is(True, qcore.inspection.is_cython_function(cythonized_method))
         assert_eq(
             'test_inspection.TestClass.compute',
             qcore.inspection.get_full_name(cythonized_method)
