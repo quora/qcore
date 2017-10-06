@@ -16,11 +16,7 @@ all: test
 
 install: clean
 	python setup.py sdist
-	pip install --upgrade dist/qcore*.gz
-
-install64: clean
-	python64 setup.py sdist
-	pip64 install --upgrade dist/qcore*.gz
+	pip install --upgrade --upgrade-strategy only-if-needed dist/qcore*.gz
 
 clean:
 	rm -rf dist/
