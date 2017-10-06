@@ -14,7 +14,7 @@
 
 from qcore.caching import (
     LRUCache, miss, cached_per_instance, memoize, memoize_with_ttl,
-    LazyConstant, ThreadLocalLazyConstant, lazy_constant, not_computed
+    LazyConstant, ThreadLocalLazyConstant, lazy_constant, not_computed, lru_cache
 )
 from qcore.asserts import assert_eq, assert_ne, assert_is, assert_in, assert_not_in, AssertRaises
 import qcore
@@ -262,6 +262,21 @@ class TestLRUCache(object):
         assert_eq(3, on_evict.call_count)
         assert_eq([call(0, 'a'), call(1, 'b'), call(2, 'c')],
                   on_evict.call_args_list)
+
+
+def test_lru_cache():
+
+    @lru_cache(maxsize=1, key_fn=lambda args, kwargs: args[0] % 2 == 0)
+    def cube(n):
+        return n * n * n
+
+    assert_eq(1, cube(1))
+    # hit the cache
+    assert_eq(1, cube(3))
+    # cache miss
+    assert_eq(8, cube(2))
+    # now it's a cache miss
+    assert_eq(27, cube(3))
 
 
 class TestClass(object):
