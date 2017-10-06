@@ -266,13 +266,6 @@ class TestLRUCache(object):
 
 def test_lru_cache():
 
-    @lru_cache(maxsize=5)
-    def square(n):
-        return n * n
-
-    for i in range(10):
-        assert_eq(i * i, square(i))
-
     @lru_cache(maxsize=1, key_fn=lambda args, kwargs: args[0] % 2 == 0)
     def cube(n):
         return n * n * n
