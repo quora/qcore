@@ -64,6 +64,7 @@ if __name__ == '__main__':
         packages=find_packages(),
         package_data={'qcore': DATA_FILES},
         ext_modules=cythonize(EXTENSIONS),
+        setup_requires=['Cython'],
         install_requires=['Cython', 'inspect2', 'setuptools', 'six'],
     )
 
