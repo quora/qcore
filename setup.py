@@ -26,7 +26,7 @@ CYTHON_MODULES = ['helpers', 'microtime', 'events', 'decorators', 'caching', 'in
 DATA_FILES = ['%s.pxd' % module for module in CYTHON_MODULES]
 
 
-VERSION = '0.4.0'
+VERSION = '0.4.1'
 
 
 EXTENSIONS = [
