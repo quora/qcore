@@ -14,7 +14,8 @@
 
 from setuptools import setup, find_packages
 from setuptools.extension import Extension
-from Cython.Build import cythonize
+
+import sys
 
 import codecs
 import os
@@ -41,6 +42,10 @@ if __name__ == '__main__':
     with codecs.open('./README.rst', encoding='utf-8') as f:
         long_description = f.read()
 
+    if 'egg_info' in sys.argv:
+        cythonize = lambda x: x
+    else:
+        from Cython.Build import cythonize
     setup(
         name='qcore',
         version=VERSION,
