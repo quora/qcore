@@ -14,7 +14,6 @@
 
 from setuptools import setup, find_packages
 from setuptools.extension import Extension
-from Cython.Build import cythonize
 
 import codecs
 import os
@@ -31,7 +30,7 @@ VERSION = '0.4.1'
 
 EXTENSIONS = [
     Extension(
-        'qcore/%s' % module,
+        'qcore.%s' % module,
         ['qcore/%s.py' % module]
     ) for module in CYTHON_MODULES
 ]
@@ -63,10 +62,7 @@ if __name__ == '__main__':
         keywords='quora core common utility',
         packages=find_packages(),
         package_data={'qcore': DATA_FILES},
-        ext_modules=cythonize(EXTENSIONS),
+        ext_modules=EXTENSIONS,
         setup_requires=['Cython'],
         install_requires=['Cython', 'inspect2', 'setuptools', 'six'],
     )
-
-    os.system('rm -rf ./build ./qcore.egg-info')
-    os.system('rm -f ./qcore/*.pyc ./qcore/*.c')
