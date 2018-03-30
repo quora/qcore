@@ -247,9 +247,13 @@ def retry(exception_cls, max_tries=10, sleep=0.05):
         if not is_generator:
             # so that qcore.inspection.get_original_fn can retrieve the original function
             retry_fun.fn = fn
+            # Necessary for pickling of Cythonized functions to work. Cython's __reduce__
+            # method always returns the original name of the function.
+            retry_fun.__reduce__ = lambda: fn.__name__
             return retry_fun
         else:
             retry_generator_fun.fn = fn
+            retry_generator_fun.__reduce__ = lambda: fn.__name__
             return retry_generator_fun
     return outer
 

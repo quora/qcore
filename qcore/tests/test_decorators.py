@@ -63,6 +63,11 @@ class AnyOtherException(Exception):
     pass
 
 
+@retry(Exception)
+def retry_it():
+    pass
+
+
 class TestRetry(object):
     def create_generator_function(self, exception_type, max_tries):
         fn_body = mock.Mock()
@@ -84,6 +89,11 @@ class TestRetry(object):
             return fn_body(*args, **kwargs)
 
         return any_function, fn_body
+
+    def test_pickling(self):
+        for protocol in range(pickle.HIGHEST_PROTOCOL + 1):
+            pickled = pickle.dumps(retry_it, protocol=protocol)
+            assert_is(retry_it, pickle.loads(pickled))
 
     def test_retry_passes_all_arguments(self):
         any_expected_exception_type = AnyException
