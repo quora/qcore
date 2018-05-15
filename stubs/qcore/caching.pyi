@@ -1,14 +1,29 @@
 import threading
 import inspect  # or inspect2, which doesn't have stubs
-from typing import Any, Callable, Dict, Generic, Iterable, List, Mapping, MutableMapping, overload, Sequence, Tuple, TypeVar, Optional, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Generic,
+    Iterable,
+    List,
+    Mapping,
+    MutableMapping,
+    overload,
+    Sequence,
+    Tuple,
+    TypeVar,
+    Optional,
+    Union,
+)
 
 from . import helpers
 from .helpers import miss as miss
 
-_T = TypeVar('_T')
-_KT = TypeVar('_KT')
-_VT = TypeVar('_VT')
-_CallableT = TypeVar('_CallableT', bound=Callable[..., Any])
+_T = TypeVar("_T")
+_KT = TypeVar("_KT")
+_VT = TypeVar("_VT")
+_CallableT = TypeVar("_CallableT", bound=Callable[..., Any])
 
 not_computed: helpers.MarkerObject
 
@@ -34,7 +49,9 @@ class ThreadLocalLazyConstant(threading.local, Generic[_T]):
     def clear(self) -> None: ...
 
 class LRUCache(MutableMapping[_KT, _VT]):
-    def __init__(self, capacity: int, item_evicted: Optional[Callable[[_KT, _VT], object]] = ...) -> None: ...
+    def __init__(
+        self, capacity: int, item_evicted: Optional[Callable[[_KT, _VT], object]] = ...
+    ) -> None: ...
     def get_capacity(self) -> int: ...
     def __len__(self) -> int: ...
     def __contains__(self, key: object) -> bool: ...
@@ -47,11 +64,17 @@ class LRUCache(MutableMapping[_KT, _VT]):
     def __delitem__(self, key: _KT) -> None: ...
     def clear(self, omit_item_evicted: bool = ...) -> None: ...
 
-
-def lru_cache(maxsize: int = ..., key_fn: Optional[Callable[[List[Any], Dict[str, Any]], object]] = ...) -> Callable[[_CallableT], _CallableT]: ...
-
+def lru_cache(
+    maxsize: int = ...,
+    key_fn: Optional[Callable[[List[Any], Dict[str, Any]], object]] = ...,
+) -> Callable[[_CallableT], _CallableT]: ...
 def cached_per_instance() -> Callable[[_CallableT], _CallableT]: ...
-def get_args_tuple(args: Iterable[object], kwargs: Mapping[str, object], arg_names: Sequence[str], kwargs_defaults: Mapping[str, object]) -> Tuple[object, ...]: ...
+def get_args_tuple(
+    args: Iterable[object],
+    kwargs: Mapping[str, object],
+    arg_names: Sequence[str],
+    kwargs_defaults: Mapping[str, object],
+) -> Tuple[object, ...]: ...
 def get_kwargs_defaults(argspec: inspect.ArgSpec) -> Dict[str, object]: ...
 def memoize(fun: _CallableT) -> _CallableT: ...
 def memoize_with_ttl(ttl_secs: int = ...) -> Callable[[_CallableT], _CallableT]: ...

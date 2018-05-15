@@ -1,5 +1,8 @@
 from . import inspection
-from .inspection import get_original_fn as get_original_fn, get_full_name as get_full_name
+from .inspection import (
+    get_original_fn as get_original_fn,
+    get_full_name as get_full_name,
+)
 from .errors import *
 from .helpers import *
 from .enum import *
@@ -10,7 +13,7 @@ from .events import (
     EventHub as EventHub,
     EnumBasedEventHub as EnumBasedEventHub,
     EventInterceptor as EventInterceptor,
-    sinking_event_hook as sinking_event_hook
+    sinking_event_hook as sinking_event_hook,
 )
 from .decorators import *
 from .caching import *

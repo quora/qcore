@@ -1,15 +1,25 @@
-from typing import Any, ContextManager, Dict, Generic, List, Optional, Text, Tuple, Type, TypeVar
+from typing import (
+    Any,
+    ContextManager,
+    Dict,
+    Generic,
+    List,
+    Optional,
+    Text,
+    Tuple,
+    Type,
+    TypeVar,
+)
 from types import TracebackType
 
 from .disallow_inheritance import DisallowInheritance as DisallowInheritance
 
-_T = TypeVar('_T')
-_T_co = TypeVar('_T_co', covariant=True)
+_T = TypeVar("_T")
+_T_co = TypeVar("_T_co", covariant=True)
 
 empty_tuple: Tuple[Any, ...]
 empty_list: List[Any]
 empty_dict: Dict[Any, Any]
-
 def true_fn() -> bool: ...
 def false_fn() -> bool: ...
 
@@ -24,7 +34,13 @@ unspecified: MarkerObject
 
 class EmptyContext(object):
     def __enter__(self) -> None: ...
-    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None: ...
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None: ...
+
 empty_context: EmptyContext
 
 class CythonCachedHashWrapper(Generic[_T_co]):
@@ -45,10 +61,14 @@ class ScopedValue(Generic[_T]):
 class _PropertyOverrideContext(object):
     def __init__(self, target: object, property_name: str, value: object) -> None: ...
     def __enter__(self) -> None: ...
-    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None: ...
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None: ...
 
 override = _PropertyOverrideContext
-
 def ellipsis(source: str, max_length: int) -> str: ...
 def safe_str(source: object, max_length: int = ...) -> str: ...
 def safe_repr(source: object, max_length: int = ...) -> str: ...
