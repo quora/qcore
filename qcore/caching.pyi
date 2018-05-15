@@ -1,5 +1,6 @@
 import threading
 import inspect  # or inspect2, which doesn't have stubs
+import sys
 from typing import (
     Any,
     Callable,
@@ -19,6 +20,11 @@ from typing import (
 
 from . import helpers
 from .helpers import miss as miss
+
+if sys.version_info >= (3,):
+    _ArgSpec = Union[inspect.ArgSpec, inspect.FullArgSpec]
+else:
+    _ArgSpec = inspect.ArgSpec
 
 _T = TypeVar("_T")
 _KT = TypeVar("_KT")
@@ -75,6 +81,6 @@ def get_args_tuple(
     arg_names: Sequence[str],
     kwargs_defaults: Mapping[str, object],
 ) -> Tuple[object, ...]: ...
-def get_kwargs_defaults(argspec: inspect.ArgSpec) -> Dict[str, object]: ...
+def get_kwargs_defaults(argspec: _ArgSpec) -> Dict[str, object]: ...
 def memoize(fun: _CallableT) -> _CallableT: ...
 def memoize_with_ttl(ttl_secs: int = ...) -> Callable[[_CallableT], _CallableT]: ...

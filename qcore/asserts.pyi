@@ -27,7 +27,7 @@ def assert_is_not(
 ) -> None: ...
 def assert_is_instance(
     value: Any,
-    types: Union[type, Tuple[Union[type, Tuple], ...]],
+    types: Union[Type[Any], Tuple[Union[Type[Any], Tuple[Any, ...]], ...]],
     message: Optional[str] = ...,
     extra: Optional[str] = ...,
 ) -> None: ...
