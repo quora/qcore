@@ -13,7 +13,7 @@ class DecoratorBinder(Generic[_T]):
     def __call__(self, *args: Any, **kwargs: Any) -> _T: ...
 
 class DecoratorBase(Generic[_T]):
-    binder_cls = DecoratorBinder[_T]
+    binder_cls: Type[DecoratorBinder[_T]]
 
     def __init__(self, fn: Callable[..., _T]) -> None: ...
     @abstractmethod
