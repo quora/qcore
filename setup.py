@@ -17,6 +17,7 @@ from setuptools.extension import Extension
 
 import codecs
 import glob
+import os.path
 
 
 CYTHON_MODULES = ['helpers', 'microtime', 'events', 'decorators', 'caching', 'inspection']
@@ -25,7 +26,7 @@ CYTHON_MODULES = ['helpers', 'microtime', 'events', 'decorators', 'caching', 'in
 DATA_FILES = (
     ['py.typed'] +
     ['%s.pxd' % module for module in CYTHON_MODULES] +
-    glob.glob('qcore/*.pyi')
+    [os.path.relpath(f, 'qcore/') for f in glob.glob('qcore/*.pyi')]
 )
 
 

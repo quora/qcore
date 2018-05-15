@@ -1,7 +1,7 @@
 from typing import Any, Callable, Type
 
 TEST_PREFIX: str
-Anything: object
+Anything: Any
 
 class GreaterEq(object):
     val: object
