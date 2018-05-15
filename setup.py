@@ -16,13 +16,17 @@ from setuptools import setup, find_packages
 from setuptools.extension import Extension
 
 import codecs
-import os
+import glob
 
 
 CYTHON_MODULES = ['helpers', 'microtime', 'events', 'decorators', 'caching', 'inspection']
 
 
-DATA_FILES = ['%s.pxd' % module for module in CYTHON_MODULES]
+DATA_FILES = (
+    ['py.typed'] +
+    ['%s.pxd' % module for module in CYTHON_MODULES] +
+    glob.glob('qcore/*.pyi')
+)
 
 
 VERSION = '0.4.2'
