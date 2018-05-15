@@ -22,9 +22,14 @@ class EventInterceptor(object):
     events: Dict[str, _HandlerT]
     def __init__(self, source: object, **events: _HandlerT) -> None: ...
     def __enter__(self) -> None: ...
-    def __exit__(self, typ: Optional[Type[BaseException]], value: Optional[BaseException], traceback: Optional[TracebackType]) -> None: ...
+    def __exit__(
+        self,
+        typ: Optional[Type[BaseException]],
+        value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None: ...
 
-_HubT = TypeVar('_HubT', bound=EventHub)
+_HubT = TypeVar("_HubT", bound=EventHub)
 
 class EventHub(object):
     def __init__(self, source: Optional[Dict[Any, Any]] = ...) -> None: ...

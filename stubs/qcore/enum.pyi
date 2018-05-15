@@ -1,18 +1,35 @@
 import inspect
 import six
 import sys
-from typing import Any, Callable, ContextManager, Dict, Generic, Iterable, Iterator, List, SupportsInt, Tuple, Type, TypeVar, Optional, Union
+from typing import (
+    Any,
+    Callable,
+    ContextManager,
+    Dict,
+    Generic,
+    Iterable,
+    Iterator,
+    List,
+    SupportsInt,
+    Tuple,
+    Type,
+    TypeVar,
+    Optional,
+    Union,
+)
 
 from . import helpers
 from . import inspection
 
-_T = TypeVar('_T', bound=EnumBase)
+_T = TypeVar("_T", bound=EnumBase)
 
 class EnumType(type):
     def __contains__(self, k: int) -> bool: ...
     def __len__(self) -> int: ...
     def __iter__(self) -> Iterator[EnumBase]: ...
-    def __call__(self, value: str, default: EnumBase = ...) -> EnumBase: ...  # type: ignore
+    def __call__(
+        self, value: str, default: EnumBase = ...
+    ) -> EnumBase: ...  # type: ignore
     def process(self) -> None: ...
 
 class EnumBase(metaclass=EnumType):
@@ -34,7 +51,11 @@ class EnumBase(metaclass=EnumType):
     @classmethod
     def get_members(cls: Type[_T]) -> List[_T]: ...
     @classmethod
-    def create(cls: Type[_T], name: str, members: Union[Dict[str, int], Iterable[Tuple[str, int]], Iterable[EnumBase]]) -> Type[_T]: ...
+    def create(
+        cls: Type[_T],
+        name: str,
+        members: Union[Dict[str, int], Iterable[Tuple[str, int]], Iterable[EnumBase]],
+    ) -> Type[_T]: ...
     @classmethod
     def parse(cls: Type[_T], value: object, default: object = ...) -> _T: ...
 
@@ -45,7 +66,7 @@ class Enum(EnumBase):
     @classmethod
     def parse(cls: Type[_T], value: object, default: object = ...) -> _T: ...
 
-_FlagsT = TypeVar('_FlagsT', bound=Flags)
+_FlagsT = TypeVar("_FlagsT", bound=Flags)
 
 class Flags(EnumBase):
     def is_valid(self) -> bool: ...
