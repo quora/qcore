@@ -213,8 +213,8 @@ class EnumBase(six.with_metaclass(EnumType)):
     # This is necessary for things to unpickle correctly from Python 3 to 2, but does not work in 3.3
     # and lower.
     if sys.version_info >= (3, 4):
-        def __reduce__(self):
-            return (type(self).parse, (self.value,))
+        def __reduce_ex__(self, proto):
+            return self.__class__, (self.value,)
 
 
 class Enum(EnumBase):
