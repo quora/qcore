@@ -30,7 +30,7 @@ DATA_FILES = (
 )
 
 
-VERSION = '0.4.3'
+VERSION = '0.4.4'
 
 
 EXTENSIONS = [
@@ -63,6 +63,7 @@ if __name__ == '__main__':
             'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
+            'Programming Language :: Python :: 3.7',
         ],
         keywords='quora core common utility',
         packages=find_packages(),
