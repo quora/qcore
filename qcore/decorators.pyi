@@ -50,5 +50,5 @@ def retry(
     sleep: float = ...,
 ) -> Callable[[_CallableT], _CallableT]: ...
 def decorator_of_context_manager(
-    ctxt: ContextManager[Any]
+    ctxt: Type[ContextManager[Any]]
 ) -> Callable[[_CallableT], _CallableT]: ...
