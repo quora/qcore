@@ -26,3 +26,7 @@ done
 # Install packages and test
 "${PYBIN}/pip" install qcore --no-index -f /io/wheelhouse
 (cd "$HOME"; "${PYBIN}/nosetests" qcore)
+
+if [[ "$PYVER" =~ "^cp36-" ]]; then
+    (cd "/io"; "${PYBIN}/mypy" qcore)
+fi
