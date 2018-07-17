@@ -94,7 +94,7 @@ class DebugCounter(object):
         if predicate(self):
             self.dump()
             if and_break:
-                breakpoint()
+                _breakpoint()
         return self
 
     def dump_every(self, interval_in_seconds=1):
@@ -104,7 +104,7 @@ class DebugCounter(object):
 
     def break_if(self, predicate):
         if predicate(self):
-            breakpoint()
+            _breakpoint()
         return self
 
     def __str__(self):
@@ -122,7 +122,7 @@ def counter(name):
         return DebugCounter(name)
 
 
-def breakpoint():
+def _breakpoint():
     print('Breakpoint reached.')
 
 
