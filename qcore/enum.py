@@ -90,6 +90,11 @@ class EnumType(type):
         member.__init__(value)
         return member
 
+    # Needed bcz of a six bug: https://github.com/benjaminp/six/issues/252
+    @classmethod
+    def __prepare__(cls, name, bases, **kwargs):
+        return {}
+
 
 class EnumBase(six.with_metaclass(EnumType)):
     _name_to_member = {}

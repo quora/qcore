@@ -322,6 +322,11 @@ class EventHub(object):
         """Gets the ``repr`` representation of this object."""
         return '%s(%r)' % (self.__class__.__name__, self.__dict__)
 
+    # Needed bcz of a six bug: https://github.com/benjaminp/six/issues/252
+    @classmethod
+    def __prepare__(cls, name, bases, **kwargs):
+        return {}
+
 
 class EnumBasedEventHubType(type):
     """Metaclass for enum-based event hubs.
@@ -372,6 +377,11 @@ class EnumBasedEventHubType(type):
             # Members are removed from class, since EventHub anyway creates
             # similar instance members
             delattr(cls, 'on_' + name)
+
+    # Needed bcz of a six bug: https://github.com/benjaminp/six/issues/252
+    @classmethod
+    def __prepare__(cls, name, bases, **kwargs):
+        return {}
 
 
 class EnumBasedEventHub(six.with_metaclass(EnumBasedEventHubType, EventHub)):
