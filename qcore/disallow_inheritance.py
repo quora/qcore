@@ -28,3 +28,9 @@ class DisallowInheritance(type):
                     (cls, cl_name)
                 raise TypeError(message)
         super(DisallowInheritance, self).__init__(cl_name, bases, namespace)
+
+    # Needed bcz of a six bug: https://github.com/benjaminp/six/issues/252
+    @classmethod
+    def __prepare__(cls, name, bases, **kwargs):
+        return {}
+
