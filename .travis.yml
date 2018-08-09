@@ -27,7 +27,7 @@ script:
   - ls wheelhouse/
   # According to https://github.com/travis-ci/dpl/issues/496, copying files to dist/ is enough to get them uploaded
   - mkdir -p dist/
-  - cp wheelhouse/qcorex-*.whl dist/
+  - cp wheelhouse/qcore-*.whl dist/
   - if [[ "$PYVER" = "cp37-cp37m" ]]; then python3.7 setup.py sdist; fi
 
 deploy:
