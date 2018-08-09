@@ -1,3 +1,9 @@
+## 0.5.0
+* Start publishing manylinux wheels
+* Support Python 3.7
+* Improve pickle implementation for enums
+* Add type stubs
+
 ## 0.4.2
 * Improve installation procedure
 
