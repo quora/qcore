@@ -27,7 +27,7 @@ script:
   - ls wheelhouse/
   # According to https://github.com/travis-ci/dpl/issues/496, copying files to dist/ is enough to get them uploaded
   - mkdir -p dist/
-  - cp wheelhouse/qcore-*.whl dist/
+  - cp wheelhouse/qcorex-*.whl dist/
 
 deploy:
   provider: pypi

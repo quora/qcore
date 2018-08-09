@@ -24,7 +24,7 @@ for whl in wheelhouse/*-py2.py3-*.whl; do
 done
 
 # Install packages and test
-"${PYBIN}/pip" install qcore --no-index -f /io/wheelhouse
+"${PYBIN}/pip" install qcorex --no-index -f /io/wheelhouse
 (cd "$HOME"; "${PYBIN}/nosetests" qcore)
 
 if [[ "$PYVER" =~ "^cp36-" ]]; then

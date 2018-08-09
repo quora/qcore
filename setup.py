@@ -30,7 +30,7 @@ DATA_FILES = (
 )
 
 
-VERSION = '0.4.5'
+VERSION = '0.4.6'
 
 
 EXTENSIONS = [
@@ -46,7 +46,7 @@ if __name__ == '__main__':
         long_description = f.read()
 
     setup(
-        name='qcore',
+        name='qcorex',
         version=VERSION,
         author='Quora, Inc.',
         author_email='asynq@quora.com',
