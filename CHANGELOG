@@ -1,3 +1,6 @@
+## 0.5.1
+* Add __prepare__ to some metaclasses to fix errors with six 1.11.0.
+
 ## 0.5.0
 * Start publishing manylinux wheels
 * Support Python 3.7
