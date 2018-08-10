@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import qcore
-from qcore.asserts import assert_eq, assert_ne, assert_unordered_list_eq, AssertRaises
+from qcore.asserts import assert_eq, assert_is, assert_ne, assert_unordered_list_eq, AssertRaises
 import inspect
 
 
@@ -175,3 +175,35 @@ def test_get_function_call_repr():
 
     assert_eq('test_inspection.dummy_function(\'x\',k=\'v\')', function_repr_kv)
     assert_ne(function_repr_kv, function_repr_kr)
+
+
+class TestClass(qcore.caching.LazyConstant):
+    pass
+
+
+def func():
+    return 1
+
+
+def test_get_full_name():
+    if qcore.caching.__file__.endswith('.so'):
+
+        x = TestClass(func)
+        cythonized_class = x
+        assert_is(False, hasattr(cythonized_class, '__name__'))
+        assert_is(True, hasattr(cythonized_class, '__pyx_vtable__'))
+        assert_eq(
+            'test_inspection.TestClass',
+            qcore.inspection.get_full_name(cythonized_class)
+        )
+
+        cythonized_method = x.compute
+        assert_is(True, hasattr(cythonized_method, '__module__'))
+        assert_is(True, hasattr(cythonized_method, '__name__'))
+        assert_is(None, cythonized_method.__module__)
+        assert_is(True, hasattr(cythonized_method, '__self__'))
+        assert_is(True, qcore.inspection.is_cython_function(cythonized_method))
+        assert_eq(
+            'test_inspection.TestClass.compute',
+            qcore.inspection.get_full_name(cythonized_method)
+        )

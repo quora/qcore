@@ -17,7 +17,7 @@ import cython
 
 cpdef object get_original_fn(object fn)
 
-@cython.locals(_full_name_=str)
+@cython.locals(module_name=str, _full_name_=str)
 cpdef str get_full_name(object src)
 
 @cython.locals(result=str, first=bint)
