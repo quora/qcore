@@ -7,6 +7,7 @@ from typing import (
     Iterable,
     List,
     Optional,
+    Set,
     Tuple,
     Type,
     Union,
@@ -114,6 +115,9 @@ def assert_raises(
 ) -> None: ...
 
 class AssertRaises(object):
+    expected_exception_types: Set[Type[BaseException]]
+    expected_exception_found: Any
+    extra: Optional[str]
     def __init__(
         self, *expected_exception_types: Type[BaseException], extra: Optional[str] = ...
     ) -> None: ...
