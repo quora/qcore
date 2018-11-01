@@ -266,17 +266,71 @@ class TestLRUCache(object):
 
 def test_lru_cache():
 
-    @lru_cache(maxsize=1, key_fn=lambda args, kwargs: args[0] % 2 == 0)
+    calls = []
+
+    @lru_cache(maxsize=3)
     def cube(n):
+        calls.append(n)
         return n * n * n
 
     assert_eq(1, cube(1))
-    # hit the cache
-    assert_eq(1, cube(3))
-    # cache miss
+    assert_eq([1], calls)
+    assert_eq(1, cube(1))
+    assert_eq([1], calls)
+
     assert_eq(8, cube(2))
-    # now it's a cache miss
+    assert_eq([1, 2], calls)
+
     assert_eq(27, cube(3))
+    assert_eq([1, 2, 3], calls)
+    assert_eq(1, cube(1))
+    assert_eq([1, 2, 3], calls)
+
+    assert_eq(64, cube(4))
+    assert_eq([1, 2, 3, 4], calls)
+
+    assert_eq(1, cube(1))
+    assert_eq([1, 2, 3, 4], calls)
+
+    # 2 should have been evicted
+    assert_eq(8, cube(2))
+    assert_eq([1, 2, 3, 4, 2], calls)
+
+    # manually clear the cache
+    cube.clear()
+    assert_eq(1, cube(1))
+    assert_eq([1, 2, 3, 4, 2, 1], calls)
+    assert_eq(8, cube(2))
+    assert_eq([1, 2, 3, 4, 2, 1, 2], calls)
+    assert_eq(27, cube(3))
+    assert_eq([1, 2, 3, 4, 2, 1, 2, 3], calls)
+    assert_eq(64, cube(4))
+    assert_eq([1, 2, 3, 4, 2, 1, 2, 3, 4], calls)
+
+
+def test_lru_cache_key_fn():
+    calls = []
+
+    @lru_cache(maxsize=3, key_fn=lambda args, kwargs: args[0] % 2 == 0)
+    def cube(n):
+        calls.append(n)
+        return n * n * n
+
+    assert_eq(1, cube(1))
+    assert_eq([1], calls)
+    assert_eq(1, cube(3))
+    assert_eq([1], calls)
+
+    assert_eq(8, cube(2))
+    assert_eq([1, 2], calls)
+    assert_eq(8, cube(4))
+    assert_eq([1, 2], calls)
+
+    cube.clear()
+    assert_eq(27, cube(3))
+    assert_eq([1, 2, 3], calls)
+    assert_eq(27, cube(1))
+    assert_eq([1, 2, 3], calls)
 
 
 class TestClass(object):
