@@ -49,11 +49,14 @@ __all__ = [
     "assert_in",
     "assert_not_in",
     "assert_in_with_tolerance",
-    "assert_is_substring",
-    "assert_is_not_substring",
     "assert_unordered_list_eq",
     "assert_raises",
     "AssertRaises",
+    # Strings
+    "assert_is_substring",
+    "assert_is_not_substring",
+    "assert_startswith",
+    "assert_endswith",
 ]
 
 
@@ -271,24 +274,6 @@ def assert_in_with_tolerance(obj, seq, tolerance, message=None, extra=None):
     assert False, _assert_fail_message(message, obj, seq, "is not in", extra)
 
 
-def assert_is_substring(substring, subject, message=None, extra=None):
-    """Raises an AssertionError if substring is not a substring of subject."""
-    assert (
-        (subject is not None)
-        and (substring is not None)
-        and (subject.find(substring) != -1)
-    ), _assert_fail_message(message, substring, subject, "is not in", extra)
-
-
-def assert_is_not_substring(substring, subject, message=None, extra=None):
-    """Raises an AssertionError if substring is a substring of subject."""
-    assert (
-        (subject is not None)
-        and (substring is not None)
-        and (subject.find(substring) == -1)
-    ), _assert_fail_message(message, substring, subject, "is in", extra)
-
-
 def assert_unordered_list_eq(expected, actual, message=None):
     """Raises an AssertionError if the objects contained
     in expected are not equal to the objects contained
@@ -366,3 +351,42 @@ class AssertRaises(object):
                 EXTRA_STR=(" (%s)" % self.extra) if self.extra is not None else "",
             )
         raise AssertionError(message)
+
+
+# ===================================================
+# Strings
+# ===================================================
+
+
+def assert_is_substring(substring, subject, message=None, extra=None):
+    """Raises an AssertionError if substring is not a substring of subject."""
+    assert (
+        (subject is not None)
+        and (substring is not None)
+        and (subject.find(substring) != -1)
+    ), _assert_fail_message(message, substring, subject, "is not in", extra)
+
+
+def assert_is_not_substring(substring, subject, message=None, extra=None):
+    """Raises an AssertionError if substring is a substring of subject."""
+    assert (
+        (subject is not None)
+        and (substring is not None)
+        and (subject.find(substring) == -1)
+    ), _assert_fail_message(message, substring, subject, "is in", extra)
+
+
+def assert_startswith(prefix, subject, message=None, extra=None):
+    """Raises an AssertionError if the subject string does not start with prefix."""
+    assert (
+        (type(subject) is str)
+        and (type(prefix) is str)
+        and (subject.startswith(prefix))
+    ), _assert_fail_message(message, subject, prefix, "does not start with", extra)
+
+
+def assert_endswith(suffix, subject, message=None, extra=None):
+    """Raises an AssertionError if the subject string does not end with suffix."""
+    assert (
+        (type(subject) is str) and (type(suffix) is str) and (subject.endswith(suffix))
+    ), _assert_fail_message(message, subject, suffix, "does not end with", extra)
