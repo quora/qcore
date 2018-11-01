@@ -49,12 +49,12 @@ def test_events():
 
     count = 0
     events = qcore.EventHook()
-    assert_eq('EventHook()', str(events))
-    assert_eq('EventHook()', repr(events))
+    assert_eq("EventHook()", str(events))
+    assert_eq("EventHook()", repr(events))
 
     events.subscribe(h0)
-    assert_eq('EventHook(%r,)' % h0, str(events))
-    assert_eq('EventHook(%r,)' % h0, repr(events))
+    assert_eq("EventHook(%r,)" % h0, str(events))
+    assert_eq("EventHook(%r,)" % h0, repr(events))
 
     events()
     assert_eq(count, 1)
@@ -148,7 +148,7 @@ def test_sinking_event_hook():
 
     assert_not_in(None, events)
     assert_not_in(False, events)
-    assert_eq('SinkingEventHook()', str(events))
+    assert_eq("SinkingEventHook()", str(events))
 
 
 def test_event_interceptor():
@@ -184,7 +184,7 @@ def test_event_hub():
     h = qcore.EventHub()
 
     assert_eq(0, len(h))
-    assert_eq('EventHub({})', repr(h))
+    assert_eq("EventHub({})", repr(h))
 
     with AssertRaises(AttributeError):
         h.doesnt_start_with_on
@@ -192,27 +192,27 @@ def test_event_hub():
     h_e = h.on_e
     assert_is_instance(h_e, qcore.EventHook)
     assert_eq(1, len(h))
-    assert_is(h_e, h['e'])
+    assert_is(h_e, h["e"])
     assert_eq("EventHub({'e': %r})" % h_e, repr(h))
-    assert_is(h, h.safe_trigger('e'))
-    assert_is(h, h.trigger('e'))
+    assert_is(h, h.safe_trigger("e"))
+    assert_is(h, h.trigger("e"))
 
     h_e.subscribe(lambda: 0)
 
-    assert_in('e', h)
-    assert_not_in('f', h)
+    assert_in("e", h)
+    assert_not_in("f", h)
 
-    h['f'] = None
-    assert_is(None, h['f'])
-    assert_in('f', h)
+    h["f"] = None
+    assert_is(None, h["f"])
+    assert_in("f", h)
     assert_eq(2, len(h))
 
-    del h['f']
-    assert_not_in('f', h)
+    del h["f"]
+    assert_not_in("f", h)
     assert_eq(1, len(h))
 
     for k, v in h:
-        assert_eq('e', k)
+        assert_eq("e", k)
         assert_is(h_e, v)
 
     def bad_fn(*args):
@@ -221,11 +221,11 @@ def test_event_hub():
     m = mock.MagicMock()
     h.on_test.subscribe(bad_fn)
     with AssertRaises(NotImplementedError):
-        h.on('test', m).safe_trigger('test', 1)
+        h.on("test", m).safe_trigger("test", 1)
     m.assert_called_once_with(1)
     m.reset_mock()
 
-    h.off('test', bad_fn).trigger('test', 2, 3)
+    h.off("test", bad_fn).trigger("test", 2, 3)
     m.assert_called_once_with(2, 3)
 
 
@@ -237,14 +237,14 @@ def test_events_hub_with_source():
     hook.subscribe(handler)
     assert_eq([handler], list(hook))
 
-    hub = qcore.EventHub(source={'on_something': hook})
+    hub = qcore.EventHub(source={"on_something": hook})
     assert_eq([handler], list(hub.on_something))
 
 
 def test_global_events():
     c = len(qcore.events.hub)
 
-    event = 'test_global_event_4849tcj5'
+    event = "test_global_event_4849tcj5"
     e = qcore.events.hub.get_or_create(event)
 
     event_fire_args = []
@@ -299,17 +299,20 @@ def test_enum_based_event_hub():
             pass
 
     with AssertRaises(AssertionError):
+
         class BadEventHub3(qcore.EnumBasedEventHub):
             # No __based_on__ = [Events]
             pass
 
     with AssertRaises(AssertionError):
+
         class BadEventHub4(qcore.EnumBasedEventHub):
             __based_on__ = [Events, MoreEvents]
             on_work = qcore.EventHook()
             on_eat = qcore.EventHook()
 
     with AssertRaises(AssertionError):
+
         class BadEventHub5(qcore.EnumBasedEventHub):
             __based_on__ = [Events, MoreEvents]
             on_work = qcore.EventHook()
@@ -318,12 +321,14 @@ def test_enum_based_event_hub():
             on_bad = qcore.EventHook()
 
     with AssertRaises(AssertionError):
+
         class BadEventHub6(qcore.EnumBasedEventHub):
             __based_on__ = Events
             on_work = qcore.EventHook()
             on_sleep = 1
 
     with AssertRaises(AssertionError):
+
         class BadEventHub7(qcore.EnumBasedEventHub):
             __based_on__ = [Events, MoreEvents, MoreEvents]  # Duplicate members
             on_work = qcore.EventHook()

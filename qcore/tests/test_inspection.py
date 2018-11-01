@@ -26,7 +26,7 @@ class InheritFromCython(qcore.caching.LazyConstant):
 
 
 def test_is_cython_class():
-    if qcore.caching.__file__.endswith('.so'):
+    if qcore.caching.__file__.endswith(".so"):
         assert qcore.inspection.is_cython_class(qcore.caching.LazyConstant)
     assert not qcore.inspection.is_cython_class(NonCython)
     assert not qcore.inspection.is_cython_class(InheritFromCython)
@@ -61,7 +61,7 @@ def test_get_subclass_tree():
     assert_eq([], qcore.inspection.get_subclass_tree(MetaB))
 
 
-def fun_with_args(a, b, c, d='e', **f):
+def fun_with_args(a, b, c, d="e", **f):
     pass
 
 
@@ -70,31 +70,42 @@ def test_getargspec():
     assert_eq(empty, qcore.inspection.getargspec(test_get_subclass_tree))
     assert_eq(empty, qcore.inspection.getargspec(qcore.inspection.lazy_stack))
 
-    emptymethod = inspect.ArgSpec(args=['self'], varargs=None, keywords=None, defaults=None)
+    emptymethod = inspect.ArgSpec(
+        args=["self"], varargs=None, keywords=None, defaults=None
+    )
     assert_eq(emptymethod, qcore.inspection.getargspec(X.myinstancemethod))
     assert_eq(emptymethod, qcore.inspection.getargspec(X().myinstancemethod))
 
-    emptyclsmethod = inspect.ArgSpec(args=['cls'], varargs=None, keywords=None, defaults=None)
+    emptyclsmethod = inspect.ArgSpec(
+        args=["cls"], varargs=None, keywords=None, defaults=None
+    )
     assert_eq(emptyclsmethod, qcore.inspection.getargspec(X.myclassmethod))
 
-    spec = inspect.ArgSpec(args=['a', 'b', 'c', 'd'], varargs=None, keywords='f', defaults=('e',))
+    spec = inspect.ArgSpec(
+        args=["a", "b", "c", "d"], varargs=None, keywords="f", defaults=("e",)
+    )
     assert_eq(spec, qcore.inspection.getargspec(fun_with_args))
 
 
 try:
-    exec("""
+    exec(
+        """
 def fun_with_annotations(a: int, b: str, *args) -> None:
     pass
 
 
 def fun_with_kwonly_args(a=1, *, b, c=3):
     pass
-""")
+"""
+    )
 except SyntaxError:
     pass
 else:
+
     def test_getargspec_py3_only():
-        spec = inspect.ArgSpec(args=['a', 'b'], varargs='args', keywords=None, defaults=None)
+        spec = inspect.ArgSpec(
+            args=["a", "b"], varargs="args", keywords=None, defaults=None
+        )
         assert_eq(spec, qcore.inspection.getargspec(fun_with_annotations))
         with AssertRaises(ValueError):
             qcore.inspection.getargspec(fun_with_kwonly_args)
@@ -123,7 +134,7 @@ class BoolConversionFails(object):
         pass
 
     def __nonzero__(self):
-        raise TypeError('Cannot convert %s to bool' % self)
+        raise TypeError("Cannot convert %s to bool" % self)
 
     __bool__ = __nonzero__
 
@@ -133,7 +144,7 @@ def test_is_classmethod():
     assert not qcore.inspection.is_classmethod(X())
     assert not qcore.inspection.is_classmethod(OldStyle)
     assert not qcore.inspection.is_classmethod(OldStyle())
-    assert not qcore.inspection.is_classmethod('x')
+    assert not qcore.inspection.is_classmethod("x")
     assert not qcore.inspection.is_classmethod(qcore)
     assert not qcore.inspection.is_classmethod(qcore.inspection.is_classmethod)
     assert qcore.inspection.is_classmethod(X.myclassmethod)
@@ -151,27 +162,37 @@ def test_is_classmethod():
 def test_get_function_call_str():
     class TestObject(object):
         """A test object containing no __str__ implementation."""
+
         def __str__(self):
             raise NotImplementedError()
 
         def __repr__(self):
-            return 'test'
+            return "test"
 
     def test_function():
         pass
 
-    function_str_kv = qcore.inspection.get_function_call_str(test_function, (1, 2, 3), {'k': 'v'})
-    function_str_dummy = qcore.inspection.get_function_call_str(test_function, (TestObject(),), {})
+    function_str_kv = qcore.inspection.get_function_call_str(
+        test_function, (1, 2, 3), {"k": "v"}
+    )
+    function_str_dummy = qcore.inspection.get_function_call_str(
+        test_function, (TestObject(),), {}
+    )
 
-    assert_eq('test_inspection.test_function(1,2,3,k=v)', function_str_kv)
-    assert_eq('test_inspection.test_function(test)', function_str_dummy)
+    assert_eq("test_inspection.test_function(1,2,3,k=v)", function_str_kv)
+    assert_eq("test_inspection.test_function(test)", function_str_dummy)
 
 
 def test_get_function_call_repr():
     def dummy_function():
         pass
-    function_repr_kv = qcore.inspection.get_function_call_repr(dummy_function, ('x',), {'k': 'v'})
-    function_repr_kr = qcore.inspection.get_function_call_repr(dummy_function, ('x',), {'k': 'r'})
 
-    assert_eq('test_inspection.dummy_function(\'x\',k=\'v\')', function_repr_kv)
+    function_repr_kv = qcore.inspection.get_function_call_repr(
+        dummy_function, ("x",), {"k": "v"}
+    )
+    function_repr_kr = qcore.inspection.get_function_call_repr(
+        dummy_function, ("x",), {"k": "r"}
+    )
+
+    assert_eq("test_inspection.dummy_function('x',k='v')", function_repr_kv)
     assert_ne(function_repr_kv, function_repr_kr)

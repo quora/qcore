@@ -19,15 +19,15 @@ Low-level caching abstractions.
 """
 
 __all__ = [
-    'miss',
-    'not_computed',
-    'LazyConstant',
-    'lazy_constant',
-    'ThreadLocalLazyConstant',
-    'LRUCache',
-    'cached_per_instance',
-    'memoize',
-    'memoize_with_ttl',
+    "miss",
+    "not_computed",
+    "LazyConstant",
+    "lazy_constant",
+    "ThreadLocalLazyConstant",
+    "LRUCache",
+    "cached_per_instance",
+    "memoize",
+    "memoize_with_ttl",
 ]
 
 from collections import OrderedDict
@@ -43,9 +43,9 @@ from . import helpers
 
 
 miss = helpers.miss
-not_computed = helpers.MarkerObject(u'not_computed @ qcore.caching')
-globals()['miss'] = miss
-globals()['not_computed'] = not_computed
+not_computed = helpers.MarkerObject(u"not_computed @ qcore.caching")
+globals()["miss"] = miss
+globals()["not_computed"] = not_computed
 
 
 class LazyConstant(object):
@@ -56,6 +56,7 @@ class LazyConstant(object):
     only on demand (e.g. in case a particular event is raised).
 
     """
+
     def __init__(self, value_provider):
         self.value_provider = value_provider
         self.value = not_computed
@@ -82,10 +83,12 @@ class LazyConstant(object):
 
 def lazy_constant(fn):
     """Decorator to make a function that takes no arguments use the LazyConstant class."""
+
     class NewLazyConstant(LazyConstant):
         @functools.wraps(fn)
         def __call__(self):
             return self.get_value()
+
     return NewLazyConstant(fn)
 
 
@@ -97,6 +100,7 @@ class ThreadLocalLazyConstant(threading.local):
     only on demand (e.g. in case a particular event is raised).
 
     """
+
     def __init__(self, value_provider):
         self.value_provider = value_provider
         self.value = not_computed
@@ -159,9 +163,9 @@ class LRUCache(object):
 
     def __init__(self, capacity, item_evicted=None):
         if not isinstance(capacity, six.integer_types):
-            raise TypeError('capacity must be integer, not {}'.format(type(capacity)))
+            raise TypeError("capacity must be integer, not {}".format(type(capacity)))
         if capacity <= 0:
-            raise ValueError('capacity must be positive, not {}'.format(capacity))
+            raise ValueError("capacity must be positive, not {}".format(capacity))
         self._capacity = capacity
         self._item_evicted = item_evicted
         self._dict = OrderedDict()
@@ -270,6 +274,7 @@ def lru_cache(maxsize=128, key_fn=None):
         wrapper.clear = cache.clear
 
         return wrapper
+
     return decorator
 
 
@@ -281,6 +286,7 @@ def cached_per_instance():
     The cached values are not stored when the object is pickled.
 
     """
+
     def cache_fun(fun):
         argspec = inspect2.getfullargspec(fun)
         arg_names = argspec.args[1:] + argspec.kwonlyargs  # remove self
@@ -309,6 +315,7 @@ def cached_per_instance():
         # just so unit tests can check that this is cleaned up correctly
         new_fun.__cached_per_instance_cache__ = cache
         return new_fun
+
     return cache_fun
 
 
@@ -326,7 +333,7 @@ def get_args_tuple(args, kwargs, arg_names, kwargs_defaults):
                 args_list.append(kwargs[arg_name])
             args_len += 1
     except KeyError as e:
-        raise TypeError('Missing argument %r' % (e.args[0],))
+        raise TypeError("Missing argument %r" % (e.args[0],))
     return tuple(args_list)
 
 
@@ -338,7 +345,7 @@ def get_kwargs_defaults(argspec):
     kwargs_defaults = {}
     for i, default_value in enumerate(defaults):
         kwargs_defaults[arg_names[num_args + i]] = default_value
-    if getattr(argspec, 'kwonlydefaults', None):
+    if getattr(argspec, "kwonlydefaults", None):
         kwargs_defaults.update(argspec.kwonlydefaults)
     return kwargs_defaults
 
@@ -382,8 +389,10 @@ def memoize_with_ttl(ttl_secs=60 * 60 * 24):
 
     """
 
-    error_msg = 'Incorrect usage of qcore.caching.memoize_with_ttl: ' \
-                'ttl_secs must be a positive integer.'
+    error_msg = (
+        "Incorrect usage of qcore.caching.memoize_with_ttl: "
+        "ttl_secs must be a positive integer."
+    )
     assert_is_instance(ttl_secs, six.integer_types, error_msg)
     assert_gt(ttl_secs, 0, error_msg)
 
@@ -432,4 +441,5 @@ def memoize_with_ttl(ttl_secs=60 * 60 * 24):
         new_fun.clear_cache = clear_cache
         new_fun.dirty = dirty
         return new_fun
+
     return cache_fun

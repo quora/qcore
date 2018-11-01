@@ -30,9 +30,9 @@ def get_original_fn(fn):
     fn_type = type(fn)
     if fn_type is classmethod or fn_type is staticmethod:
         return get_original_fn(fn.__func__)
-    if hasattr(fn, 'original_fn'):
+    if hasattr(fn, "original_fn"):
         return fn.original_fn
-    if hasattr(fn, 'fn'):
+    if hasattr(fn, "fn"):
         fn.original_fn = get_original_fn(fn.fn)
         return fn.original_fn
     return fn
@@ -41,11 +41,11 @@ def get_original_fn(fn):
 def get_full_name(src):
     """Gets full class or function name."""
 
-    if hasattr(src, '_full_name_'):
+    if hasattr(src, "_full_name_"):
         return src._full_name_
-    if hasattr(src, 'is_decorator'):
+    if hasattr(src, "is_decorator"):
         # Our own decorator or binder
-        if hasattr(src, 'decorator'):
+        if hasattr(src, "decorator"):
             # Our own binder
             _full_name_ = str(src.decorator)
             # It's a short-living object, so we don't cache result
@@ -58,15 +58,18 @@ def get_full_name(src):
                 pass
             except TypeError:
                 pass
-    elif hasattr(src, 'im_class'):
+    elif hasattr(src, "im_class"):
         # Bound method
         cls = src.im_class
-        _full_name_ = get_full_name(cls) + '.' + src.__name__
+        _full_name_ = get_full_name(cls) + "." + src.__name__
         # It's a short-living object, so we don't cache result
-    elif hasattr(src, '__module__') and hasattr(src, '__name__'):
+    elif hasattr(src, "__module__") and hasattr(src, "__name__"):
         # Func or class
-        _full_name_ = ('<unknown module>' if src.__module__ is None else src.__module__) + \
-            '.' + src.__name__
+        _full_name_ = (
+            ("<unknown module>" if src.__module__ is None else src.__module__)
+            + "."
+            + src.__name__
+        )
         try:
             src._full_name_ = _full_name_
         except AttributeError:
@@ -89,22 +92,22 @@ def get_function_call_str(fn, args, kwargs):
             try:
                 return repr(v)
             except Exception:
-                return '<n/a str raised>'
+                return "<n/a str raised>"
 
-    result = get_full_name(fn) + '('
+    result = get_full_name(fn) + "("
     first = True
     for v in args:
         if first:
             first = False
         else:
-            result += ','
+            result += ","
         result += str_converter(v)
     for k, v in kwargs.items():
         if first:
             first = False
         else:
-            result += ','
-        result += str(k) + '=' + str_converter(v)
+            result += ","
+        result += str(k) + "=" + str_converter(v)
     result += ")"
     return result
 
@@ -112,20 +115,20 @@ def get_function_call_str(fn, args, kwargs):
 def get_function_call_repr(fn, args, kwargs):
     """Converts method call (function and its arguments) to a repr(...)-like string."""
 
-    result = get_full_name(fn) + '('
+    result = get_full_name(fn) + "("
     first = True
     for v in args:
         if first:
             first = False
         else:
-            result += ','
+            result += ","
         result += repr(v)
     for k, v in kwargs.items():
         if first:
             first = False
         else:
-            result += ','
-        result += str(k) + '=' + repr(v)
+            result += ","
+        result += str(k) + "=" + repr(v)
     result += ")"
     return result
 
@@ -144,41 +147,43 @@ def getargspec(func):
     try:
         code = func.__code__
     except AttributeError:
-        raise TypeError('{!r} is not a Python function'.format(func))
-    if hasattr(code, 'co_kwonlyargcount') and code.co_kwonlyargcount > 0:
-        raise ValueError('keyword-only arguments are not supported by getargspec()')
+        raise TypeError("{!r} is not a Python function".format(func))
+    if hasattr(code, "co_kwonlyargcount") and code.co_kwonlyargcount > 0:
+        raise ValueError("keyword-only arguments are not supported by getargspec()")
     args, varargs, varkw = inspect.getargs(code)
     return inspect.ArgSpec(args, varargs, varkw, func.__defaults__)
 
 
 def is_cython_or_generator(fn):
     """Returns whether this function is either a generator function or a Cythonized function."""
-    if hasattr(fn, '__func__'):
+    if hasattr(fn, "__func__"):
         fn = fn.__func__  # Class method, static method
     if inspect.isgeneratorfunction(fn):
         return True
     name = type(fn).__name__
-    return \
-        name == 'generator' or \
-        name == 'method_descriptor' or \
-        name == 'cython_function_or_method' or \
-        name == 'builtin_function_or_method'
+    return (
+        name == "generator"
+        or name == "method_descriptor"
+        or name == "cython_function_or_method"
+        or name == "builtin_function_or_method"
+    )
 
 
 def is_cython_function(fn):
     """Checks if a function is compiled w/Cython."""
-    if hasattr(fn, '__func__'):
+    if hasattr(fn, "__func__"):
         fn = fn.__func__  # Class method, static method
     name = type(fn).__name__
-    return \
-        name == 'method_descriptor' or \
-        name == 'cython_function_or_method' or \
-        name == 'builtin_function_or_method'
+    return (
+        name == "method_descriptor"
+        or name == "cython_function_or_method"
+        or name == "builtin_function_or_method"
+    )
 
 
 def is_cython_class(cls):
     """Returns whether a class is a Cython extension class."""
-    return '__pyx_vtable__' in cls.__dict__
+    return "__pyx_vtable__" in cls.__dict__
 
 
 def is_classmethod(fn):
@@ -186,7 +191,7 @@ def is_classmethod(fn):
     # This is True for bound methods
     if not inspect.ismethod(fn):
         return False
-    if not hasattr(fn, '__self__'):
+    if not hasattr(fn, "__self__"):
         return False
     im_self = fn.__self__
     # This is None for instance methods on classes, but True
@@ -198,9 +203,8 @@ def is_classmethod(fn):
 
 
 def wraps(
-        wrapped,
-        assigned=functools.WRAPPER_ASSIGNMENTS,
-        updated=functools.WRAPPER_UPDATES):
+    wrapped, assigned=functools.WRAPPER_ASSIGNMENTS, updated=functools.WRAPPER_UPDATES
+):
     """Cython-compatible functools.wraps implementation."""
     if not is_cython_function(wrapped):
         return functools.wraps(wrapped, assigned, updated)

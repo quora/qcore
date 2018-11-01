@@ -41,32 +41,33 @@ def trace(enter=False, exit=True):
     :return: decorated function.
 
     """
+
     def decorate(fn):
         @inspection.wraps(fn)
         def new_fn(*args, **kwargs):
-            name = fn.__module__ + '.' + fn.__name__
+            name = fn.__module__ + "." + fn.__name__
             if enter:
-                print('%s(args = %s, kwargs = %s) <-' % (name, repr(args), repr(kwargs)))
+                print(
+                    "%s(args = %s, kwargs = %s) <-" % (name, repr(args), repr(kwargs))
+                )
             try:
                 result = fn(*args, **kwargs)
                 if exit:
-                    print('%s(args = %s, kwargs = %s) -> %s' % (
-                        name,
-                        repr(args),
-                        repr(kwargs),
-                        repr(result),
-                    ))
+                    print(
+                        "%s(args = %s, kwargs = %s) -> %s"
+                        % (name, repr(args), repr(kwargs), repr(result))
+                    )
                 return result
             except Exception as e:
                 if exit:
-                    print('%s(args = %s, kwargs = %s) -> thrown %s' % (
-                        name,
-                        repr(args),
-                        repr(kwargs),
-                        str(e),
-                    ))
+                    print(
+                        "%s(args = %s, kwargs = %s) -> thrown %s"
+                        % (name, repr(args), repr(kwargs), str(e))
+                    )
                 raise
+
         return new_fn
+
     return decorate
 
 
@@ -87,7 +88,7 @@ class DebugCounter(object):
 
     def dump(self):
         self.last_dump_time = time.time()
-        print('debug: ' + str(self))
+        print("debug: " + str(self))
         return self
 
     def dump_if(self, predicate, and_break=False):
@@ -123,20 +124,20 @@ def counter(name):
 
 
 def breakpoint():
-    print('Breakpoint reached.')
+    print("Breakpoint reached.")
 
 
 def hang_me(timeout_secs=10000):
     """Used for debugging tests."""
-    print('Sleeping. Press Ctrl-C to continue...')
+    print("Sleeping. Press Ctrl-C to continue...")
     try:
         time.sleep(timeout_secs)
     except KeyboardInterrupt:
-        print('Done sleeping')
+        print("Done sleeping")
 
 
 def format_stack():
-    return ''.join(traceback.format_stack())
+    return "".join(traceback.format_stack())
 
 
 def get_bool_by_mask(source, prefix):

@@ -4,6 +4,7 @@ _CallableT = TypeVar("_CallableT", bound=Callable[..., Any])
 _SelfT = TypeVar("_SelfT", bound=DebugCounter)
 
 counters: Dict[str, DebugCounter]
+
 def trace(
     enter: bool = ..., exit: bool = ...
 ) -> Callable[[_CallableT], _CallableT]: ...

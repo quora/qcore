@@ -35,7 +35,7 @@ include:
 
 """
 
-__all__ = ['Anything', 'GreaterEq']
+__all__ = ["Anything", "GreaterEq"]
 
 
 # The unittest.py testing framework checks for this variable in a module to
@@ -51,7 +51,7 @@ import inspect
 try:
     import mock
 except ImportError:
-    TEST_PREFIX = 'test'
+    TEST_PREFIX = "test"
 else:
     TEST_PREFIX = mock.patch.TEST_PREFIX
 
@@ -69,10 +69,11 @@ class _Anything(object):
         return False
 
     def __repr__(self):
-        return '<Anything>'
+        return "<Anything>"
 
     def __hash__(self):
         return 0
+
 
 Anything = _Anything()
 
@@ -85,6 +86,7 @@ class GreaterEq(object):
     Useful if only equality asserts are supported or if we need to
     check inequality in a subfield as part of an assert_eq on an object that contains it.
     """
+
     def __init__(self, val):
         self.val = val
 
@@ -95,7 +97,7 @@ class GreaterEq(object):
         return not self.__eq__(other)
 
     def __repr__(self):
-        return '<GreaterEq({})>'.format(self.val)
+        return "<GreaterEq({})>".format(self.val)
 
 
 def disabled(func_or_class):
@@ -105,6 +107,7 @@ def disabled(func_or_class):
     teardown is executed.
 
     """
+
     def decorate_func(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -112,6 +115,7 @@ def disabled(func_or_class):
                 raise SkipTest
             else:
                 return None  # do nothing, the test will show up as passed
+
         return wrapper
 
     def decorate_class(class_):
@@ -123,7 +127,7 @@ def disabled(func_or_class):
     elif inspect.isclass(func_or_class):
         return decorate_class(func_or_class)
     else:
-        assert False, 'Must be used as a function or class decorator'
+        assert False, "Must be used as a function or class decorator"
 
 
 def decorate_all_test_methods(decorator):
@@ -137,7 +141,9 @@ def decorate_all_test_methods(decorator):
             if name.startswith(TEST_PREFIX):
                 setattr(cls, name, decorator(m))
         return cls
+
     return wrapper
+
 
 decorate_all_test_methods.__test__ = False
 
@@ -150,13 +156,16 @@ def decorate_func_or_method_or_class(decorator):
     test methods of the class.
 
     """
+
     def decorate(func_or_class):
         if inspect.isclass(func_or_class):
             return decorate_all_test_methods(decorator)(func_or_class)
         elif inspect.isfunction(func_or_class):
             return decorator(func_or_class)
         else:
-            assert False, 'Target of decorator must be function or class'
+            assert False, "Target of decorator must be function or class"
+
     return decorate
+
 
 decorate_func_or_method_or_class.__test__ = False

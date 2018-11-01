@@ -31,9 +31,9 @@ from .disallow_inheritance import DisallowInheritance
 empty_tuple = ()
 empty_list = []
 empty_dict = {}
-globals()['empty_tuple'] = empty_tuple
-globals()['empty_list'] = empty_list
-globals()['empty_dict'] = empty_dict
+globals()["empty_tuple"] = empty_tuple
+globals()["empty_list"] = empty_list
+globals()["empty_dict"] = empty_dict
 
 
 def true_fn():
@@ -49,36 +49,43 @@ class MarkerObject(object):
     Used mainly by caches to describe a cache miss.
 
     """
+
     def __init__(self, name):
         if isinstance(name, six.binary_type):
             if six.PY2:
-                warnings.warnpy3k('MarkerObject does not support bytes names in Python 3')
-                name = name.decode('utf-8')
+                warnings.warnpy3k(
+                    "MarkerObject does not support bytes names in Python 3"
+                )
+                name = name.decode("utf-8")
             else:
                 raise TypeError("name must be str, not bytes")
         self.name = name
 
     if six.PY2:
+
         def __str__(self):
-            return unicode(self).encode('utf-8')
+            return unicode(self).encode("utf-8")
 
         def __unicode__(self):
             return self.name
+
     else:
+
         def __str__(self):
             return self.name
 
     def __repr__(self):
         return self.name
 
-none = MarkerObject(u'none')
-miss = MarkerObject(u'miss')
-same = MarkerObject(u'same')
-unspecified = MarkerObject(u'unspecified')
-globals()['none'] = none
-globals()['miss'] = miss
-globals()['same'] = same
-globals()['unspecified'] = unspecified
+
+none = MarkerObject(u"none")
+miss = MarkerObject(u"miss")
+same = MarkerObject(u"same")
+unspecified = MarkerObject(u"unspecified")
+globals()["none"] = none
+globals()["miss"] = miss
+globals()["same"] = same
+globals()["unspecified"] = unspecified
 
 
 class EmptyContext(object):
@@ -89,10 +96,11 @@ class EmptyContext(object):
         pass
 
     def __repr__(self):
-        return 'qcore.empty_context'
+        return "qcore.empty_context"
+
 
 empty_context = EmptyContext()
-globals()['empty_context'] = empty_context
+globals()["empty_context"] = empty_context
 
 
 class CythonCachedHashWrapper(object):
@@ -118,42 +126,46 @@ class CythonCachedHashWrapper(object):
             return (
                 self() == other()
                 if isinstance(other, CachedHashWrapper)
-                else self() == other)
+                else self() == other
+            )
         elif op == 3:
             return not (
                 self() == other()
                 if isinstance(other, CachedHashWrapper)
-                else self() == other)
+                else self() == other
+            )
         else:
-            raise NotImplementedError('only == and != are supported')
+            raise NotImplementedError("only == and != are supported")
 
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self._value)
 
 
 CachedHashWrapper = CythonCachedHashWrapper
-globals()['CachedHashWrapper'] = CythonCachedHashWrapper
-if hasattr(CythonCachedHashWrapper, '__richcmp__'):
+globals()["CachedHashWrapper"] = CythonCachedHashWrapper
+if hasattr(CythonCachedHashWrapper, "__richcmp__"):
     # This isn't Cython, so we must add eq and ne to make it work w/o Cython
     class PythonCachedHashWrapper(CachedHashWrapper):
         def __eq__(self, other):
             return (
                 self._value == other._value
                 if isinstance(other, CachedHashWrapper)
-                else self._value == other)
+                else self._value == other
+            )
 
         def __ne__(self, other):
             return not (
                 self._value == other._value
                 if isinstance(other, CachedHashWrapper)
-                else self._value == other)
+                else self._value == other
+            )
 
         # needed in Python 3 because this class overrides __eq__
         def __hash__(self):
             return self._hash
 
     CachedHashWrapper = PythonCachedHashWrapper
-    globals()['CachedHashWrapper'] = PythonCachedHashWrapper
+    globals()["CachedHashWrapper"] = PythonCachedHashWrapper
 
 
 class ScopedValue(object):
@@ -178,10 +190,10 @@ class ScopedValue(object):
         return self._value
 
     def __str__(self):
-        return 'ScopedValue(%s)' % (self._value,)
+        return "ScopedValue(%s)" % (self._value,)
 
     def __repr__(self):
-        return 'ScopedValue(%r)' % (self._value,)
+        return "ScopedValue(%r)" % (self._value,)
 
 
 class _ScopedValueOverrideContext(object):
@@ -212,15 +224,16 @@ class _PropertyOverrideContext(object):
     def __exit__(self, exc_type, exc_value, tb):
         setattr(self._target, self._property_name, self._old_value)
 
+
 override = _PropertyOverrideContext
-globals()['override'] = override
+globals()["override"] = override
 
 
 def ellipsis(source, max_length):
     """Truncates a string to be at most max_length long."""
     if max_length == 0 or len(source) <= max_length:
         return source
-    return source[:max(0, max_length - 3)] + '...'
+    return source[: max(0, max_length - 3)] + "..."
 
 
 def safe_str(source, max_length=0):
@@ -254,7 +267,7 @@ def copy_public_attrs(source_obj, dest_obj):
 
     """
     for name, value in inspect.getmembers(source_obj):
-        if not any(name.startswith(x) for x in ['_', 'func', 'im']):
+        if not any(name.startswith(x) for x in ["_", "func", "im"]):
             setattr(dest_obj, name, value)
 
 
@@ -272,25 +285,25 @@ def object_from_string(name):
     """
     if six.PY3:
         if not isinstance(name, str):
-            raise TypeError('name must be str, not %r' % type(name))
+            raise TypeError("name must be str, not %r" % type(name))
     else:
         if isinstance(name, unicode):
-            name = name.encode('ascii')
+            name = name.encode("ascii")
         if not isinstance(name, (str, unicode)):
-            raise TypeError('name must be bytes or unicode, got %r' % type(name))
+            raise TypeError("name must be bytes or unicode, got %r" % type(name))
 
-    pos = name.rfind('.')
+    pos = name.rfind(".")
     if pos < 0:
-        raise ValueError('Invalid function or class name %s' % name)
+        raise ValueError("Invalid function or class name %s" % name)
     module_name = name[:pos]
-    func_name = name[pos + 1:]
+    func_name = name[pos + 1 :]
     try:
         mod = __import__(module_name, fromlist=[func_name], level=0)
     except ImportError:
         # Hail mary. if the from import doesn't work, then just import the top level module
         # and do getattr on it, one level at a time. This will handle cases where imports are
         # done like `from . import submodule as another_name`
-        parts = name.split('.')
+        parts = name.split(".")
         mod = __import__(parts[0], level=0)
         for i in range(1, len(parts)):
             mod = getattr(mod, parts[i])
@@ -310,8 +323,11 @@ def catchable_exceptions(exceptions):
     if isinstance(exceptions, type) and issubclass(exceptions, BaseException):
         return True
 
-    if (isinstance(exceptions, tuple) and exceptions and
-            all(issubclass(it, BaseException) for it in exceptions)):
+    if (
+        isinstance(exceptions, tuple)
+        and exceptions
+        and all(issubclass(it, BaseException) for it in exceptions)
+    ):
         return True
 
     return False

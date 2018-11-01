@@ -32,7 +32,7 @@ class OidObject(InspectableClass):
 
 
 class ObjectWithExcludedAttributes(InspectableClass):
-    _excluded_attributes = {'attr1'}
+    _excluded_attributes = {"attr1"}
 
     def __init__(self, attr1, attr2):
         self.attr1 = attr1
@@ -40,7 +40,7 @@ class ObjectWithExcludedAttributes(InspectableClass):
 
 
 class ObjectWithSlots(InspectableClass):
-    __slots__ = ('oid',)
+    __slots__ = ("oid",)
 
     def __init__(self, oid):
         self.oid = oid
@@ -53,16 +53,22 @@ class TestObjectWithDictComparison(object):
 
     def test_compare_objects(self):
         assert_eq(SimpleObjectWithDictComparison(), SimpleObjectWithDictComparison())
-        assert_eq(SimpleObjectWithDictComparison(foo='bar'),
-                  SimpleObjectWithDictComparison(foo='bar'))
         assert_eq(
-            SimpleObjectWithDictComparison(x=SimpleObjectWithDictComparison(y='z')),
-            SimpleObjectWithDictComparison(x=SimpleObjectWithDictComparison(y='z'))
+            SimpleObjectWithDictComparison(foo="bar"),
+            SimpleObjectWithDictComparison(foo="bar"),
+        )
+        assert_eq(
+            SimpleObjectWithDictComparison(x=SimpleObjectWithDictComparison(y="z")),
+            SimpleObjectWithDictComparison(x=SimpleObjectWithDictComparison(y="z")),
         )
 
         # not equal
-        assert_ne(SimpleObjectWithDictComparison(x=42), SimpleObjectWithDictComparison(x=43))
-        assert_ne(SimpleObjectWithDictComparison(), SimpleObjectWithDictComparison(foo='bar'))
+        assert_ne(
+            SimpleObjectWithDictComparison(x=42), SimpleObjectWithDictComparison(x=43)
+        )
+        assert_ne(
+            SimpleObjectWithDictComparison(), SimpleObjectWithDictComparison(foo="bar")
+        )
 
     def test_compare_to_non_object(self):
         empty_object = SimpleObjectWithDictComparison(oid=3)
@@ -82,33 +88,38 @@ class TestObjectWithDictComparison(object):
         assert not (empty_object == OldStyleClass())
 
     def test_repr_and_str(self):
-        self._check_repr_and_str('SimpleObjectWithDictComparison()',
-                                 SimpleObjectWithDictComparison())
-        self._check_repr_and_str("SimpleObjectWithDictComparison(foo='bar')",
-                                 SimpleObjectWithDictComparison(foo='bar'))
-        self._check_repr_and_str("SimpleObjectWithDictComparison(bar='baz', foo='bar')",
-                                 SimpleObjectWithDictComparison(foo='bar', bar='baz'))
-        self._check_repr_and_str('OidObject(oid=3)', OidObject(3))
+        self._check_repr_and_str(
+            "SimpleObjectWithDictComparison()", SimpleObjectWithDictComparison()
+        )
+        self._check_repr_and_str(
+            "SimpleObjectWithDictComparison(foo='bar')",
+            SimpleObjectWithDictComparison(foo="bar"),
+        )
+        self._check_repr_and_str(
+            "SimpleObjectWithDictComparison(bar='baz', foo='bar')",
+            SimpleObjectWithDictComparison(foo="bar", bar="baz"),
+        )
+        self._check_repr_and_str("OidObject(oid=3)", OidObject(3))
 
     def test_hash(self):
         d = {}
         obj1 = SimpleObjectWithDictComparison(oid=1)
-        d[obj1] = 'val1'
-        assert_eq('val1', d[obj1])
+        d[obj1] = "val1"
+        assert_eq("val1", d[obj1])
         # different but equal object also works
-        assert_eq('val1', d[SimpleObjectWithDictComparison(oid=1)])
+        assert_eq("val1", d[SimpleObjectWithDictComparison(oid=1)])
 
         obj2 = SimpleObjectWithDictComparison(oid=1)
-        d[obj2] = 'val2'
+        d[obj2] = "val2"
         assert_eq(1, len(d))
-        assert_eq('val2', d[obj1])
+        assert_eq("val2", d[obj1])
 
         # non-equal object
         obj3 = SimpleObjectWithDictComparison(oid=3)
-        d[obj3] = 'val3'
+        d[obj3] = "val3"
         assert_eq(2, len(d))
-        assert_eq('val2', d[obj1])
-        assert_eq('val3', d[obj3])
+        assert_eq("val2", d[obj1])
+        assert_eq("val3", d[obj3])
 
     def test_excluded_attributes(self):
         obj1 = ObjectWithExcludedAttributes(1, 1)
@@ -117,9 +128,9 @@ class TestObjectWithDictComparison(object):
         assert_eq(obj1, obj2)
         assert_ne(obj1, obj3)
         assert_ne(obj2, obj3)
-        self._check_repr_and_str('ObjectWithExcludedAttributes(attr2=1)', obj1)
-        self._check_repr_and_str('ObjectWithExcludedAttributes(attr2=1)', obj2)
-        self._check_repr_and_str('ObjectWithExcludedAttributes(attr2=2)', obj3)
+        self._check_repr_and_str("ObjectWithExcludedAttributes(attr2=1)", obj1)
+        self._check_repr_and_str("ObjectWithExcludedAttributes(attr2=1)", obj2)
+        self._check_repr_and_str("ObjectWithExcludedAttributes(attr2=2)", obj3)
 
     def test_slots(self):
         obj1 = ObjectWithSlots(1)
@@ -128,4 +139,4 @@ class TestObjectWithDictComparison(object):
         assert_eq(obj1, obj3)
         assert_eq(obj1, obj1)
         assert_ne(obj1, obj2)
-        self._check_repr_and_str('ObjectWithSlots(oid=1)', obj1)
+        self._check_repr_and_str("ObjectWithSlots(oid=1)", obj1)

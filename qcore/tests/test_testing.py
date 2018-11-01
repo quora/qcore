@@ -24,7 +24,6 @@ from qcore.testing import (
 )
 
 
-
 def test_Anything():
     assert_eq(Anything, None)
     assert_eq(Anything, [])
@@ -34,7 +33,7 @@ def test_Anything():
     assert not (Anything != [])
     assert not (None != Anything)
     assert not ([] != Anything)
-    assert_eq('<Anything>', repr(Anything))
+    assert_eq("<Anything>", repr(Anything))
 
 
 def test_GreaterEq():
@@ -46,7 +45,7 @@ def test_GreaterEq():
     with AssertRaises(AssertionError):
         assert_eq(GreaterEq(3), 2)
 
-    assert_eq('<GreaterEq(3)>', repr(GreaterEq(3)))
+    assert_eq("<GreaterEq(3)>", repr(GreaterEq(3)))
 
 
 def _check_disabled(fn):
@@ -97,9 +96,10 @@ def test_disabled():
 def normal_method(self):
     pass
 
+
 marker = object()
-test_method_name = TEST_PREFIX + '_method'
-test_member_name = TEST_PREFIX + '_member'
+test_method_name = TEST_PREFIX + "_method"
+test_member_name = TEST_PREFIX + "_member"
 
 
 def decorator(method):
@@ -116,7 +116,7 @@ def _get_decoratable_class():
     setattr(Cls, test_method_name, test_method)
     assert_eq(test_method.__get__(None, Cls), getattr(Cls, test_method_name))
 
-    setattr(Cls, test_member_name, 'not a method')
+    setattr(Cls, test_member_name, "not a method")
     return Cls
 
 
@@ -124,7 +124,7 @@ def _assert_is_decorated(new_cls, cls):
     assert_is(new_cls, cls)
     assert_eq(normal_method.__get__(None, new_cls), new_cls.normal_method)
     assert_is(marker, getattr(new_cls, test_method_name))
-    assert_eq('not a method', getattr(new_cls, test_member_name))
+    assert_eq("not a method", getattr(new_cls, test_member_name))
 
 
 def test_decorate_all_test_methods():

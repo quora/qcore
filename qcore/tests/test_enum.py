@@ -16,8 +16,13 @@ import json
 import pickle
 from qcore.enum import Enum, Flags, IntEnum, EnumValueGenerator
 from qcore.asserts import (
-    assert_eq, assert_is, assert_ne, assert_raises, assert_in, assert_not_in,
-    assert_is_instance
+    assert_eq,
+    assert_is,
+    assert_ne,
+    assert_raises,
+    assert_in,
+    assert_not_in,
+    assert_is_instance,
 )
 
 
@@ -50,7 +55,7 @@ def _assert_equality_both_directions(left, right, not_equal):
 def test_gender():
     assert_eq([2, 1], Gender._flag_values)
     assert_eq([Gender.undefined, Gender.male, Gender.female], Gender.get_members())
-    assert_eq(['undefined', 'male', 'female'], Gender.get_names())
+    assert_eq(["undefined", "male", "female"], Gender.get_names())
     assert_eq(3, len(Gender))
 
     _assert_equality_both_directions(0, Gender.undefined, 1)
@@ -58,46 +63,48 @@ def test_gender():
     _assert_equality_both_directions(2, Gender.female, 3)
 
     _assert_equality_both_directions(
-        Gender.undefined, Gender.parse('undefined'), Gender.male)
-    _assert_equality_both_directions(
-        Gender.male, Gender.parse('male'), Gender.female)
-    _assert_equality_both_directions(
-        Gender.female, Gender.parse('female'), Gender.male)
+        Gender.undefined, Gender.parse("undefined"), Gender.male
+    )
+    _assert_equality_both_directions(Gender.male, Gender.parse("male"), Gender.female)
+    _assert_equality_both_directions(Gender.female, Gender.parse("female"), Gender.male)
 
     _assert_equality_both_directions(
-        Gender.undefined, Gender.parse(Gender.undefined), Gender.male)
+        Gender.undefined, Gender.parse(Gender.undefined), Gender.male
+    )
     _assert_equality_both_directions(
-        Gender.male, Gender.parse(Gender.male), Gender.female)
+        Gender.male, Gender.parse(Gender.male), Gender.female
+    )
     _assert_equality_both_directions(
-        Gender.female, Gender.parse(Gender.female), Gender.male)
+        Gender.female, Gender.parse(Gender.female), Gender.male
+    )
 
-    assert_is(None, Gender.parse('na', None))
-    assert_raises(lambda: Gender.parse('na'), KeyError)
+    assert_is(None, Gender.parse("na", None))
+    assert_raises(lambda: Gender.parse("na"), KeyError)
     assert_raises(lambda: Gender.parse(SeparateEnum.undefined), KeyError)
-    assert_raises(lambda: Gender.parse(b'ni\xc3\xb1o'), KeyError)
-    assert_raises(lambda: Gender.parse(u'ni\xf1o'), KeyError)
-    assert_raises(lambda: Gender.parse(b'ni\xff\xffo'), KeyError)
-    assert_raises(lambda: Gender.parse(u'\xe4\xb8\xad\xe6\x96\x87'), KeyError)
+    assert_raises(lambda: Gender.parse(b"ni\xc3\xb1o"), KeyError)
+    assert_raises(lambda: Gender.parse(u"ni\xf1o"), KeyError)
+    assert_raises(lambda: Gender.parse(b"ni\xff\xffo"), KeyError)
+    assert_raises(lambda: Gender.parse(u"\xe4\xb8\xad\xe6\x96\x87"), KeyError)
 
-    assert_eq('undefined', Gender(0).short_name)
-    assert_eq('male', Gender(1).short_name)
-    assert_eq('female', Gender(2).short_name)
+    assert_eq("undefined", Gender(0).short_name)
+    assert_eq("male", Gender(1).short_name)
+    assert_eq("female", Gender(2).short_name)
 
-    assert_eq('Gender.female', Gender.female.long_name)
-    assert_eq('Female', Gender.female.title)
-    assert_eq('test_enum.Gender.female', Gender.female.full_name)
+    assert_eq("Gender.female", Gender.female.long_name)
+    assert_eq("Female", Gender.female.title)
+    assert_eq("test_enum.Gender.female", Gender.female.full_name)
 
-    assert_is(None, Gender.parse('', None))
+    assert_is(None, Gender.parse("", None))
     assert_is(None, Gender.parse(4, None))
-    assert_raises(lambda: Gender.parse(''), KeyError)
+    assert_raises(lambda: Gender.parse(""), KeyError)
     assert_raises(lambda: Gender.parse(4), KeyError)
-    assert_is(None, Gender('', None))
+    assert_is(None, Gender("", None))
     assert_is(None, Gender(4, None))
-    assert_raises(lambda: Gender(''), KeyError)
+    assert_raises(lambda: Gender(""), KeyError)
     assert_raises(lambda: Gender(4), KeyError)
 
-    assert_eq(str(Gender.male), 'male')
-    assert_eq(repr(Gender.male), 'Gender.male')
+    assert_eq(str(Gender.male), "male")
+    assert_eq(repr(Gender.male), "Gender.male")
 
 
 def test_property():
@@ -117,33 +124,25 @@ def test_create():
         assert_in(cls.male, cls)
 
         assert_eq(cls.male, cls.parse(1))
-        assert_eq(cls.male, cls.parse('male'))
+        assert_eq(cls.male, cls.parse("male"))
         assert_eq(cls.male, cls.parse(cls.male))
         assert_eq(cls.male, cls(1))
-        assert_eq(cls.male, cls('male'))
+        assert_eq(cls.male, cls("male"))
         assert_eq(cls.male, cls(cls.male))
 
     class ExactGender(Enum):
         male = Gender.male
         female = Gender.female
+
     test_exact_gender(ExactGender)
 
-    cls = Enum.create("ExactGender", [
-        Gender.male,
-        Gender.female,
-    ])
+    cls = Enum.create("ExactGender", [Gender.male, Gender.female])
     test_exact_gender(cls)
 
-    cls = Enum.create("ExactGender", {
-        "male": 1,
-        "female": 2,
-    })
+    cls = Enum.create("ExactGender", {"male": 1, "female": 2})
     test_exact_gender(cls)
 
-    cls = Enum.create("ExactGender", [
-        ("male", 1),
-        ("female", 2),
-    ])
+    cls = Enum.create("ExactGender", [("male", 1), ("female", 2)])
     test_exact_gender(cls)
 
 
@@ -166,50 +165,51 @@ def test_xyz():
     assert_eq([Xy.x, Xy.y, Xy.xy], Xy.get_members())
     assert_eq([Xyz.x, Xyz.y, Xyz.xy, Xyz.z], Xyz.get_members())
     assert_eq([Xyzna.na, Xyzna.x, Xyzna.y, Xyzna.xy, Xyzna.z], Xyzna.get_members())
-    assert_eq('[Xyzna.na, Xyzna.x, Xyzna.y, Xyzna.xy, Xyzna.z]',
-              str(Xyzna.get_members()))
+    assert_eq(
+        "[Xyzna.na, Xyzna.x, Xyzna.y, Xyzna.xy, Xyzna.z]", str(Xyzna.get_members())
+    )
 
-    assert_eq(0, Xyz.parse(''))
+    assert_eq(0, Xyz.parse(""))
     assert_eq(0, Xyz.parse(0))
-    assert_eq(0, Xyzna.parse('na'))
-    assert_is(None, Xyz.parse('na', None))
-    assert_eq(0, Xyz(''))
+    assert_eq(0, Xyzna.parse("na"))
+    assert_is(None, Xyz.parse("na", None))
+    assert_eq(0, Xyz(""))
     assert_eq(0, Xyz(0))
-    assert_eq(0, Xyzna('na'))
-    assert_is(None, Xyz('na', None))
+    assert_eq(0, Xyzna("na"))
+    assert_is(None, Xyz("na", None))
 
-    assert_raises(lambda: Xyz.parse('_'), KeyError)
-    assert_raises(lambda: Xyz.parse('x,_'), KeyError)
-    assert_raises(lambda: Xyz('_'), KeyError)
-    assert_raises(lambda: Xyz('x,_'), KeyError)
+    assert_raises(lambda: Xyz.parse("_"), KeyError)
+    assert_raises(lambda: Xyz.parse("x,_"), KeyError)
+    assert_raises(lambda: Xyz("_"), KeyError)
+    assert_raises(lambda: Xyz("x,_"), KeyError)
 
-    assert_eq(4, Xyz.parse('y'))
+    assert_eq(4, Xyz.parse("y"))
     assert_eq(4, Xyz.parse(4))
-    assert_eq(4, Xyz('y'))
+    assert_eq(4, Xyz("y"))
     assert_eq(4, Xyz(4))
 
-    assert_eq(5, Xyz.parse('xy'))
-    assert_eq(5, Xyz.parse('x,y'))
-    assert_eq(5, Xyz('xy'))
-    assert_eq(5, Xyz('x,y'))
+    assert_eq(5, Xyz.parse("xy"))
+    assert_eq(5, Xyz.parse("x,y"))
+    assert_eq(5, Xyz("xy"))
+    assert_eq(5, Xyz("x,y"))
 
     assert_is(None, Xyz.parse(100, None))
     assert_raises(lambda: Xyz.parse(100), KeyError)
     assert_is(None, Xyz(100, None))
     assert_raises(lambda: Xyz(100), KeyError)
 
-    assert_eq('x', Xyz(1).short_name)
-    assert_eq('y', Xyz(4).short_name)
-    assert_eq('xy', Xyz(5).short_name)
-    assert_eq('z,xy', Xyz(8 | 5).short_name)
-    assert_eq('', Xyz(0).short_name)
-    assert_eq('na', Xyzna(0).short_name)
+    assert_eq("x", Xyz(1).short_name)
+    assert_eq("y", Xyz(4).short_name)
+    assert_eq("xy", Xyz(5).short_name)
+    assert_eq("z,xy", Xyz(8 | 5).short_name)
+    assert_eq("", Xyz(0).short_name)
+    assert_eq("na", Xyzna(0).short_name)
 
-    assert_eq('z', str(Xyz.z))
-    assert_eq('Xyz.z', repr(Xyz.z))
-    assert_eq('xy', str(Xyz.xy))
-    assert_eq('Xyz.xy', repr(Xyz.xy))
-    assert_eq('z,x', str(Xyz.x | Xyz.z))
+    assert_eq("z", str(Xyz.z))
+    assert_eq("Xyz.z", repr(Xyz.z))
+    assert_eq("xy", str(Xyz.xy))
+    assert_eq("Xyz.xy", repr(Xyz.xy))
+    assert_eq("z,x", str(Xyz.x | Xyz.z))
     assert_eq("Xyz.parse('z,x')", repr(Xyz.x | Xyz.z))
 
 
@@ -242,8 +242,8 @@ def test_instances():
     assert_raises(lambda: Gender.parse(4), KeyError)
     assert_eq(hash(2), hash(Gender(2)))
 
-    assert_eq('xy', str(Xyz.xy))
-    assert_eq('Xyz.xy', repr(Xyz.xy))
+    assert_eq("xy", str(Xyz.xy))
+    assert_eq("Xyz.xy", repr(Xyz.xy))
 
     assert_eq(Xyz.xy, Xyz.x | Xyz.y)
     assert_eq(5, Xyz.x | Xyz.y)
@@ -275,9 +275,9 @@ def test_instances():
     assert_in(Xyzna.na, Xyzna.z)
     assert_in(Xyzna.na, Xyzna.na)
 
-    xyz1 = Xyz.parse('z,xy')
-    xyz2 = Xyz.parse('x,y,z')
-    xyz3 = Xyz.parse('xy,z')
+    xyz1 = Xyz.parse("z,xy")
+    xyz2 = Xyz.parse("x,y,z")
+    xyz3 = Xyz.parse("xy,z")
     xyz4 = Xyz.parse(8 | 5)
     assert isinstance(xyz1, Xyz)
     assert isinstance(xyz2, Xyz)
@@ -290,9 +290,9 @@ def test_instances():
     assert_is(None, Xyz.parse(100, None))
     assert_raises(lambda: Xyz.parse(100), KeyError)
 
-    na1 = Xyz.parse('')
-    na2 = Xyzna.parse('na')
-    na3 = Xyzna.parse('na')
+    na1 = Xyz.parse("")
+    na2 = Xyzna.parse("na")
+    na3 = Xyzna.parse("na")
     assert isinstance(na1, Xyz)
     assert isinstance(na2, Xyzna)
     assert isinstance(na3, Xyzna)
@@ -308,8 +308,8 @@ class Python(IntEnum):
 
 def test_intenum():
     assert_is_instance(Python.two, int)
-    assert_eq('Python.two', repr(Python.two))
-    assert_eq('2', json.dumps(Python.two))
+    assert_eq("Python.two", repr(Python.two))
+    assert_eq("2", json.dumps(Python.two))
     assert_in(Python.two, Python)
     assert_in(2, Python)
     assert_not_in(4, Python)
@@ -348,14 +348,14 @@ def test_long_enum():
     assert_is_instance(LongEnum.x, LongEnum)
 
 
-DynamicEnum = Enum.create('DynamicEnum', [Gender.male, Gender.female])
+DynamicEnum = Enum.create("DynamicEnum", [Gender.male, Gender.female])
 
 
 def test_pickling():
     assert_eq(Gender.female, pickle.loads(pickle.dumps(Gender.female)))
     assert_eq(DynamicEnum.male, pickle.loads(pickle.dumps(DynamicEnum.male)))
     # results of pickling Gender.male in Python 3 with protocol 0 and 2
-    proto0 = b'c__builtin__\ngetattr\np0\n(ctest_enum\nGender\np1\nVparse\np2\ntp3\nRp4\n(L1L\ntp5\nRp6\n.'
-    proto2 = b'\x80\x02c__builtin__\ngetattr\nq\x00ctest_enum\nGender\nq\x01X\x05\x00\x00\x00parseq\x02\x86q\x03Rq\x04K\x01\x85q\x05Rq\x06.'
+    proto0 = b"c__builtin__\ngetattr\np0\n(ctest_enum\nGender\np1\nVparse\np2\ntp3\nRp4\n(L1L\ntp5\nRp6\n."
+    proto2 = b"\x80\x02c__builtin__\ngetattr\nq\x00ctest_enum\nGender\nq\x01X\x05\x00\x00\x00parseq\x02\x86q\x03Rq\x04K\x01\x85q\x05Rq\x06."
     assert_eq(Gender.male, pickle.loads(proto0))
     assert_eq(Gender.male, pickle.loads(proto2))

@@ -36,10 +36,24 @@ include:
 """
 
 __all__ = [
-    'assert_is', 'assert_is_not', 'assert_is_instance', 'assert_eq', 'assert_dict_eq', 'assert_ne',
-    'assert_gt', 'assert_ge', 'assert_lt', 'assert_le', 'assert_in',
-    'assert_not_in', 'assert_in_with_tolerance', 'assert_is_substring', 'assert_is_not_substring',
-    'assert_unordered_list_eq', 'assert_raises', 'AssertRaises'
+    "assert_is",
+    "assert_is_not",
+    "assert_is_instance",
+    "assert_eq",
+    "assert_dict_eq",
+    "assert_ne",
+    "assert_gt",
+    "assert_ge",
+    "assert_lt",
+    "assert_le",
+    "assert_in",
+    "assert_not_in",
+    "assert_in_with_tolerance",
+    "assert_is_substring",
+    "assert_is_not_substring",
+    "assert_unordered_list_eq",
+    "assert_raises",
+    "AssertRaises",
 ]
 
 
@@ -62,24 +76,29 @@ def _assert_fail_message(message, expected, actual, comparison_str, extra):
     if message:
         return message
     if extra:
-        return '%r %s %r (%s)' % (expected, comparison_str, actual, extra)
-    return '%r %s %r' % (expected, comparison_str, actual)
+        return "%r %s %r (%s)" % (expected, comparison_str, actual, extra)
+    return "%r %s %r" % (expected, comparison_str, actual)
 
 
 def assert_is(expected, actual, message=None, extra=None):
     """Raises an AssertionError if expected is not actual."""
-    assert expected is actual, _assert_fail_message(message, expected, actual, 'is not', extra)
+    assert expected is actual, _assert_fail_message(
+        message, expected, actual, "is not", extra
+    )
 
 
 def assert_is_not(expected, actual, message=None, extra=None):
     """Raises an AssertionError if expected is actual."""
-    assert expected is not actual, _assert_fail_message(message, expected, actual, 'is', extra)
+    assert expected is not actual, _assert_fail_message(
+        message, expected, actual, "is", extra
+    )
 
 
 def assert_is_instance(value, types, message=None, extra=None):
     """Raises an AssertionError if value is not an instance of type(s)."""
-    assert isinstance(value, types), _assert_fail_message(message, value, types,
-                                                          'is not an instance of', extra)
+    assert isinstance(value, types), _assert_fail_message(
+        message, value, types, "is not an instance of", extra
+    )
 
 
 def assert_eq(expected, actual, message=None, tolerance=None, extra=None):
@@ -91,23 +110,30 @@ def assert_eq(expected, actual, message=None, tolerance=None, extra=None):
 
     """
     if tolerance is None:
-        assert expected == actual, _assert_fail_message(message, expected, actual, '!=', extra)
+        assert expected == actual, _assert_fail_message(
+            message, expected, actual, "!=", extra
+        )
     else:
-        assert isinstance(tolerance, _number_types), \
-            'tolerance parameter to assert_eq must be a number: %r' % tolerance
-        assert isinstance(expected, _number_types) and isinstance(actual, _number_types), \
-            'parameters must be numbers when tolerance is specified: %r, %r' % (expected, actual)
+        assert isinstance(tolerance, _number_types), (
+            "tolerance parameter to assert_eq must be a number: %r" % tolerance
+        )
+        assert isinstance(expected, _number_types) and isinstance(
+            actual, _number_types
+        ), (
+            "parameters must be numbers when tolerance is specified: %r, %r"
+            % (expected, actual)
+        )
 
         diff = abs(expected - actual)
-        assert diff <= tolerance, _assert_fail_message(message, expected, actual,
-                                                       'is more than %r away from' % tolerance,
-                                                       extra)
+        assert diff <= tolerance, _assert_fail_message(
+            message, expected, actual, "is more than %r away from" % tolerance, extra
+        )
 
 
 def _dict_path_string(path):
     if len(path) == 0:
-        return '(root)'
-    return '->'.join(map(repr, path))
+        return "(root)"
+    return "->".join(map(repr, path))
 
 
 def assert_dict_eq(expected, actual, number_tolerance=None, dict_path=[]):
@@ -118,33 +144,47 @@ def assert_dict_eq(expected, actual, number_tolerance=None, dict_path=[]):
     expected_keys = set(expected.keys())
     actual_keys = set(actual.keys())
     assert expected_keys <= actual_keys, "Actual dict at %s is missing keys: %r" % (
-            _dict_path_string(dict_path), expected_keys - actual_keys)
+        _dict_path_string(dict_path),
+        expected_keys - actual_keys,
+    )
     assert actual_keys <= expected_keys, "Actual dict at %s has extra keys: %r" % (
-            _dict_path_string(dict_path), actual_keys - expected_keys)
+        _dict_path_string(dict_path),
+        actual_keys - expected_keys,
+    )
 
     for k in expected_keys:
         key_path = dict_path + [k]
         assert_is_instance(
             actual[k],
             type(expected[k]),
-            extra="Types don't match for %s" % _dict_path_string(key_path)
+            extra="Types don't match for %s" % _dict_path_string(key_path),
         )
         assert_is_instance(
             expected[k],
             type(actual[k]),
-            extra="Types don't match for %s" % _dict_path_string(key_path)
+            extra="Types don't match for %s" % _dict_path_string(key_path),
         )
 
         if isinstance(actual[k], dict):
             assert_dict_eq(
-                expected[k], actual[k], number_tolerance=number_tolerance, dict_path=key_path)
+                expected[k],
+                actual[k],
+                number_tolerance=number_tolerance,
+                dict_path=key_path,
+            )
         elif isinstance(actual[k], _number_types):
-            assert_eq(expected[k], actual[k],
-                      extra="Value doesn't match for %s" % _dict_path_string(key_path),
-                      tolerance=number_tolerance)
+            assert_eq(
+                expected[k],
+                actual[k],
+                extra="Value doesn't match for %s" % _dict_path_string(key_path),
+                tolerance=number_tolerance,
+            )
         else:
-            assert_eq(expected[k], actual[k],
-                      extra="Value doesn't match for %s" % _dict_path_string(key_path))
+            assert_eq(
+                expected[k],
+                actual[k],
+                extra="Value doesn't match for %s" % _dict_path_string(key_path),
+            )
 
 
 def assert_ne(expected, actual, message=None, tolerance=None, extra=None):
@@ -156,42 +196,49 @@ def assert_ne(expected, actual, message=None, tolerance=None, extra=None):
 
     """
     if tolerance is None:
-        assert expected != actual, _assert_fail_message(message, expected, actual, '==', extra)
+        assert expected != actual, _assert_fail_message(
+            message, expected, actual, "==", extra
+        )
     else:
-        assert isinstance(tolerance, _number_types), \
-            'tolerance parameter to assert_eq must be a number: %r' % tolerance
-        assert isinstance(expected, _number_types) and isinstance(actual, _number_types), \
-            'parameters must be numbers when tolerance is specified: %r, %r' % (expected, actual)
+        assert isinstance(tolerance, _number_types), (
+            "tolerance parameter to assert_eq must be a number: %r" % tolerance
+        )
+        assert isinstance(expected, _number_types) and isinstance(
+            actual, _number_types
+        ), (
+            "parameters must be numbers when tolerance is specified: %r, %r"
+            % (expected, actual)
+        )
 
         diff = abs(expected - actual)
-        assert diff > tolerance, _assert_fail_message(message, expected, actual,
-                                                      'is less than %r away from' % tolerance,
-                                                      extra)
+        assert diff > tolerance, _assert_fail_message(
+            message, expected, actual, "is less than %r away from" % tolerance, extra
+        )
 
 
 def assert_gt(left, right, message=None, extra=None):
     """Raises an AssertionError if left_hand <= right_hand."""
-    assert left > right, _assert_fail_message(message, left, right, '<=', extra)
+    assert left > right, _assert_fail_message(message, left, right, "<=", extra)
 
 
 def assert_ge(left, right, message=None, extra=None):
     """Raises an AssertionError if left_hand < right_hand."""
-    assert left >= right, _assert_fail_message(message, left, right, '<', extra)
+    assert left >= right, _assert_fail_message(message, left, right, "<", extra)
 
 
 def assert_lt(left, right, message=None, extra=None):
     """Raises an AssertionError if left_hand >= right_hand."""
-    assert left < right, _assert_fail_message(message, left, right, '>=', extra)
+    assert left < right, _assert_fail_message(message, left, right, ">=", extra)
 
 
 def assert_le(left, right, message=None, extra=None):
     """Raises an AssertionError if left_hand > right_hand."""
-    assert left <= right, _assert_fail_message(message, left, right, '>', extra)
+    assert left <= right, _assert_fail_message(message, left, right, ">", extra)
 
 
 def assert_in(obj, seq, message=None, extra=None):
     """Raises an AssertionError if obj is not in seq."""
-    assert obj in seq, _assert_fail_message(message, obj, seq, 'is not in', extra)
+    assert obj in seq, _assert_fail_message(message, obj, seq, "is not in", extra)
 
 
 def assert_not_in(obj, seq, message=None, extra=None):
@@ -201,16 +248,16 @@ def assert_not_in(obj, seq, message=None, extra=None):
         index = seq.find(obj)
         start_index = index - 50
         if start_index > 0:
-            truncated = '(truncated) ...'
+            truncated = "(truncated) ..."
         else:
-            truncated = ''
+            truncated = ""
             start_index = 0
         end_index = index + len(obj) + 50
         truncated += seq[start_index:end_index]
         if end_index < len(seq):
-            truncated += '... (truncated)'
-        assert False, _assert_fail_message(message, obj, truncated, 'is in', extra)
-    assert obj not in seq, _assert_fail_message(message, obj, seq, 'is in', extra)
+            truncated += "... (truncated)"
+        assert False, _assert_fail_message(message, obj, truncated, "is in", extra)
+    assert obj not in seq, _assert_fail_message(message, obj, seq, "is in", extra)
 
 
 def assert_in_with_tolerance(obj, seq, tolerance, message=None, extra=None):
@@ -221,25 +268,25 @@ def assert_in_with_tolerance(obj, seq, tolerance, message=None, extra=None):
             return
         except AssertionError:
             pass
-    assert False, _assert_fail_message(message, obj, seq, 'is not in', extra)
+    assert False, _assert_fail_message(message, obj, seq, "is not in", extra)
 
 
 def assert_is_substring(substring, subject, message=None, extra=None):
     """Raises an AssertionError if substring is not a substring of subject."""
-    assert \
-        (subject is not None) and \
-        (substring is not None) and \
-        (subject.find(substring) != -1), \
-        _assert_fail_message(message, substring, subject, 'is not in', extra)
+    assert (
+        (subject is not None)
+        and (substring is not None)
+        and (subject.find(substring) != -1)
+    ), _assert_fail_message(message, substring, subject, "is not in", extra)
 
 
 def assert_is_not_substring(substring, subject, message=None, extra=None):
     """Raises an AssertionError if substring is a substring of subject."""
-    assert \
-        (subject is not None) and \
-        (substring is not None) and \
-        (subject.find(substring) == -1), \
-        _assert_fail_message(message, substring, subject, 'is in', extra)
+    assert (
+        (subject is not None)
+        and (substring is not None)
+        and (subject.find(substring) == -1)
+    ), _assert_fail_message(message, substring, subject, "is in", extra)
 
 
 def assert_unordered_list_eq(expected, actual, message=None):
@@ -260,8 +307,10 @@ def assert_unordered_list_eq(expected, actual, message=None):
 
     if missing_in_actual or missing_in_expected:
         if not message:
-            message = '%r not equal to %r; missing items: %r in expected, %r in actual.' % (
-                expected, actual, missing_in_expected, missing_in_actual)
+            message = (
+                "%r not equal to %r; missing items: %r in expected, %r in actual."
+                % (expected, actual, missing_in_expected, missing_in_actual)
+            )
         assert False, message
 
 
@@ -273,14 +322,16 @@ def assert_raises(fn, *expected_exception_types):
 
 class AssertRaises(object):
     """With-context that asserts that the code within the context raises the specified exception."""
+
     def __init__(self, *expected_exception_types, **kwargs):
         # when you don't specify the exception expected, it's easy to write buggy tests that appear
         # to pass but actually throw an exception different from the expected one
-        assert len(expected_exception_types) >= 1, \
-            'You must specify the exception type when using AssertRaises'
+        assert (
+            len(expected_exception_types) >= 1
+        ), "You must specify the exception type when using AssertRaises"
         self.expected_exception_types = set(expected_exception_types)
         self.expected_exception_found = None
-        self.extra = kwargs.pop('extra', None)
+        self.extra = kwargs.pop("extra", None)
         assert_eq({}, kwargs)
 
     def __enter__(self):
@@ -299,19 +350,19 @@ class AssertRaises(object):
                 self.expected_exception_found = exc_val
                 return True
 
-        expected = ', '.join(map(get_full_name, self.expected_exception_types))
+        expected = ", ".join(map(get_full_name, self.expected_exception_types))
 
         if exc_type is None:
             message = "No exception raised, but expected: %s" % expected
             if self.extra is not None:
-                message += ' (%s)' % self.extra
+                message += " (%s)" % self.extra
         else:
-            template = '{TYPE}: {VAL} is raised, but expected: {EXPECTED}{EXTRA_STR}\n\n{STACK}'
+            template = "{TYPE}: {VAL} is raised, but expected: {EXPECTED}{EXTRA_STR}\n\n{STACK}"
             message = template.format(
                 TYPE=get_full_name(exc_type),
                 VAL=exc_val,
                 EXPECTED=expected,
-                STACK=''.join(traceback.format_tb(exc_tb)),
-                EXTRA_STR=(' (%s)' % self.extra) if self.extra is not None else '',
+                STACK="".join(traceback.format_tb(exc_tb)),
+                EXTRA_STR=(" (%s)" % self.extra) if self.extra is not None else "",
             )
         raise AssertionError(message)

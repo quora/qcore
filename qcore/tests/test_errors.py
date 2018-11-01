@@ -21,7 +21,7 @@ from qcore.asserts import assert_in
 
 def test_errors():
     def f1():
-        assert 0, 'holy moly'
+        assert 0, "holy moly"
 
     def raise_later(e):
         errors.reraise(e)
@@ -32,15 +32,15 @@ def test_errors():
         except AssertionError as e:
             prepared_e = errors.prepare_for_reraise(e)
         else:
-            assert False, 'f1 should have raised AssertionError'
+            assert False, "f1 should have raised AssertionError"
         raise_later(prepared_e)
 
     try:
         f2()
     except AssertionError:
         formatted = traceback.format_tb(sys.exc_info()[2])
-        formatted_message = ''.join(formatted)
-        assert_in('holy moly', formatted_message)
-        assert_in('f1', formatted_message)
+        formatted_message = "".join(formatted)
+        assert_in("holy moly", formatted_message)
+        assert_in("f1", formatted_message)
     else:
-        assert False, 'f2 should have raised AssertionError'
+        assert False, "f2 should have raised AssertionError"

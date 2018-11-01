@@ -13,13 +13,14 @@
 # limitations under the License.
 
 from __future__ import unicode_literals
+
 __doc__ = """
 
 Enum implementation.
 
 """
 
-__all__ = ['Enum', 'EnumType', 'EnumValueGenerator', 'Flags', 'IntEnum']
+__all__ = ["Enum", "EnumType", "EnumValueGenerator", "Flags", "IntEnum"]
 
 import inspect
 import six
@@ -28,7 +29,7 @@ import sys
 from . import helpers
 from . import inspection
 
-_no_default = helpers.MarkerObject(u'no_default @ enums')
+_no_default = helpers.MarkerObject("no_default @ enums")
 
 
 class EnumType(type):
@@ -60,13 +61,14 @@ class EnumType(type):
         for k, v in list(inspect.getmembers(self)):
             # ensure that names are unicode, even in py2
             if isinstance(k, bytes):
-                k = k.decode('ascii')
+                k = k.decode("ascii")
             if isinstance(type(v), EnumType):
                 v = v.value  # For inherited members
             if isinstance(v, six.integer_types):
-                assert v not in value_to_member, \
-                    'Duplicate enum value: %s (class: %s).' % \
-                    (v, inspection.get_full_name(self))
+                assert v not in value_to_member, (
+                    "Duplicate enum value: %s (class: %s)."
+                    % (v, inspection.get_full_name(self))
+                )
                 member = self._make_value(v)
 
                 name_to_member[k] = member
@@ -114,17 +116,17 @@ class EnumBase(six.with_metaclass(EnumType)):
     @property
     def long_name(self):
         """Returns the enum member's name including the class name, like "MyEnum.foo"."""
-        return '%s.%s' % (self.__class__.__name__, self.short_name)
+        return "%s.%s" % (self.__class__.__name__, self.short_name)
 
     @property
     def title(self):
         """Returns the enum member's name in title case, like "FooBar" for MyEnum.foo_bar."""
-        return self.short_name.replace('_', ' ').title()
+        return self.short_name.replace("_", " ").title()
 
     @property
     def full_name(self):
         """Returns the enum meber's name including the module, like "mymodule.MyEnum.foo"."""
-        return '%s.%s' % (self.__class__.__module__, self.long_name)
+        return "%s.%s" % (self.__class__.__module__, self.long_name)
 
     def is_valid(self):
         raise NotImplementedError
@@ -152,13 +154,13 @@ class EnumBase(six.with_metaclass(EnumType)):
         if self.is_valid():
             return self.short_name
         else:
-            return '%s(%s)' % (self.__class__.__name__, self.value)
+            return "%s(%s)" % (self.__class__.__name__, self.value)
 
     def __repr__(self):
         if self.is_valid():
-            return self.__class__.__name__ + '.' + self.short_name
+            return self.__class__.__name__ + "." + self.short_name
         else:
-            return '%s(%s)' % (self.__class__.__name__, self.value)
+            return "%s(%s)" % (self.__class__.__name__, self.value)
 
     @classmethod
     def get_names(cls):
@@ -195,16 +197,17 @@ class EnumBase(six.with_metaclass(EnumType)):
                 setattr(NewEnum, member.short_name, member.value)
             else:
                 assert False, (
-                    "members must be either a dict, " +
-                    "a list of (name, value) tuples, " +
-                    "or a list of EnumBase instances.")
+                    "members must be either a dict, "
+                    + "a list of (name, value) tuples, "
+                    + "or a list of EnumBase instances."
+                )
 
         NewEnum.process()
 
         # needed for pickling to work (hopefully); taken from the namedtuple implementation in the
         # standard library
         try:
-            NewEnum.__module__ = sys._getframe(1).f_globals.get('__name__', '__main__')
+            NewEnum.__module__ = sys._getframe(1).f_globals.get("__name__", "__main__")
         except (AttributeError, ValueError):
             pass
 
@@ -218,6 +221,7 @@ class EnumBase(six.with_metaclass(EnumType)):
     # This is necessary for things to unpickle correctly from Python 3 to 2, but does not work in 3.3
     # and lower.
     if sys.version_info >= (3, 4):
+
         def __reduce_ex__(self, proto):
             return self.__class__, (self.value,)
 
@@ -289,8 +293,8 @@ class Flags(EnumBase):
             if 0 in self._value_to_name:
                 return self._value_to_name[0]
             else:
-                return ''
-        return ','.join(result)
+                return ""
+        return ",".join(result)
 
     @classmethod
     def parse(cls, value, default=_no_default):
@@ -324,7 +328,7 @@ class Flags(EnumBase):
                 e = cls._make_value(0)
             else:
                 r = 0
-                for k in value.split(','):
+                for k in value.split(","):
                     v = cls._name_to_member.get(k, _no_default)
                     if v is _no_default:
                         if default is _no_default:
@@ -357,12 +361,12 @@ class Flags(EnumBase):
     def __repr__(self):
         if self.is_valid():
             name = self.short_name
-            if ',' in name:
+            if "," in name:
                 return "%s.parse('%s')" % (self.__class__.__name__, self.short_name)
             else:
-                return self.__class__.__name__ + '.' + self.short_name
+                return self.__class__.__name__ + "." + self.short_name
         else:
-            return '%s(%s)' % (self.__class__.__name__, self.value)
+            return "%s(%s)" % (self.__class__.__name__, self.value)
 
 
 class IntEnum(int, Enum):
@@ -393,6 +397,6 @@ class EnumValueGenerator(object):
 
 # Private part
 
+
 def _create_invalid_value_error(cls, value):
-    return KeyError(
-        "Invalid %s value: %r" % (inspection.get_full_name(cls), value))
+    return KeyError("Invalid %s value: %r" % (inspection.get_full_name(cls), value))

@@ -41,6 +41,7 @@ def deprecated(replacement_description: str) -> Callable[[_CallableT], _Callable
 
 _InputT = TypeVar("_InputT")
 _OutputT = TypeVar("_OutputT")
+
 def convert_result(
     converter: Callable[[_InputT], _OutputT]
 ) -> Callable[[Callable[..., _InputT]], Callable[..., _OutputT]]: ...

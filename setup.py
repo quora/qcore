@@ -20,54 +20,58 @@ import glob
 import os.path
 
 
-CYTHON_MODULES = ['helpers', 'microtime', 'events', 'decorators', 'caching', 'inspection']
-
-
-DATA_FILES = (
-    ['py.typed'] +
-    ['%s.pxd' % module for module in CYTHON_MODULES] +
-    [os.path.relpath(f, 'qcore/') for f in glob.glob('qcore/*.pyi')]
-)
-
-
-VERSION = '0.5.1'
-
-
-EXTENSIONS = [
-    Extension(
-        'qcore.%s' % module,
-        ['qcore/%s.py' % module]
-    ) for module in CYTHON_MODULES
+CYTHON_MODULES = [
+    "helpers",
+    "microtime",
+    "events",
+    "decorators",
+    "caching",
+    "inspection",
 ]
 
 
-if __name__ == '__main__':
-    with codecs.open('./README.rst', encoding='utf-8') as f:
+DATA_FILES = (
+    ["py.typed"]
+    + ["%s.pxd" % module for module in CYTHON_MODULES]
+    + [os.path.relpath(f, "qcore/") for f in glob.glob("qcore/*.pyi")]
+)
+
+
+VERSION = "0.5.1"
+
+
+EXTENSIONS = [
+    Extension("qcore.%s" % module, ["qcore/%s.py" % module])
+    for module in CYTHON_MODULES
+]
+
+
+if __name__ == "__main__":
+    with codecs.open("./README.rst", encoding="utf-8") as f:
         long_description = f.read()
 
     setup(
-        name='qcore',
+        name="qcore",
         version=VERSION,
-        author='Quora, Inc.',
-        author_email='asynq@quora.com',
-        description='Quora\'s core utility library',
+        author="Quora, Inc.",
+        author_email="asynq@quora.com",
+        description="Quora's core utility library",
         long_description=long_description,
-        url='https://github.com/quora/qcore',
-        license='Apache Software License',
+        url="https://github.com/quora/qcore",
+        license="Apache Software License",
         classifiers=[
-            'License :: OSI Approved :: Apache Software License',
-
-            'Programming Language :: Python',
-            'Programming Language :: Python :: 2.7',
-            'Programming Language :: Python :: 3.4',
-            'Programming Language :: Python :: 3.5',
-            'Programming Language :: Python :: 3.6',
-            'Programming Language :: Python :: 3.7',
+            "License :: OSI Approved :: Apache Software License",
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 2.7",
+            "Programming Language :: Python :: 3.4",
+            "Programming Language :: Python :: 3.5",
+            "Programming Language :: Python :: 3.6",
+            "Programming Language :: Python :: 3.7",
         ],
-        keywords='quora core common utility',
+        keywords="quora core common utility",
         packages=find_packages(),
-        package_data={'qcore': DATA_FILES},
+        package_data={"qcore": DATA_FILES},
         ext_modules=EXTENSIONS,
-        setup_requires=['Cython'],
-        install_requires=['Cython', 'inspect2', 'setuptools', 'six'],
+        setup_requires=["Cython"],
+        install_requires=["Cython", "inspect2", "setuptools", "six"],
     )

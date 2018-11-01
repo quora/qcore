@@ -19,8 +19,13 @@ from .helpers import *
 from .enum import *
 from .microtime import *
 from . import events
-from .events import EventHook, EventHub, EnumBasedEventHub, \
-    EventInterceptor, sinking_event_hook
+from .events import (
+    EventHook,
+    EventHub,
+    EnumBasedEventHub,
+    EventInterceptor,
+    sinking_event_hook,
+)
 from .decorators import *
 from .caching import *
 from . import debug

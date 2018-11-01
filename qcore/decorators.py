@@ -19,13 +19,13 @@ Base classes and helpers for decorators.
 """
 
 __all__ = [
-    'DecoratorBinder',
-    'DecoratorBase',
-    'decorate',
-    'deprecated',
-    'convert_result',
-    'retry',
-    'decorator_of_context_manager',
+    "DecoratorBinder",
+    "DecoratorBase",
+    "decorate",
+    "deprecated",
+    "convert_result",
+    "retry",
+    "decorator_of_context_manager",
 ]
 
 # make sure qcore is still importable if this module has not been compiled with Cython and Cython
@@ -63,9 +63,9 @@ class DecoratorBinder(object):
 
     def __str__(self):
         if self.instance is None:
-            return '<%s unbound>' % str(self.decorator)
+            return "<%s unbound>" % str(self.decorator)
         else:
-            return '<%s bound to %s>' % (str(self.decorator), str(self.instance))
+            return "<%s bound to %s>" % (str(self.decorator), str(self.instance))
 
     def __repr__(self):
         return self.__str__()
@@ -75,11 +75,15 @@ class DecoratorBinder(object):
     # supports overriding __richcmp__, not __eq__ (https://github.com/cython/cython/issues/690),
     # but if __eq__ is defined it throws an error.
     if compiled:
+
         def __richcmp__(self, other, op):
             """Compare objects for equality (so we can run tests that do an equality check)."""
-            if op in (2, 3): # ==, !=
-                if self.__class__ is other.__class__ and self.decorator == other.decorator and \
-                        self.instance == other.instance:
+            if op in (2, 3):  # ==, !=
+                if (
+                    self.__class__ is other.__class__
+                    and self.decorator == other.decorator
+                    and self.instance == other.instance
+                ):
                     equal = True
                 else:
                     equal = False
@@ -92,9 +96,14 @@ class DecoratorBinder(object):
 
 
 if not compiled:
+
     def __eq__(self, other):
-        return self.__class__ is other.__class__ and self.decorator == other.decorator and \
-            self.instance == other.instance
+        return (
+            self.__class__ is other.__class__
+            and self.decorator == other.decorator
+            and self.instance == other.instance
+        )
+
     DecoratorBinder.__eq__ = __eq__
     del __eq__
 
@@ -103,10 +112,10 @@ class DecoratorBase(object):
     binder_cls = DecoratorBinder
 
     def __init__(self, fn):
-        if hasattr(fn, '__func__'):  # Class method, static method
+        if hasattr(fn, "__func__"):  # Class method, static method
             self.type = type(fn)
             fn = fn.__func__
-        elif hasattr(fn, 'is_decorator'):  # Decorator
+        elif hasattr(fn, "is_decorator"):  # Decorator
             self.type = fn.type
         else:
             self.type = None
@@ -131,7 +140,7 @@ class DecoratorBase(object):
         return self.binder_cls(self, cls if self.type is classmethod else owner)
 
     def __str__(self):
-        return self.name() + ' ' + inspection.get_full_name(self.fn)
+        return self.name() + " " + inspection.get_full_name(self.fn)
 
     def __repr__(self):
         return self.__str__()
@@ -140,7 +149,7 @@ class DecoratorBase(object):
         # For pickling. We assume that the decorated function is available in its module's global
         # scope. Alternatively, we could supply type(self) and the decorator class's __init__
         # arguments, but that runs into "it's not the same object" errors from Pickle.
-        return (_reduce_impl, (self.__module__, self.__name__,))
+        return (_reduce_impl, (self.__module__, self.__name__))
 
 
 # We use wrappers of Cython extension classes here to enable
@@ -154,11 +163,12 @@ def decorate(decorator_cls, *args, **kwargs):
 
     wrapper_cls = _wrappers.get(decorator_cls, None)
     if wrapper_cls is None:
+
         class PythonWrapper(decorator_cls):
             pass
 
         wrapper_cls = PythonWrapper
-        wrapper_cls.__name__ = decorator_cls.__name__ + 'PythonWrapper'
+        wrapper_cls.__name__ = decorator_cls.__name__ + "PythonWrapper"
         _wrappers[decorator_cls] = wrapper_cls
 
     def decorator(fn):
@@ -176,28 +186,33 @@ def deprecated(replacement_description):
     :return: the original method with modified docstring.
 
     """
+
     def decorate(fn_or_class):
         if isinstance(fn_or_class, type):
             pass  # Can't change __doc__ of type objects
         else:
             try:
-                fn_or_class.__doc__ = 'This API point is obsolete. %s\n\n%s' % (
+                fn_or_class.__doc__ = "This API point is obsolete. %s\n\n%s" % (
                     replacement_description,
                     fn_or_class.__doc__,
                 )
             except AttributeError:
                 pass  # For Cython method descriptors, etc.
         return fn_or_class
+
     return decorate
 
 
 def convert_result(converter):
     """Decorator that can convert the result of a function call."""
+
     def decorate(fn):
         @inspection.wraps(fn)
         def new_fn(*args, **kwargs):
             return converter(fn(*args, **kwargs))
+
         return new_fn
+
     return decorate
 
 
@@ -255,6 +270,7 @@ def retry(exception_cls, max_tries=10, sleep=0.05):
             retry_generator_fun.fn = fn
             retry_generator_fun.__reduce__ = lambda: fn.__name__
             return retry_generator_fun
+
     return outer
 
 
@@ -268,17 +284,20 @@ def decorator_of_context_manager(ctxt):
     :return: Wrapper around the original function.
 
     """
+
     def decorator_fn(*outer_args, **outer_kwargs):
         def decorator(fn):
             @functools.wraps(fn)
             def wrapper(*args, **kwargs):
                 with ctxt(*outer_args, **outer_kwargs):
                     return fn(*args, **kwargs)
+
             return wrapper
+
         return decorator
 
-    if getattr(ctxt, '__doc__', None) is None:
-        msg = 'Decorator that runs the inner function in the context of %s'
+    if getattr(ctxt, "__doc__", None) is None:
+        msg = "Decorator that runs the inner function in the context of %s"
         decorator_fn.__doc__ = msg % ctxt
     else:
         decorator_fn.__doc__ = ctxt.__doc__
@@ -286,11 +305,11 @@ def decorator_of_context_manager(ctxt):
 
 
 def _update_wrapper(wrapper, wrapped):
-    if hasattr(wrapped, '__module__'):
+    if hasattr(wrapped, "__module__"):
         wrapper.__module__ = wrapped.__module__
-    if hasattr(wrapped, '__name__'):
+    if hasattr(wrapped, "__name__"):
         wrapper.__name__ = wrapped.__name__
-    if hasattr(wrapped, '__doc__'):
+    if hasattr(wrapped, "__doc__"):
         wrapper.__doc__ = wrapped.__doc__
 
 
@@ -300,4 +319,5 @@ def _reduce_impl(module, name):
         return getattr(module, name)
     except (KeyError, AttributeError):
         raise TypeError(
-            'Cannot pickle decorated function %s.%s, failed to find it' % (module, name))
+            "Cannot pickle decorated function %s.%s, failed to find it" % (module, name)
+        )
