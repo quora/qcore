@@ -13,17 +13,12 @@ from typing import (
 )
 
 _Numeric = Union[int, float, complex]
+
 def assert_is(
-    expected: Any,
-    actual: Any,
-    message: Optional[str] = ...,
-    extra: Optional[str] = ...,
+    expected: Any, actual: Any, message: Optional[str] = ..., extra: Optional[str] = ...
 ) -> None: ...
 def assert_is_not(
-    expected: Any,
-    actual: Any,
-    message: Optional[str] = ...,
-    extra: Optional[str] = ...,
+    expected: Any, actual: Any, message: Optional[str] = ..., extra: Optional[str] = ...
 ) -> None: ...
 def assert_is_instance(
     value: Any,
@@ -52,28 +47,16 @@ def assert_ne(
     extra: Optional[str] = ...,
 ) -> None: ...
 def assert_gt(
-    expected: Any,
-    actual: Any,
-    message: Optional[str] = ...,
-    extra: Optional[str] = ...,
+    expected: Any, actual: Any, message: Optional[str] = ..., extra: Optional[str] = ...
 ) -> None: ...
 def assert_ge(
-    expected: Any,
-    actual: Any,
-    message: Optional[str] = ...,
-    extra: Optional[str] = ...,
+    expected: Any, actual: Any, message: Optional[str] = ..., extra: Optional[str] = ...
 ) -> None: ...
 def assert_lt(
-    expected: Any,
-    actual: Any,
-    message: Optional[str] = ...,
-    extra: Optional[str] = ...,
+    expected: Any, actual: Any, message: Optional[str] = ..., extra: Optional[str] = ...
 ) -> None: ...
 def assert_le(
-    expected: Any,
-    actual: Any,
-    message: Optional[str] = ...,
-    extra: Optional[str] = ...,
+    expected: Any, actual: Any, message: Optional[str] = ..., extra: Optional[str] = ...
 ) -> None: ...
 def assert_in(
     expected: Any,

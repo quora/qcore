@@ -38,6 +38,7 @@ class EventHook(object):
                              # the first thrown exception (if any)
 
     """
+
     def __init__(self, handlers=None):
         """Constructor."""
         self.handlers = handlers if handlers is not None else []
@@ -111,7 +112,7 @@ class EventHook(object):
 
     def __str__(self):
         """Gets the string representation of this object."""
-        return 'EventHook' + repr(tuple(self.handlers))
+        return "EventHook" + repr(tuple(self.handlers))
 
     def __repr__(self):
         """Gets the ``repr`` representation of this object."""
@@ -125,6 +126,7 @@ class SinkingEventHook(EventHook):
     classes, since they never raise their events.
 
     """
+
     def subscribe(self, handler):
         """Does nothing."""
         return self
@@ -155,10 +157,11 @@ class SinkingEventHook(EventHook):
 
     def __str__(self):
         """Gets the string representation of this object."""
-        return 'SinkingEventHook()'
+        return "SinkingEventHook()"
+
 
 sinking_event_hook = SinkingEventHook()
-globals()['sinking_event_hook'] = sinking_event_hook
+globals()["sinking_event_hook"] = sinking_event_hook
 
 
 class EventInterceptor(object):
@@ -166,6 +169,7 @@ class EventInterceptor(object):
     a set of events on an object exposing a set of event hooks.
 
     """
+
     def __init__(self, source, **events):
         """
         Constructor.
@@ -200,6 +204,7 @@ class EventHub(object):
     access attempt).
 
     """
+
     def __init__(self, source=None):
         """Constructor.
 
@@ -289,7 +294,7 @@ class EventHub(object):
         trimmed when key is passed to self.get_or_create.
 
         """
-        if key.startswith('on_'):
+        if key.startswith("on_"):
             return self.get_or_create(key[3:])
         else:
             raise AttributeError(key)
@@ -320,7 +325,7 @@ class EventHub(object):
 
     def __repr__(self):
         """Gets the ``repr`` representation of this object."""
-        return '%s(%r)' % (self.__class__.__name__, self.__dict__)
+        return "%s(%r)" % (self.__class__.__name__, self.__dict__)
 
     # Needed bcz of a six bug: https://github.com/benjaminp/six/issues/252
     @classmethod
@@ -334,22 +339,24 @@ class EnumBasedEventHubType(type):
     Asserts that all enum members are defined in class and vice versa.
 
     """
+
     def __init__(cls, what, bases=None, dict=None):
         super(EnumBasedEventHubType, cls).__init__(what, bases, dict)
-        if cls.__name__ == 'NewBase' and cls.__module__ == 'six' and not dict:
+        if cls.__name__ == "NewBase" and cls.__module__ == "six" and not dict:
             # some versions of six generate an intermediate class that is created without a
             # __based_on__
             return
-        assert dict is not None and '__based_on__' in dict, (
-            '__based_on__ = [EnumA, EnumB] class member ' +
-            'must be used to subclass EnumBasedEventHub')
+        assert dict is not None and "__based_on__" in dict, (
+            "__based_on__ = [EnumA, EnumB] class member "
+            + "must be used to subclass EnumBasedEventHub"
+        )
         based_on = cls.__based_on__
         if isinstance(based_on, EnumType):
             based_on = [based_on]
 
         cls_member_names = set()
         for k, v in inspect.getmembers(cls):
-            if not k.startswith('on_'):
+            if not k.startswith("on_"):
                 continue
             if not isinstance(v, EventHook):
                 continue
@@ -359,24 +366,26 @@ class EnumBasedEventHubType(type):
         for enum_type in based_on:
             for member in enum_type.get_members():
                 name = member.short_name
-                assert name not in enum_members, \
-                    'Two enum members share the same name: %r and %r ' % \
-                    (member, enum_members[name])
+                assert name not in enum_members, (
+                    "Two enum members share the same name: %r and %r "
+                    % (member, enum_members[name])
+                )
                 enum_members[name] = member
         enum_member_names = set(enum_members.keys())
 
         for name in enum_member_names:
             assert name in cls_member_names, (
-                "Member %r is declared in one of enums, " +
-                "but %r is not declared in class.") % (name, 'on_' + name)
+                "Member %r is declared in one of enums, "
+                + "but %r is not declared in class."
+            ) % (name, "on_" + name)
         for name in cls_member_names:
             assert name in enum_member_names, (
-                "Member %r is declared in class, " +
-                "but %r is not declared in any of enum(s).") % (
-                'on_' + name, name)
+                "Member %r is declared in class, "
+                + "but %r is not declared in any of enum(s)."
+            ) % ("on_" + name, name)
             # Members are removed from class, since EventHub anyway creates
             # similar instance members
-            delattr(cls, 'on_' + name)
+            delattr(cls, "on_" + name)
 
     # Needed bcz of a six bug: https://github.com/benjaminp/six/issues/252
     @classmethod

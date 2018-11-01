@@ -26,12 +26,13 @@ class InspectableClass(object):
     hashing.
 
     """
+
     _excluded_attributes = set()  # these are not used in equality checking and repr
 
     def _filtered_dict(self):
         excluded = self._excluded_attributes
         typ = type(self)
-        if hasattr(typ, '__slots__'):
+        if hasattr(typ, "__slots__"):
             items = ((slot, getattr(self, slot)) for slot in typ.__slots__)
         else:
             items = self.__dict__.items()
@@ -40,12 +41,9 @@ class InspectableClass(object):
         return sorted(items, key=lambda pair: pair[0])
 
     def __repr__(self):
-        return '%s(%s)' % (
+        return "%s(%s)" % (
             self.__class__.__name__,
-            ', '.join(
-                '%s=%r' % pair
-                for pair in self._filtered_dict()
-            )
+            ", ".join("%s=%r" % pair for pair in self._filtered_dict()),
         )
 
     def __str__(self):

@@ -13,8 +13,14 @@
 # limitations under the License.
 
 from qcore import (
-    convert_result, decorate, decorator_of_context_manager, DecoratorBase,
-    deprecated, retry, get_original_fn, DecoratorBinder
+    convert_result,
+    decorate,
+    decorator_of_context_manager,
+    DecoratorBase,
+    deprecated,
+    retry,
+    get_original_fn,
+    DecoratorBinder,
 )
 from qcore.asserts import assert_eq, assert_is, assert_in, assert_ne, AssertRaises
 import inspect
@@ -26,22 +32,22 @@ except ImportError:
     from unittest import mock
 
 
-@deprecated('Deprecated.')
+@deprecated("Deprecated.")
 def deprecated_fn():
     pass
 
 
-@deprecated('Deprecated.')
+@deprecated("Deprecated.")
 class DeprecatedClass(object):
     pass
 
 
 def test_deprecated():
     fn = deprecated_fn
-    fn.__doc__.startswith('Deprecated')
+    fn.__doc__.startswith("Deprecated")
 
     # should not fail
-    deprecated('Deprecated.')(3)
+    deprecated("Deprecated.")(3)
 
 
 def test_convert_result():
@@ -149,7 +155,10 @@ class TestRetry(object):
         any_expected_exception_type = AnyException
         any_other_expected_exception_type = AnyOtherException
 
-        expected_exceptions = (any_expected_exception_type, any_other_expected_exception_type)
+        expected_exceptions = (
+            any_expected_exception_type,
+            any_other_expected_exception_type,
+        )
 
         for method in (self.create_any_function, self.create_generator_function):
             any_function, fn_body = method(expected_exceptions, max_tries)
@@ -174,8 +183,9 @@ class TestRetry(object):
 
         decorated = retry(Exception)(fn)
 
-        assert_eq(inspect.getargspec(fn),
-                  inspect.getargspec(get_original_fn(decorated)))
+        assert_eq(
+            inspect.getargspec(fn), inspect.getargspec(get_original_fn(decorated))
+        )
 
 
 def test_decorator_of_context_manager():
@@ -183,26 +193,27 @@ def test_decorator_of_context_manager():
 
     class Context(object):
         "Dummy context"
+
         def __init__(self, key):
             self.key = key
 
         def __enter__(self):
-            data.append('enter %s' % self.key)
+            data.append("enter %s" % self.key)
 
         def __exit__(self, *args):
-            data.append('exit %s' % self.key)
+            data.append("exit %s" % self.key)
 
     decorator = decorator_of_context_manager(Context)
 
-    @decorator('maras')
+    @decorator("maras")
     def decorated():
-        data.append('inside maras')
+        data.append("inside maras")
 
-    assert_eq('Dummy context', decorator.__doc__)
+    assert_eq("Dummy context", decorator.__doc__)
 
     decorated()
 
-    assert_eq(['enter maras', 'inside maras', 'exit maras'], data)
+    assert_eq(["enter maras", "inside maras", "exit maras"], data)
 
     class NoDocString(object):
         def __enter__(self):
@@ -211,16 +222,17 @@ def test_decorator_of_context_manager():
         def __exit__(self, *args):
             pass
 
-
     assert_eq(
-        "Decorator that runs the inner function in the context of {}".format(NoDocString),
-        decorator_of_context_manager(NoDocString).__doc__
+        "Decorator that runs the inner function in the context of {}".format(
+            NoDocString
+        ),
+        decorator_of_context_manager(NoDocString).__doc__,
     )
 
 
 class UselessDecorator(DecoratorBase):
     def name(self):
-        return 'UselessDecorator'
+        return "UselessDecorator"
 
 
 def useless_decorator(fn):
@@ -234,7 +246,7 @@ def decorated_fn():
 
 def test_decorated_fn_name():
     # test that the decorator preserves the __module__
-    assert_in('test_decorators', decorated_fn.__module__)
+    assert_in("test_decorators", decorated_fn.__module__)
 
 
 class CacheDecoratorBinder(DecoratorBinder):
@@ -253,7 +265,7 @@ class CacheDecorator(DecoratorBase):
         self._cache = {}
 
     def name(self):
-        return '@cached'
+        return "@cached"
 
     def dirty(self, *args):
         try:
@@ -268,6 +280,7 @@ class CacheDecorator(DecoratorBase):
             value = self.fn(*args)
             self._cache[args] = value
             return value
+
 
 cached = decorate(CacheDecorator)
 
@@ -311,7 +324,7 @@ class CachedMethods(object):
         return a + b + i
 
     def __str__(self):
-        return 'CachedMethods()'
+        return "CachedMethods()"
 
     def __repr__(self):
         return str(self)
@@ -335,7 +348,7 @@ class TestDecorators(object):
         for method in methods:
             i = 0
             assert method.is_decorator()
-            assert_eq('@cached', method.name())
+            assert_eq("@cached", method.name())
             assert_eq(3, method(1, 1))
             assert_eq(3, method(1, 1))
             method.dirty(2, 1)
@@ -354,13 +367,18 @@ class TestDecorators(object):
 
     def test_decorator_str_and_repr(self):
         cases = [
-            (f, '@cached test_decorators.f'),
-            (CachedMethods().f, '<@cached test_decorators.f bound to CachedMethods()>'),
-            (CachedMethods.f, '<@cached test_decorators.f unbound>'),
-            (CachedMethods.cached_classmethod,
-             "<@cached test_decorators.cached_classmethod bound to <class "
-             "'test_decorators.CachedMethods'>>"),
-            (CachedMethods.cached_staticmethod, '@cached test_decorators.cached_staticmethod'),
+            (f, "@cached test_decorators.f"),
+            (CachedMethods().f, "<@cached test_decorators.f bound to CachedMethods()>"),
+            (CachedMethods.f, "<@cached test_decorators.f unbound>"),
+            (
+                CachedMethods.cached_classmethod,
+                "<@cached test_decorators.cached_classmethod bound to <class "
+                "'test_decorators.CachedMethods'>>",
+            ),
+            (
+                CachedMethods.cached_staticmethod,
+                "@cached test_decorators.cached_staticmethod",
+            ),
         ]
         for method, expected in cases:
             assert_eq(expected, str(method))

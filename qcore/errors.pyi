@@ -10,6 +10,7 @@ class PermissionError(SecurityError): ...
 class TimeoutError(RuntimeError): ...
 
 _ExceptionT = TypeVar("_ExceptionT", bound=BaseException)
+
 def prepare_for_reraise(
     error: _ExceptionT,
     exc_info: Optional[Tuple[Type[BaseException], BaseException, TracebackType]] = ...,

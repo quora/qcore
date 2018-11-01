@@ -21,23 +21,23 @@ Assume that time is represented as an integer of microseconds.
 """
 
 __all__ = [
-    'MICROSECOND',
-    'MILLISECOND',
-    'SECOND',
-    'MINUTE',
-    'HOUR',
-    'DAY',
-    'WEEK',
-    'YEAR_APPROXIMATE',
-    'MONTH_APPROXIMATE',
-    'utime_delta',
-    'get_time_offset',
-    'set_time_offset',
-    'add_time_offset',
-    'TimeOffset',
-    'utime',
-    'true_utime',
-    'execute_with_timeout',
+    "MICROSECOND",
+    "MILLISECOND",
+    "SECOND",
+    "MINUTE",
+    "HOUR",
+    "DAY",
+    "WEEK",
+    "YEAR_APPROXIMATE",
+    "MONTH_APPROXIMATE",
+    "utime_delta",
+    "get_time_offset",
+    "set_time_offset",
+    "add_time_offset",
+    "TimeOffset",
+    "utime",
+    "true_utime",
+    "execute_with_timeout",
 ]
 
 from functools import wraps
@@ -66,6 +66,7 @@ def _keyword_arguments_only(fn):
     @wraps(fn)
     def new_fn(**kwargs):
         return fn(**kwargs)
+
     return new_fn
 
 
@@ -100,6 +101,7 @@ def add_time_offset(offset):
 
 class TimeOffset(object):
     """Temporarily applies specified offset (in microseconds) to time() function result."""
+
     def __init__(self, offset):
         self.offset = int(offset)
 
@@ -123,15 +125,20 @@ def true_utime():
 
 
 # Windows compatibility stuff
-_default_signal_type = signal.SIGALRM if hasattr(signal, 'SIGALRM') else None
-_default_timer_type = signal.ITIMER_REAL if hasattr(signal, 'ITIMER_REAL') else None
+_default_signal_type = signal.SIGALRM if hasattr(signal, "SIGALRM") else None
+_default_timer_type = signal.ITIMER_REAL if hasattr(signal, "ITIMER_REAL") else None
 
 
-def execute_with_timeout(fn, args=None, kwargs=None, timeout=None,
-                         fail_if_no_timer=True,
-                         signal_type=_default_signal_type,
-                         timer_type=_default_timer_type,
-                         timeout_exception_cls=TimeoutError):
+def execute_with_timeout(
+    fn,
+    args=None,
+    kwargs=None,
+    timeout=None,
+    fail_if_no_timer=True,
+    signal_type=_default_signal_type,
+    timer_type=_default_timer_type,
+    timeout_exception_cls=TimeoutError,
+):
     """
     Executes specified function with timeout. Uses SIGALRM to interrupt it.
 
@@ -185,7 +192,8 @@ def execute_with_timeout(fn, args=None, kwargs=None, timeout=None,
             if fail_if_no_timer:
                 raise NotSupportedError(
                     "Timer is not available; the code is probably invoked from outside the main "
-                    "thread.")
+                    "thread."
+                )
         return fn(*args, **kwargs)
     finally:
         if timer_is_set:

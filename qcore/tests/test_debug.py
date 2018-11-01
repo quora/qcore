@@ -24,7 +24,7 @@ except ImportError:
 
 def test_hang_me_does_not_throw():
     qcore.debug.hang_me(0)
-    with mock.patch('time.sleep') as mock_sleep:
+    with mock.patch("time.sleep") as mock_sleep:
         qcore.debug.hang_me(1)
         mock_sleep.assert_called_once_with(1)
         mock_sleep.reset_mock()
@@ -33,7 +33,7 @@ def test_hang_me_does_not_throw():
 
 
 def test_hange_me_handles_exception():
-    with mock.patch('time.sleep') as mock_sleep:
+    with mock.patch("time.sleep") as mock_sleep:
         mock_sleep.side_effect = RuntimeError
         with AssertRaises(RuntimeError):
             qcore.debug.hang_me()
@@ -46,21 +46,21 @@ def test_format_stack():
         return qcore.debug.format_stack()
 
     st = foo()
-    assert_is_substring('in foo\n', st)
+    assert_is_substring("in foo\n", st)
 
 
 def test_debug_counter():
-    counter = qcore.debug.counter('test_debug_counter')
-    counter_again = qcore.debug.counter('test_debug_counter')
+    counter = qcore.debug.counter("test_debug_counter")
+    counter_again = qcore.debug.counter("test_debug_counter")
 
     assert_is(counter, counter_again)
     counter.increment(5)
-    assert_eq('DebugCounter(\'test_debug_counter\', value=5)', str(counter))
-    assert_eq('DebugCounter(\'test_debug_counter\', value=5)', repr(counter))
+    assert_eq("DebugCounter('test_debug_counter', value=5)", str(counter))
+    assert_eq("DebugCounter('test_debug_counter', value=5)", repr(counter))
 
     counter.decrement(3)
-    assert_eq('DebugCounter(\'test_debug_counter\', value=2)', str(counter))
-    assert_eq('DebugCounter(\'test_debug_counter\', value=2)', repr(counter))
+    assert_eq("DebugCounter('test_debug_counter', value=2)", str(counter))
+    assert_eq("DebugCounter('test_debug_counter', value=2)", repr(counter))
 
 
 def test_bool_by_mask():
@@ -70,18 +70,18 @@ def test_bool_by_mask():
             self.TEST_MASK_2 = True
 
     m = MaskObject()
-    assert_is(True, get_bool_by_mask(m, 'ABC'))
-    assert_is(False, get_bool_by_mask(m, 'TEST_MASK'))
-    assert_is(False, get_bool_by_mask(m, 'TEST_MASK_1'))
-    assert_is(True, get_bool_by_mask(m, 'TEST_MASK_2'))
+    assert_is(True, get_bool_by_mask(m, "ABC"))
+    assert_is(False, get_bool_by_mask(m, "TEST_MASK"))
+    assert_is(False, get_bool_by_mask(m, "TEST_MASK_1"))
+    assert_is(True, get_bool_by_mask(m, "TEST_MASK_2"))
 
-    set_by_mask(m, 'TEST_', True)
-    assert_is(True, get_bool_by_mask(m, 'TEST_MASK'))
-    assert_is(True, get_bool_by_mask(m, 'TEST_MASK_1'))
-    assert_is(True, get_bool_by_mask(m, 'TEST_MASK_2'))
+    set_by_mask(m, "TEST_", True)
+    assert_is(True, get_bool_by_mask(m, "TEST_MASK"))
+    assert_is(True, get_bool_by_mask(m, "TEST_MASK_1"))
+    assert_is(True, get_bool_by_mask(m, "TEST_MASK_2"))
 
-    set_by_mask(m, 'TEST_MASK_2', False)
-    assert_is(True, get_bool_by_mask(m, 'ABC'))
-    assert_is(False, get_bool_by_mask(m, 'TEST_MASK'))
-    assert_is(True, get_bool_by_mask(m, 'TEST_MASK_1'))
-    assert_is(False, get_bool_by_mask(m, 'TEST_MASK_2'))
+    set_by_mask(m, "TEST_MASK_2", False)
+    assert_is(True, get_bool_by_mask(m, "ABC"))
+    assert_is(False, get_bool_by_mask(m, "TEST_MASK"))
+    assert_is(True, get_bool_by_mask(m, "TEST_MASK_1"))
+    assert_is(False, get_bool_by_mask(m, "TEST_MASK_2"))

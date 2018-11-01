@@ -36,11 +36,11 @@ def test_common():
 
 def test_events():
     e = qcore.EventHook()
-    e.subscribe(lambda *args: dump('Handler 1', *args))
-    e('argument')
+    e.subscribe(lambda *args: dump("Handler 1", *args))
+    e("argument")
 
-    e.subscribe(lambda: fail('Handler 2'))
-    e.subscribe(lambda: dump('Handler 3'))
+    e.subscribe(lambda: fail("Handler 2"))
+    e.subscribe(lambda: dump("Handler 3"))
 
     with AssertRaises(NotImplementedError):
         e()  # prints 'Handler 1'
@@ -49,8 +49,8 @@ def test_events():
         e.safe_trigger()  # prints 'Handler 1', 'Handler 3'
 
     h = qcore.EventHub()
-    h.on_some_event.subscribe(lambda: dump('On some event'))
-    h.on_some_other_event.subscribe(lambda: dump('On some other event'))
+    h.on_some_event.subscribe(lambda: dump("On some event"))
+    h.on_some_other_event.subscribe(lambda: dump("On some other event"))
 
     h.on_some_event()
     h.on_some_other_event()

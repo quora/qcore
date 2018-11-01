@@ -9,5 +9,6 @@ class Foo(six.with_metaclass(qcore.DisallowInheritance)):
 
 def test_disallow_inheritance():
     with AssertRaises(TypeError):
+
         class Bar(Foo):
             pass

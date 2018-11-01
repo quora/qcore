@@ -21,11 +21,14 @@ Provides a metaclass that prevents inheritance from its instances.
 
 class DisallowInheritance(type):
     """Metaclass that disallows inheritance from classes using it."""
+
     def __init__(self, cl_name, bases, namespace):
         for cls in bases:
             if isinstance(cls, DisallowInheritance):
-                message = 'Class %s cannot be used as a base for newly defined class %s' % \
-                    (cls, cl_name)
+                message = (
+                    "Class %s cannot be used as a base for newly defined class %s"
+                    % (cls, cl_name)
+                )
                 raise TypeError(message)
         super(DisallowInheritance, self).__init__(cl_name, bases, namespace)
 
@@ -33,4 +36,3 @@ class DisallowInheritance(type):
     @classmethod
     def __prepare__(cls, name, bases, **kwargs):
         return {}
-

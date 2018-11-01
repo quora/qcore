@@ -14,6 +14,7 @@ from typing import (
 
 _AnyCallable = TypeVar("_AnyCallable", bound=Callable[..., Any])
 _T = TypeVar("_T")
+
 def get_original_fn(fn: Callable[..., Any]) -> Callable[..., Any]: ...
 def get_full_name(src: object) -> str: ...
 def get_function_call_str(
