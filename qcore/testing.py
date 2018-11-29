@@ -47,18 +47,7 @@ __all__ = ["Anything", "GreaterEq"]
 import functools
 import inspect
 
-# avoid generating a dependency on mock and nose just for a constant and an exception class
-try:
-    import mock
-except ImportError:
-    TEST_PREFIX = "test"
-else:
-    TEST_PREFIX = mock.patch.TEST_PREFIX
-
-try:
-    from nose.plugins.skip import SkipTest
-except ImportError:
-    SkipTest = None
+TEST_PREFIX = "test"
 
 
 class _Anything(object):
@@ -111,10 +100,12 @@ def disabled(func_or_class):
     def decorate_func(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            if SkipTest is not None:
-                raise SkipTest
-            else:
+            try:
+                from nose.plugins.skip import SkipTest
+            except ImportError:
                 return None  # do nothing, the test will show up as passed
+            else:
+                raise SkipTest
 
         return wrapper
 
