@@ -73,5 +73,11 @@ if __name__ == "__main__":
         package_data={"qcore": DATA_FILES},
         ext_modules=EXTENSIONS,
         setup_requires=["Cython"],
-        install_requires=["Cython", "inspect2", "setuptools", "six"],
+        install_requires=[
+            "Cython",
+            "inspect2",
+            "setuptools",
+            "six",
+            'typing; python_version < "3.5"',
+        ],
     )

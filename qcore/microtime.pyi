@@ -3,6 +3,7 @@ from typing import (
     Callable,
     Iterable,
     Mapping,
+    NewType,
     Optional,
     SupportsInt,
     Type,
@@ -12,20 +13,22 @@ from types import TracebackType
 
 _T = TypeVar("_T")
 
-MICROSECOND: int
-MILLISECOND: int
-SECOND: int
-MINUTE: int
-HOUR: int
-DAY: int
-WEEK: int
-YEAR_APPROXIMATE: int
-MONTH_APPROXIMATE: int
+Utime = NewType("Utime", int)
+
+MICROSECOND: Utime
+MILLISECOND: Utime
+SECOND: Utime
+MINUTE: Utime
+HOUR: Utime
+DAY: Utime
+WEEK: Utime
+YEAR_APPROXIMATE: Utime
+MONTH_APPROXIMATE: Utime
 
 def utime_delta(
     *, days: int = ..., hours: int = ..., minutes: int = ..., seconds: int = ...
-) -> int: ...
-def get_time_offset() -> int: ...
+) -> Utime: ...
+def get_time_offset() -> Utime: ...
 def set_time_offset(offset: SupportsInt) -> None: ...
 def add_time_offset(offset: SupportsInt) -> None: ...
 
@@ -41,8 +44,8 @@ class TimeOffset(object):
         traceback: Optional[TracebackType],
     ) -> None: ...
 
-def utime() -> int: ...
-def true_utime() -> int: ...
+def utime() -> Utime: ...
+def true_utime() -> Utime: ...
 def execute_with_timeout(
     fn: Callable[..., _T],
     args: Optional[Iterable[Any]] = ...,
