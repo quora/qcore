@@ -38,15 +38,19 @@ __all__ = [
     "utime",
     "true_utime",
     "execute_with_timeout",
+    "Utime",
 ]
 
 from functools import wraps
 import signal
 from time import time as _time
+from typing import NewType
 
 from . import inspection
 from .helpers import none, empty_tuple, empty_dict
 from .errors import TimeoutError, NotSupportedError
+
+Utime = NewType("Utime", int)
 
 
 MICROSECOND = 1
