@@ -9,7 +9,7 @@ PYBIN=/opt/python/$PYVER/bin
 "${PYBIN}/pip" install -r /io/requirements.txt
 
 # Install dependencies of qcore
-"${PYBIN}/pip" install Cython tox
+"${PYBIN}/pip" install Cython tox 'typing; python_version < "3.5"'
 
 "${PYBIN}/pip" wheel /io/ -w wheelhouse/
 
