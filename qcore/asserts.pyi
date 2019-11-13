@@ -77,18 +77,6 @@ def assert_in_with_tolerance(
     message: Optional[str] = ...,
     extra: Optional[str] = ...,
 ) -> None: ...
-def assert_is_substring(
-    substring: str,
-    subject: str,
-    message: Optional[str] = ...,
-    extra: Optional[str] = ...,
-) -> None: ...
-def assert_is_not_substring(
-    substring: str,
-    subject: str,
-    message: Optional[str] = ...,
-    extra: Optional[str] = ...,
-) -> None: ...
 def assert_unordered_list_eq(
     expected: Iterable[Any], actual: Iterable[Any], message: Optional[str] = ...
 ) -> None: ...
@@ -107,3 +95,26 @@ class AssertRaises(object):
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ) -> bool: ...
+
+# ===================================================
+# Strings
+# ===================================================
+
+def assert_is_substring(
+    substring: str,
+    subject: str,
+    message: Optional[str] = ...,
+    extra: Optional[str] = ...,
+) -> None: ...
+def assert_is_not_substring(
+    substring: str,
+    subject: str,
+    message: Optional[str] = ...,
+    extra: Optional[str] = ...,
+) -> None: ...
+def assert_startswith(
+    prefix: str, subject: str, message: Optional[str] = ..., extra: Optional[str] = ...
+) -> None: ...
+def assert_endswith(
+    suffix: str, subject: str, message: Optional[str] = ..., extra: Optional[str] = ...
+) -> None: ...

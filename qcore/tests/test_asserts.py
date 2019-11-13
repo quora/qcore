@@ -19,8 +19,6 @@ from qcore.asserts import (
     assert_gt,
     assert_is,
     assert_is_not,
-    assert_is_substring,
-    assert_is_not_substring,
     assert_le,
     assert_lt,
     assert_ne,
@@ -30,6 +28,11 @@ from qcore.asserts import (
     assert_in,
     assert_dict_eq,
     assert_in_with_tolerance,
+    # Strings
+    assert_is_substring,
+    assert_is_not_substring,
+    assert_startswith,
+    assert_endswith,
 )
 
 
@@ -284,6 +287,8 @@ def test_complex_assertions():
             print(repr(e))
             raise
 
+
+def test_string_assertions():
     assert_is_substring("a", "bca")
     with AssertRaises(AssertionError):
         assert_is_substring("a", "bc")
@@ -291,6 +296,14 @@ def test_complex_assertions():
     assert_is_not_substring("a", "bc")
     with AssertRaises(AssertionError):
         assert_is_not_substring("a", "bca")
+
+    assert_startswith("a", "abc bcd")
+    with AssertRaises(AssertionError):
+        assert_startswith("b", "abc bcd")
+
+    assert_endswith("d", "abc bcd")
+    with AssertRaises(AssertionError):
+        assert_endswith("c", "abc bcd")
 
 
 class ExceptionWithValue(Exception):
