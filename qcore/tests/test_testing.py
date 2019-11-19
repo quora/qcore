@@ -19,7 +19,6 @@ from qcore.testing import (
     decorate_func_or_method_or_class,
     GreaterEq,
     disabled,
-    SkipTest,
     TEST_PREFIX,
 )
 
@@ -49,7 +48,9 @@ def test_GreaterEq():
 
 
 def _check_disabled(fn):
-    if SkipTest is None:
+    try:
+        from nose.plugins.skip import SkipTest
+    except ImportError:
         assert_is(None, fn())
     else:
         with AssertRaises(SkipTest):
