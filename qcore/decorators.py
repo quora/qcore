@@ -316,8 +316,11 @@ def _update_wrapper(wrapper, wrapped):
 def _reduce_impl(module, name):
     try:
         module = sys.modules[module]
+    except KeyError:
+        module = __import__(module)
+    try:
         return getattr(module, name)
-    except (KeyError, AttributeError):
+    except AttributeError:
         raise TypeError(
             "Cannot pickle decorated function %s.%s, failed to find it" % (module, name)
         )
