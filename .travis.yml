@@ -14,7 +14,7 @@ matrix:
       env: PYVER=cp35-cp35m
     - python: "3.6"
       env: PYVER=cp36-cp36m
-    - python: "3.7-dev"
+    - python: "3.7"
       env: PYVER=cp37-cp37m
     - python: "3.8"
       env: PYVER=cp38-cp38

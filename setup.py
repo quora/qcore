@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from setuptools import setup, find_packages
+from setuptools import setup
 from setuptools.extension import Extension
 
 import codecs
@@ -69,7 +69,7 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.8",
         ],
         keywords="quora core common utility",
-        packages=find_packages(),
+        packages=["qcore", "qcore.tests"],
         package_data={"qcore": DATA_FILES},
         ext_modules=EXTENSIONS,
         setup_requires=["Cython"],
