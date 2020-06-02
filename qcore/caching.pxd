@@ -14,7 +14,7 @@
 
 import cython
 
-cimport helpers
+from . cimport helpers
 
 
 cdef object miss
