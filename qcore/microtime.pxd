@@ -15,8 +15,8 @@
 import cython
 from cpython cimport bool
 
-cimport inspection
-from helpers cimport none, empty_tuple, empty_dict
+from . cimport inspection
+from .helpers cimport none, empty_tuple, empty_dict
 
 
 cdef object _time_offset
