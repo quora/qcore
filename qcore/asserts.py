@@ -51,7 +51,9 @@ __all__ = [
     "assert_in_with_tolerance",
     "assert_unordered_list_eq",
     "assert_raises",
+    "assert_raises_instance",
     "AssertRaises",
+    "AssertRaisesInstance",
     # Strings
     "assert_is_substring",
     "assert_is_not_substring",
@@ -305,8 +307,15 @@ def assert_raises(fn, *expected_exception_types):
         fn()
 
 
+def assert_raises_instance(fn, *expected_exception_instances):
+    """Raises an AssertionError if calling fn does not raise one of the expected_exception_instances."""
+    with AssertRaisesInstance(*expected_exception_instances):
+        fn()
+
+
 class AssertRaises(object):
-    """With-context that asserts that the code within the context raises the specified exception."""
+    """With-context that asserts that the code within the context raises the specified exception
+    type."""
 
     def __init__(self, *expected_exception_types, **kwargs):
         # when you don't specify the exception expected, it's easy to write buggy tests that appear
@@ -336,6 +345,47 @@ class AssertRaises(object):
                 return True
 
         expected = ", ".join(map(get_full_name, self.expected_exception_types))
+
+        if exc_type is None:
+            message = "No exception raised, but expected: %s" % expected
+            if self.extra is not None:
+                message += " (%s)" % self.extra
+        else:
+            template = "{TYPE}: {VAL} is raised, but expected: {EXPECTED}{EXTRA_STR}\n\n{STACK}"
+            message = template.format(
+                TYPE=get_full_name(exc_type),
+                VAL=exc_val,
+                EXPECTED=expected,
+                STACK="".join(traceback.format_tb(exc_tb)),
+                EXTRA_STR=(" (%s)" % self.extra) if self.extra is not None else "",
+            )
+        raise AssertionError(message)
+
+
+class AssertRaisesInstance(object):
+    """With-context that asserts that the code within the context raises a specified exception
+    instance."""
+
+    def __init__(self, *expected_exception_instances, **kwargs):
+        assert (
+            len(expected_exception_instances) >= 1
+        ), "You must specify an exception instance when using AssertRaisesInstance"
+        self.expected_exception_instances = expected_exception_instances
+        self.extra = kwargs.pop("extra", None)
+        assert_eq({}, kwargs)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        for exception_instance in self.expected_exception_instances:
+            if type(exception_instance) == exc_type and exception_instance.args == exc_val.args:
+                return True
+
+        expected = ", ".join(["{TYPE}: {VAL}".format(
+            TYPE=get_full_name(type(expected_exception)),
+            VAL=expected_exception,
+        ) for expected_exception in self.expected_exception_instances])
 
         if exc_type is None:
             message = "No exception raised, but expected: %s" % expected

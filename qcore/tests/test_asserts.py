@@ -24,6 +24,7 @@ from qcore.asserts import (
     assert_ne,
     assert_unordered_list_eq,
     AssertRaises,
+    AssertRaisesInstance,
     assert_not_in,
     assert_in,
     assert_dict_eq,
@@ -308,6 +309,7 @@ def test_string_assertions():
 
 class ExceptionWithValue(Exception):
     def __init__(self, value):
+        super(Exception, self).__init__(value)
         self.value = value
 
 
@@ -316,6 +318,33 @@ def test_assert_error_saves_exception():
     with assertion:
         raise ExceptionWithValue(5)
     assert_eq(5, assertion.expected_exception_found.value)
+
+
+def test_assert_raises_instance():
+    assertion = AssertRaisesInstance(ExceptionWithValue(5))
+    with assertion:
+        raise ExceptionWithValue(5)
+
+    with AssertRaisesInstance(
+            AssertionError('No exception raised, but expected: test_asserts.ExceptionWithValue: 5')
+    ):
+        with assertion:
+            pass
+
+    with AssertRaises(AssertionError) as assert_raises:
+        with assertion:
+            raise ExceptionWithValue(4)
+    # full error message includes stack trace, so we just check the first line
+    assert_startswith(
+        'test_asserts.ExceptionWithValue: 4 is raised, ' \
+        'but expected: test_asserts.ExceptionWithValue: 5\n\n',
+        assert_raises.expected_exception_found.args[0])
+
+    assertion = AssertRaisesInstance(ExceptionWithValue(4), ExceptionWithValue(5))
+    with assertion:
+        raise ExceptionWithValue(4)
+    with assertion:
+        raise ExceptionWithValue(5)
 
 
 def test_message():
