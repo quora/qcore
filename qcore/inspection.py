@@ -33,8 +33,12 @@ def get_original_fn(fn):
     if hasattr(fn, "original_fn"):
         return fn.original_fn
     if hasattr(fn, "fn"):
-        fn.original_fn = get_original_fn(fn.fn)
-        return fn.original_fn
+        original_fn = get_original_fn(fn.fn)
+        try:
+            fn.original_fn = original_fn
+        except AttributeError:
+            pass
+        return original_fn
     return fn
 
 
