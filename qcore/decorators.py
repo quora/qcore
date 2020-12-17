@@ -48,6 +48,7 @@ class DecoratorBinder(object):
     def __init__(self, decorator, instance=None):
         self.decorator = decorator
         self.instance = instance
+        self.__self__ = instance
 
     def name(self):
         return self.decorator.name()

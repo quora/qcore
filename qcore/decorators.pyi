@@ -17,6 +17,7 @@ _T = TypeVar("_T")
 class DecoratorBinder(Generic[_T]):
     decorator: DecoratorBase[_T]
     instance: Optional[object]
+    __self__: Optional[object]  
     def __init__(
         self, decorator: DecoratorBase[_T], instance: Optional[object] = ...
     ) -> None: ...
