@@ -25,7 +25,6 @@ cdef class DecoratorBase(object):
 cdef class DecoratorBinder(object):
     cdef public DecoratorBase decorator
     cdef public object instance
-    cdef public object __self__
 
     cpdef str name(self)
     cpdef bint is_decorator(self) except -1
