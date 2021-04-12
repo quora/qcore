@@ -122,9 +122,9 @@ def assert_eq(expected, actual, message=None, tolerance=None, extra=None):
         )
         assert isinstance(expected, _number_types) and isinstance(
             actual, _number_types
-        ), (
-            "parameters must be numbers when tolerance is specified: %r, %r"
-            % (expected, actual)
+        ), "parameters must be numbers when tolerance is specified: %r, %r" % (
+            expected,
+            actual,
         )
 
         diff = abs(expected - actual)
@@ -208,9 +208,9 @@ def assert_ne(expected, actual, message=None, tolerance=None, extra=None):
         )
         assert isinstance(expected, _number_types) and isinstance(
             actual, _number_types
-        ), (
-            "parameters must be numbers when tolerance is specified: %r, %r"
-            % (expected, actual)
+        ), "parameters must be numbers when tolerance is specified: %r, %r" % (
+            expected,
+            actual,
         )
 
         diff = abs(expected - actual)

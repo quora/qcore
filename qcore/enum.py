@@ -65,9 +65,11 @@ class EnumType(type):
             if isinstance(type(v), EnumType):
                 v = v.value  # For inherited members
             if isinstance(v, six.integer_types):
-                assert v not in value_to_member, (
-                    "Duplicate enum value: %s (class: %s)."
-                    % (v, inspection.get_full_name(self))
+                assert (
+                    v not in value_to_member
+                ), "Duplicate enum value: %s (class: %s)." % (
+                    v,
+                    inspection.get_full_name(self),
                 )
                 member = self._make_value(v)
 

@@ -366,9 +366,11 @@ class EnumBasedEventHubType(type):
         for enum_type in based_on:
             for member in enum_type.get_members():
                 name = member.short_name
-                assert name not in enum_members, (
-                    "Two enum members share the same name: %r and %r "
-                    % (member, enum_members[name])
+                assert (
+                    name not in enum_members
+                ), "Two enum members share the same name: %r and %r " % (
+                    member,
+                    enum_members[name],
                 )
                 enum_members[name] = member
         enum_member_names = set(enum_members.keys())
