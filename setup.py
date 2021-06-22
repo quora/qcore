@@ -51,7 +51,7 @@ if __name__ == "__main__":
         long_description = f.read()
 
     setup(
-        name="qcorex",
+        name="qcore",
         version=VERSION,
         author="Quora, Inc.",
         author_email="asynq@quora.com",
