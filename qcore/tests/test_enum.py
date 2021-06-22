@@ -82,9 +82,9 @@ def test_gender():
     assert_raises(lambda: Gender.parse("na"), KeyError)
     assert_raises(lambda: Gender.parse(SeparateEnum.undefined), KeyError)
     assert_raises(lambda: Gender.parse(b"ni\xc3\xb1o"), KeyError)
-    assert_raises(lambda: Gender.parse(u"ni\xf1o"), KeyError)
+    assert_raises(lambda: Gender.parse("ni\xf1o"), KeyError)
     assert_raises(lambda: Gender.parse(b"ni\xff\xffo"), KeyError)
-    assert_raises(lambda: Gender.parse(u"\xe4\xb8\xad\xe6\x96\x87"), KeyError)
+    assert_raises(lambda: Gender.parse("\xe4\xb8\xad\xe6\x96\x87"), KeyError)
 
     assert_eq("undefined", Gender(0).short_name)
     assert_eq("male", Gender(1).short_name)
@@ -334,14 +334,8 @@ def test_bad_enum():
     assert_raises(declare_bad_enum, AssertionError)
 
 
-try:
-    _long_type = long
-except NameError:
-    _long_type = int
-
-
 class LongEnum(Enum):
-    x = _long_type(100)
+    x = 100
 
 
 def test_long_enum():

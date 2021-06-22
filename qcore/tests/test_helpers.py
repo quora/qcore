@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 import qcore
 from qcore.asserts import (
     assert_eq,
@@ -21,9 +20,7 @@ from qcore.asserts import (
     assert_is_not,
     assert_is_substring,
     AssertRaises,
-    assert_is_instance,
 )
-import six
 
 # this import is just for test_object_from_string
 from qcore import asserts as asserts_
@@ -202,14 +199,9 @@ def test_object_from_string():
     def check(name, expected):
         actual = qcore.object_from_string(name)
         assert_eq(expected, actual)
-        if six.PY2:
-            name = unicode(name)
-            actual = qcore.object_from_string(name)
-            assert_eq(expected, actual)
-        elif six.PY3:
-            name = name.encode("ascii")
-            with AssertRaises(TypeError):
-                qcore.object_from_string(name)
+        name = name.encode("ascii")
+        with AssertRaises(TypeError):
+            qcore.object_from_string(name)
 
     with AssertRaises(ValueError):
         # Not a fully qualified name
@@ -263,16 +255,10 @@ def test_safe_representation():
 
 
 def test_marker_object():
-    assert_eq("text", six.text_type(qcore.MarkerObject("text")))
-    assert_is_instance(six.text_type(qcore.MarkerObject("text")), six.text_type)
+    assert_eq("text", str(qcore.MarkerObject("text")))
 
-    # bytes should work in py2 but not py3
-    if six.PY2:
-        assert_eq(u"bytes", six.text_type(qcore.MarkerObject(b"bytes")))
-        assert_eq(b"bytes", six.binary_type(qcore.MarkerObject(b"bytes")))
-    else:
-        with AssertRaises(TypeError):
-            qcore.MarkerObject(b"bytes")
+    with AssertRaises(TypeError):
+        qcore.MarkerObject(b"bytes")
 
     # MarkerObjects should be unique
     assert_ne(qcore.MarkerObject("name"), qcore.MarkerObject("name"))

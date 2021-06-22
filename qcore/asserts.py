@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Module with assertion helpers.
 
@@ -66,13 +66,12 @@ __all__ = [
 # __unittest = 1
 
 
-import six
 import traceback
 
 from .inspection import get_full_name
 
 
-_number_types = six.integer_types + (float, complex)
+_number_types = (int, float, complex)
 
 
 def _assert_fail_message(message, expected, actual, comparison_str, extra):
@@ -247,7 +246,7 @@ def assert_in(obj, seq, message=None, extra=None):
 def assert_not_in(obj, seq, message=None, extra=None):
     """Raises an AssertionError if obj is in iter."""
     # for very long strings, provide a truncated error
-    if isinstance(seq, six.string_types) and obj in seq and len(seq) > 200:
+    if isinstance(seq, str) and obj in seq and len(seq) > 200:
         index = seq.find(obj)
         start_index = index - 50
         if start_index > 0:
@@ -342,7 +341,10 @@ class AssertRaises(object):
             if self.extra is not None:
                 message += " (%s)" % self.extra
         else:
-            template = "{TYPE}: {VAL} is raised, but expected: {EXPECTED}{EXTRA_STR}\n\n{STACK}"
+            template = (
+                "{TYPE}: {VAL} is raised, but expected:"
+                " {EXPECTED}{EXTRA_STR}\n\n{STACK}"
+            )
             message = template.format(
                 TYPE=get_full_name(exc_type),
                 VAL=exc_val,

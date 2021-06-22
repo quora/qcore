@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Common exception types.
 
@@ -29,7 +29,6 @@ __all__ = [
     "reraise",
 ]
 
-import six
 import sys
 
 
@@ -90,5 +89,5 @@ __traceback_hide__ = True
 def reraise(error):
     """Re-raises the error that was processed by prepare_for_reraise earlier."""
     if hasattr(error, "_type_"):
-        six.reraise(type(error), error, error._traceback)
+        raise error.with_traceback(error._traceback)
     raise error

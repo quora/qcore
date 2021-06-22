@@ -15,11 +15,7 @@
 import qcore
 from qcore.asserts import AssertRaises, assert_is_substring, assert_is, assert_eq
 from qcore.debug import get_bool_by_mask, set_by_mask
-
-try:
-    import mock
-except ImportError:
-    from unittest import mock
+from unittest import mock
 
 
 def test_hang_me_does_not_throw():

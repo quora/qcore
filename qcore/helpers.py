@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Various small helper classes and routines.
 
 """
 
 import inspect
-import six
-import warnings
 
 from . import inspectable_class
 
@@ -51,37 +49,21 @@ class MarkerObject(object):
     """
 
     def __init__(self, name):
-        if isinstance(name, six.binary_type):
-            if six.PY2:
-                warnings.warnpy3k(
-                    "MarkerObject does not support bytes names in Python 3"
-                )
-                name = name.decode("utf-8")
-            else:
-                raise TypeError("name must be str, not bytes")
+        if isinstance(name, bytes):
+            raise TypeError("name must be str, not bytes")
         self.name = name
 
-    if six.PY2:
-
-        def __str__(self):
-            return unicode(self).encode("utf-8")
-
-        def __unicode__(self):
-            return self.name
-
-    else:
-
-        def __str__(self):
-            return self.name
+    def __str__(self):
+        return self.name
 
     def __repr__(self):
         return self.name
 
 
-none = MarkerObject(u"none")
-miss = MarkerObject(u"miss")
-same = MarkerObject(u"same")
-unspecified = MarkerObject(u"unspecified")
+none = MarkerObject("none")
+miss = MarkerObject("miss")
+same = MarkerObject("same")
+unspecified = MarkerObject("unspecified")
 globals()["none"] = none
 globals()["miss"] = miss
 globals()["same"] = same
@@ -283,14 +265,8 @@ def object_from_string(name):
     from a fully qualified name.
 
     """
-    if six.PY3:
-        if not isinstance(name, str):
-            raise TypeError("name must be str, not %r" % type(name))
-    else:
-        if isinstance(name, unicode):
-            name = name.encode("ascii")
-        if not isinstance(name, (str, unicode)):
-            raise TypeError("name must be bytes or unicode, got %r" % type(name))
+    if not isinstance(name, str):
+        raise TypeError("name must be str, not %r" % type(name))
 
     pos = name.rfind(".")
     if pos < 0:

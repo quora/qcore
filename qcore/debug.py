@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Helpers for debugging.
 
@@ -20,7 +20,6 @@ Helpers for debugging.
 
 import inspect
 import time
-import types
 import traceback
 
 from . import inspection
