@@ -15,7 +15,6 @@
 from setuptools import setup
 from setuptools.extension import Extension
 
-import codecs
 import glob
 import os.path
 
@@ -47,7 +46,7 @@ EXTENSIONS = [
 
 
 if __name__ == "__main__":
-    with codecs.open("./README.rst", encoding="utf-8") as f:
+    with open("./README.rst", encoding="utf-8") as f:
         long_description = f.read()
 
     setup(
@@ -57,6 +56,7 @@ if __name__ == "__main__":
         author_email="asynq@quora.com",
         description="Quora's core utility library",
         long_description=long_description,
+        long_description_content_type="text/x-rst",
         url="https://github.com/quora/qcore",
         license="Apache Software License",
         classifiers=[
