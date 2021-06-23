@@ -346,7 +346,8 @@ def test_lru_cache_key_fn():
 
 
 class TestClass(object):
-    __hash__ = None  # not hashable
+    # not hashable
+    __hash__ = None  # type: ignore
 
     def __init__(self, val):
         self.val = val
@@ -465,53 +466,46 @@ def cached_fn(y, z=4):
     return y * z
 
 
-memoize_fns = [cached_fn]
-
-
-try:
-    exec(
-        """
 @memoize
-def cached_fn_with_annotations(y: int, z: int=4) -> int:
+def cached_fn_with_annotations(y: int, z: int = 4) -> int:
     global x
     x += 1
     return y * z
+
 
 @memoize
 def cached_fn_with_kwonly_args(y, *, z):
     global x
     x += 1
     return y * z
-"""
-    )
-except SyntaxError:
-    pass
-else:
-    memoize_fns.append(cached_fn_with_annotations)
 
-    def test_memoize_with_kwonly_args():
-        global x
-        x = 0
-        with AssertRaises(TypeError):
-            cached_fn_with_kwonly_args(1)
-        with AssertRaises(TypeError):
-            cached_fn_with_kwonly_args(1, 2)
 
-        assert_eq(0, x)
+memoize_fns = [cached_fn, cached_fn_with_annotations]
 
-        assert_eq(4, cached_fn_with_kwonly_args(2, z=2))
-        assert_eq(1, x)
-        assert_eq(4, cached_fn_with_kwonly_args(z=2, y=2))
-        assert_eq(1, x)
 
-        assert_eq(8, cached_fn_with_kwonly_args(2, z=4))
-        assert_eq(2, x)
-        assert_eq(8, cached_fn_with_kwonly_args(y=2, z=4))
-        assert_eq(2, x)
+def test_memoize_with_kwonly_args():
+    global x
+    x = 0
+    with AssertRaises(TypeError):
+        cached_fn_with_kwonly_args(1)
+    with AssertRaises(TypeError):
+        cached_fn_with_kwonly_args(1, 2)
 
-        cached_fn_with_kwonly_args.clear_cache()
-        assert_eq(4, cached_fn_with_kwonly_args(2, z=2))
-        assert_eq(3, x)
+    assert_eq(0, x)
+
+    assert_eq(4, cached_fn_with_kwonly_args(2, z=2))
+    assert_eq(1, x)
+    assert_eq(4, cached_fn_with_kwonly_args(z=2, y=2))
+    assert_eq(1, x)
+
+    assert_eq(8, cached_fn_with_kwonly_args(2, z=4))
+    assert_eq(2, x)
+    assert_eq(8, cached_fn_with_kwonly_args(y=2, z=4))
+    assert_eq(2, x)
+
+    cached_fn_with_kwonly_args.clear_cache()
+    assert_eq(4, cached_fn_with_kwonly_args(2, z=2))
+    assert_eq(3, x)
 
 
 @memoize_with_ttl(ttl_secs=500)

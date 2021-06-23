@@ -13,3 +13,11 @@ exclude = '''
   | \.eggs
 )/
 '''
+
+[tool.mypy]
+python_version = "3.6"
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = "nose.plugins.skip"
+ignore_missing_imports = true

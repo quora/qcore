@@ -342,7 +342,8 @@ def test_long_enum():
     assert_is_instance(LongEnum.x, LongEnum)
 
 
-DynamicEnum = Enum.create("DynamicEnum", [Gender.male, Gender.female])
+# mypy doesn't recognize that Gender.male is a Gender instance
+DynamicEnum = Enum.create("DynamicEnum", [Gender.male, Gender.female])  # type: ignore
 
 
 def test_pickling():
