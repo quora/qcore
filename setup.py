@@ -51,12 +51,13 @@ if __name__ == "__main__":
         long_description = f.read()
 
     setup(
-        name="qcore",
+        name="qcorex",
         version=VERSION,
         author="Quora, Inc.",
         author_email="asynq@quora.com",
         description="Quora's core utility library",
         long_description=long_description,
+        long_description_content_type="text/x-rst",
         url="https://github.com/quora/qcore",
         license="Apache Software License",
         classifiers=[
