@@ -88,7 +88,7 @@ attribute to decorated functions to dirty their cache:
         binder_cls = CacheDecoratorBinder
 
         def __init__(self, *args):
-            super(CacheDecorator, self).__init__(*args)
+            super().__init__(*args)
             self._cache = {}
 
         def dirty(self, *args):

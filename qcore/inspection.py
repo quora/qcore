@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Code inspection helpers.
 
@@ -20,7 +20,6 @@ Code inspection helpers.
 
 import functools
 import inspect
-import six
 import sys
 
 
@@ -202,8 +201,7 @@ def is_classmethod(fn):
     # for instance methods on instances.
     if im_self is None:
         return False
-    # This is True for class methods of new- and old-style classes, respectively
-    return isinstance(im_self, six.class_types)
+    return isinstance(im_self, type)
 
 
 def wraps(

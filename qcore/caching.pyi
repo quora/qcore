@@ -1,6 +1,5 @@
 import threading
-import inspect  # or inspect2, which doesn't have stubs
-import sys
+import inspect
 from typing import (
     Any,
     Callable,
@@ -22,10 +21,7 @@ from typing import (
 from . import helpers
 from .helpers import miss as miss
 
-if sys.version_info >= (3,):
-    _ArgSpec = Union[inspect.ArgSpec, inspect.FullArgSpec]
-else:
-    _ArgSpec = inspect.ArgSpec
+_ArgSpec = Union[inspect.ArgSpec, inspect.FullArgSpec]
 
 _T = TypeVar("_T")
 _KT = TypeVar("_KT")

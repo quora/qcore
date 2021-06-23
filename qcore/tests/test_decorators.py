@@ -25,11 +25,7 @@ from qcore import (
 from qcore.asserts import assert_eq, assert_is, assert_in, assert_ne, AssertRaises
 import inspect
 import pickle
-
-try:
-    import mock
-except ImportError:
-    from unittest import mock
+from unittest import mock
 
 
 @deprecated("Deprecated.")
@@ -261,7 +257,7 @@ class CacheDecorator(DecoratorBase):
     binder_cls = CacheDecoratorBinder
 
     def __init__(self, *args):
-        super(CacheDecorator, self).__init__(*args)
+        super().__init__(*args)
         self._cache = {}
 
     def name(self):

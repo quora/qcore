@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import unicode_literals
-
-__doc__ = """
+"""
 
 Enum implementation.
 
@@ -23,7 +21,6 @@ Enum implementation.
 __all__ = ["Enum", "EnumType", "EnumValueGenerator", "Flags", "IntEnum"]
 
 import inspect
-import six
 import sys
 
 from . import helpers
@@ -36,7 +33,7 @@ class EnumType(type):
     """Metaclass for all enum types."""
 
     def __init__(cls, what, bases=None, dict=None):
-        super(EnumType, cls).__init__(what, bases, dict)
+        super().__init__(what, bases, dict)
         cls.process()
 
     def __contains__(self, k):
@@ -64,7 +61,7 @@ class EnumType(type):
                 k = k.decode("ascii")
             if isinstance(type(v), EnumType):
                 v = v.value  # For inherited members
-            if isinstance(v, six.integer_types):
+            if isinstance(v, int):
                 assert (
                     v not in value_to_member
                 ), "Duplicate enum value: %s (class: %s)." % (
@@ -100,7 +97,7 @@ class EnumType(type):
         return {}
 
 
-class EnumBase(six.with_metaclass(EnumType)):
+class EnumBase(metaclass=EnumType):
     _name_to_member = {}
     _value_to_member = {}
     _value_to_name = {}
@@ -220,12 +217,8 @@ class EnumBase(six.with_metaclass(EnumType)):
         """Parses a value into a member of this enum."""
         raise NotImplementedError
 
-    # This is necessary for things to unpickle correctly from Python 3 to 2, but does not work in 3.3
-    # and lower.
-    if sys.version_info >= (3, 4):
-
-        def __reduce_ex__(self, proto):
-            return self.__class__, (self.value,)
+    def __reduce_ex__(self, proto):
+        return self.__class__, (self.value,)
 
 
 class Enum(EnumBase):
@@ -263,7 +256,7 @@ class Enum(EnumBase):
         """
         if isinstance(value, cls):
             return value
-        elif isinstance(value, six.integer_types) and not isinstance(value, EnumBase):
+        elif isinstance(value, int) and not isinstance(value, EnumBase):
             e = cls._value_to_member.get(value, _no_default)
         else:
             e = cls._name_to_member.get(value, _no_default)

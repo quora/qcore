@@ -1,9 +1,8 @@
 import qcore
 from qcore.asserts import AssertRaises
-import six
 
 
-class Foo(six.with_metaclass(qcore.DisallowInheritance)):
+class Foo(metaclass=qcore.DisallowInheritance):
     pass
 
 

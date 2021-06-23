@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Low-level caching abstractions.
 
@@ -33,8 +33,7 @@ __all__ = [
 from collections import OrderedDict
 import threading
 import functools
-import inspect2
-import six
+import inspect
 import time
 import weakref
 
@@ -43,7 +42,7 @@ from . import helpers
 
 
 miss = helpers.miss
-not_computed = helpers.MarkerObject(u"not_computed @ qcore.caching")
+not_computed = helpers.MarkerObject("not_computed @ qcore.caching")
 globals()["miss"] = miss
 globals()["not_computed"] = not_computed
 
@@ -162,7 +161,7 @@ class LRUCache(object):
     """
 
     def __init__(self, capacity, item_evicted=None):
-        if not isinstance(capacity, six.integer_types):
+        if not isinstance(capacity, int):
             raise TypeError("capacity must be integer, not {}".format(type(capacity)))
         if capacity <= 0:
             raise ValueError("capacity must be positive, not {}".format(capacity))
@@ -251,7 +250,7 @@ def lru_cache(maxsize=128, key_fn=None):
 
     def decorator(fn):
         cache = LRUCache(maxsize)
-        argspec = inspect2.getfullargspec(fn)
+        argspec = inspect.getfullargspec(fn)
         arg_names = argspec.args[1:] + argspec.kwonlyargs  # remove self
         kwargs_defaults = get_kwargs_defaults(argspec)
 
@@ -288,7 +287,7 @@ def cached_per_instance():
     """
 
     def cache_fun(fun):
-        argspec = inspect2.getfullargspec(fun)
+        argspec = inspect.getfullargspec(fun)
         arg_names = argspec.args[1:] + argspec.kwonlyargs  # remove self
         kwargs_defaults = get_kwargs_defaults(argspec)
         cache = {}
@@ -357,7 +356,7 @@ def memoize(fun):
     is called on the function.
 
     """
-    argspec = inspect2.getfullargspec(fun)
+    argspec = inspect.getfullargspec(fun)
     arg_names = argspec.args + argspec.kwonlyargs
     kwargs_defaults = get_kwargs_defaults(argspec)
 
@@ -393,11 +392,11 @@ def memoize_with_ttl(ttl_secs=60 * 60 * 24):
         "Incorrect usage of qcore.caching.memoize_with_ttl: "
         "ttl_secs must be a positive integer."
     )
-    assert_is_instance(ttl_secs, six.integer_types, error_msg)
+    assert_is_instance(ttl_secs, int, error_msg)
     assert_gt(ttl_secs, 0, error_msg)
 
     def cache_fun(fun):
-        argspec = inspect2.getfullargspec(fun)
+        argspec = inspect.getfullargspec(fun)
         arg_names = argspec.args + argspec.kwonlyargs
         kwargs_defaults = get_kwargs_defaults(argspec)
 

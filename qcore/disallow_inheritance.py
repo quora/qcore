@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Provides a metaclass that prevents inheritance from its instances.
 
@@ -30,7 +30,7 @@ class DisallowInheritance(type):
                     % (cls, cl_name)
                 )
                 raise TypeError(message)
-        super(DisallowInheritance, self).__init__(cl_name, bases, namespace)
+        super().__init__(cl_name, bases, namespace)
 
     # Needed bcz of a six bug: https://github.com/benjaminp/six/issues/252
     @classmethod

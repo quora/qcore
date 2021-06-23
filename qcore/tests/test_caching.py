@@ -35,14 +35,9 @@ from qcore.asserts import (
 import qcore
 import threading
 
-try:
-    import mock
-    from mock import MagicMock, call
-    import cPickle as pickle
-except ImportError:
-    from unittest import mock
-    from unittest.mock import MagicMock, call
-    import pickle
+from unittest import mock
+from unittest.mock import MagicMock, call
+import pickle
 
 
 class TestLazyConstant(object):

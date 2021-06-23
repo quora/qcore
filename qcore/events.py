@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Event pub/sub routines.
 
 """
 
 import inspect
-import six
 
 from .enum import EnumType, EnumBase
 from .errors import prepare_for_reraise, reraise
@@ -184,14 +183,14 @@ class EventInterceptor(object):
     def __enter__(self):
         """Starts event interception."""
         source = self.source
-        for name, handler in six.iteritems(self.events):
+        for name, handler in self.events.items():
             hook = getattr(source, name)
             hook.subscribe(handler)
 
     def __exit__(self, typ, value, traceback):
         """Stops event interception."""
         source = self.source
-        for name, handler in six.iteritems(self.events):
+        for name, handler in self.events.items():
             hook = getattr(source, name)
             hook.unsubscribe(handler)
 
@@ -321,7 +320,7 @@ class EventHub(object):
 
     def __iter__(self):
         """Iterates over all (name, event_hook) pairs."""
-        return six.iteritems(self.__dict__)
+        return iter(self.__dict__.items())
 
     def __repr__(self):
         """Gets the ``repr`` representation of this object."""
@@ -341,14 +340,14 @@ class EnumBasedEventHubType(type):
     """
 
     def __init__(cls, what, bases=None, dict=None):
-        super(EnumBasedEventHubType, cls).__init__(what, bases, dict)
+        super().__init__(what, bases, dict)
         if cls.__name__ == "NewBase" and cls.__module__ == "six" and not dict:
             # some versions of six generate an intermediate class that is created without a
             # __based_on__
             return
         assert dict is not None and "__based_on__" in dict, (
             "__based_on__ = [EnumA, EnumB] class member "
-            + "must be used to subclass EnumBasedEventHub"
+            "must be used to subclass EnumBasedEventHub"
         )
         based_on = cls.__based_on__
         if isinstance(based_on, EnumType):
@@ -395,7 +394,7 @@ class EnumBasedEventHubType(type):
         return {}
 
 
-class EnumBasedEventHub(six.with_metaclass(EnumBasedEventHubType, EventHub)):
+class EnumBasedEventHub(EventHub, metaclass=EnumBasedEventHubType):
     __based_on__ = []
 
 

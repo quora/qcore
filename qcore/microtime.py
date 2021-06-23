@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Helpers for dealing with time.
 
@@ -195,8 +195,8 @@ def execute_with_timeout(
         except ValueError:
             if fail_if_no_timer:
                 raise NotSupportedError(
-                    "Timer is not available; the code is probably invoked from outside the main "
-                    "thread."
+                    "Timer is not available; the code is probably invoked from outside"
+                    " the main thread."
                 )
         return fn(*args, **kwargs)
     finally:

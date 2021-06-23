@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 import qcore
 from qcore.asserts import (
     AssertRaises,
@@ -23,10 +22,7 @@ from qcore.asserts import (
     assert_is_instance,
 )
 
-try:
-    import mock
-except ImportError:
-    from unittest import mock  # py3
+from unittest import mock
 
 
 count = 0

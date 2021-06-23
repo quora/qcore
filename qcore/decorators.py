@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__doc__ = """
+"""
 
 Base classes and helpers for decorators.
 
@@ -37,7 +37,6 @@ except ImportError:
 
 import functools
 import inspect
-from six.moves import xrange
 import sys
 import time
 
@@ -228,7 +227,7 @@ def retry(exception_cls, max_tries=10, sleep=0.05):
     assert max_tries > 0
 
     def with_max_retries_call(delegate):
-        for i in xrange(0, max_tries):
+        for i in range(max_tries):
             try:
                 return delegate()
             except exception_cls:

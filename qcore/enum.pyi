@@ -1,12 +1,5 @@
-import inspect
-import six
-import sys
 from typing import (
-    Any,
-    Callable,
-    ContextManager,
     Dict,
-    Generic,
     Iterable,
     Iterator,
     List,
@@ -14,12 +7,8 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
-    Optional,
     Union,
 )
-
-from . import helpers
-from . import inspection
 
 _T = TypeVar("_T", bound=EnumBase)
 
