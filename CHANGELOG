@@ -1,8 +1,12 @@
 ## Unreleased
 
+* Update mypy version
 * Drop support for Python 2.7, 3.4, and 3.5
 * Add support for Python 3.9
-* Build wheels using GitHub actions
+* Build wheels using GitHub actions and cibuildwheel
+* Improve stub files
+* Prevent AttributeError in qcore.inspection.get_original_fn
+* Use relative imports in pxd files
 
 ## 1.6.1
 
