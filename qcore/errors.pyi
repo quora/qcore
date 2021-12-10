@@ -1,6 +1,5 @@
-from mypy_extensions import NoReturn
 from types import TracebackType
-from typing import Optional, Tuple, Type, TypeVar
+from typing import Optional, Tuple, Type, TypeVar, NoReturn
 
 class ArgumentError(RuntimeError): ...
 class OperationError(RuntimeError): ...
