@@ -207,6 +207,14 @@ def test_assert_not_in():
     assert_eq("'aaa' is in 'aaa%s... (truncated)'" % ("a" * 50), str(e))
 
 
+def test_assert_use_ascii_representation():
+    non_ascii_string = "Hello سلام"
+    with AssertRaises(AssertionError) as ar:
+        assert_eq("aaa", non_ascii_string)
+    e = ar.expected_exception_found
+    assert_eq("'aaa' != 'Hello \\u0633\\u0644\\u0627\\u0645'", str(e))
+
+
 class SpecificException(Exception):
     pass
 
