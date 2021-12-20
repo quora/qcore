@@ -78,8 +78,8 @@ def _assert_fail_message(message, expected, actual, comparison_str, extra):
     if message:
         return message
     if extra:
-        return "%r %s %r (%s)" % (expected, comparison_str, actual, extra)
-    return "%r %s %r" % (expected, comparison_str, actual)
+        return "%a %s %a (%s)" % (expected, comparison_str, actual, extra)
+    return "%a %s %a" % (expected, comparison_str, actual)
 
 
 def assert_is(expected, actual, message=None, extra=None):
@@ -117,25 +117,25 @@ def assert_eq(expected, actual, message=None, tolerance=None, extra=None):
         )
     else:
         assert isinstance(tolerance, _number_types), (
-            "tolerance parameter to assert_eq must be a number: %r" % tolerance
+            "tolerance parameter to assert_eq must be a number: %a" % tolerance
         )
         assert isinstance(expected, _number_types) and isinstance(
             actual, _number_types
-        ), "parameters must be numbers when tolerance is specified: %r, %r" % (
+        ), "parameters must be numbers when tolerance is specified: %a, %a" % (
             expected,
             actual,
         )
 
         diff = abs(expected - actual)
         assert diff <= tolerance, _assert_fail_message(
-            message, expected, actual, "is more than %r away from" % tolerance, extra
+            message, expected, actual, "is more than %a away from" % tolerance, extra
         )
 
 
 def _dict_path_string(path):
     if len(path) == 0:
         return "(root)"
-    return "->".join(map(repr, path))
+    return "->".join(map(ascii, path))
 
 
 def assert_dict_eq(expected, actual, number_tolerance=None, dict_path=[]):
@@ -145,11 +145,11 @@ def assert_dict_eq(expected, actual, number_tolerance=None, dict_path=[]):
 
     expected_keys = set(expected.keys())
     actual_keys = set(actual.keys())
-    assert expected_keys <= actual_keys, "Actual dict at %s is missing keys: %r" % (
+    assert expected_keys <= actual_keys, "Actual dict at %s is missing keys: %a" % (
         _dict_path_string(dict_path),
         expected_keys - actual_keys,
     )
-    assert actual_keys <= expected_keys, "Actual dict at %s has extra keys: %r" % (
+    assert actual_keys <= expected_keys, "Actual dict at %s has extra keys: %a" % (
         _dict_path_string(dict_path),
         actual_keys - expected_keys,
     )
@@ -203,18 +203,18 @@ def assert_ne(expected, actual, message=None, tolerance=None, extra=None):
         )
     else:
         assert isinstance(tolerance, _number_types), (
-            "tolerance parameter to assert_eq must be a number: %r" % tolerance
+            "tolerance parameter to assert_eq must be a number: %a" % tolerance
         )
         assert isinstance(expected, _number_types) and isinstance(
             actual, _number_types
-        ), "parameters must be numbers when tolerance is specified: %r, %r" % (
+        ), "parameters must be numbers when tolerance is specified: %a, %a" % (
             expected,
             actual,
         )
 
         diff = abs(expected - actual)
         assert diff > tolerance, _assert_fail_message(
-            message, expected, actual, "is less than %r away from" % tolerance, extra
+            message, expected, actual, "is less than %a away from" % tolerance, extra
         )
 
 
@@ -292,7 +292,7 @@ def assert_unordered_list_eq(expected, actual, message=None):
     if missing_in_actual or missing_in_expected:
         if not message:
             message = (
-                "%r not equal to %r; missing items: %r in expected, %r in actual."
+                "%a not equal to %a; missing items: %a in expected, %a in actual."
                 % (expected, actual, missing_in_expected, missing_in_actual)
             )
         assert False, message
