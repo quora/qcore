@@ -429,6 +429,7 @@ def test_cached_per_instance():
     object3.with_variable_kwargs(k1=2, k2=2)
     assert_eq(8, object3.x)
 
+
 class PickleTestClass(object):
     @cached_per_instance()
     def f(self, x):
