@@ -363,6 +363,11 @@ class TestClass(object):
         self.x += x + y + z
         return self.x
 
+    @cached_per_instance()
+    def with_variable_kwargs(self, **kwargs):
+        self.x += sum(kwargs.values())
+        return self.x
+
 
 def test_cached_per_instance():
     get_x_cache = TestClass.get_x.__cached_per_instance_cache__
@@ -412,6 +417,17 @@ def test_cached_per_instance():
     del object2
     assert_eq(0, len(get_x_cache), extra=repr(get_x_cache))
     assert_eq(0, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
+
+    object3 = TestClass(0)
+    assert_eq(0, object3.x)
+    object3.with_variable_kwargs(k1=2)
+    assert_eq(2, object3.x)
+    object3.with_variable_kwargs(k1=2)
+    assert_eq(2, object3.x)
+    object3.with_variable_kwargs(k2=2)
+    assert_eq(4, object3.x)
+    object3.with_variable_kwargs(k1=2, k2=2)
+    assert_eq(8, object3.x)
 
 
 class PickleTestClass(object):

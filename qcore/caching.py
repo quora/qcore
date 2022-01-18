@@ -331,6 +331,9 @@ def get_args_tuple(args, kwargs, arg_names, kwargs_defaults):
             else:
                 args_list.append(kwargs[arg_name])
             args_len += 1
+        remaining_keys = sorted([k for k in kwargs if k not in arg_names])
+        for k in remaining_keys:
+            args_list.append((k, kwargs[k]))
     except KeyError as e:
         raise TypeError("Missing argument %r" % (e.args[0],))
     return tuple(args_list)
