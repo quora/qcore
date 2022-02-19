@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+from collections import defaultdict
+
 from qcore.asserts import (
     assert_eq,
     assert_ge,
@@ -359,6 +362,11 @@ def test_assert_dict_eq():
         assert_in("'a'->'b'", str(e))
     else:
         assert False, "should have thrown assertion error"
+
+    dd = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
+    dd["a"]["b"]["c"] = 1
+    assert_dict_eq({"a": {"b": {"c": 1}}}, dd)
+    assert_dict_eq(dd, {"a": {"b": {"c": 1}}})
 
 
 def test_assert_in_with_tolerance():
