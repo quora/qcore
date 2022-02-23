@@ -138,6 +138,11 @@ def _dict_path_string(path):
     return "->".join(map(ascii, path))
 
 
+def _to_concrete_dict(value):
+    """Convert dict-subclass instances to concrete dict instances."""
+    return dict(value) if isinstance(value, dict) and type(value) is not dict else value
+
+
 def assert_dict_eq(expected, actual, number_tolerance=None, dict_path=[]):
     """Asserts that two dictionaries are equal, producing a custom message if they are not."""
     assert_is_instance(expected, dict)
@@ -154,37 +159,41 @@ def assert_dict_eq(expected, actual, number_tolerance=None, dict_path=[]):
         actual_keys - expected_keys,
     )
 
-    for k in expected_keys:
-        key_path = dict_path + [k]
+    for key in expected_keys:
+        key_path = dict_path + [key]
+
+        expected_value = _to_concrete_dict(expected[key])
+        actual_value = _to_concrete_dict(actual[key])
+
         assert_is_instance(
-            actual[k],
-            type(expected[k]),
+            actual_value,
+            type(expected_value),
             extra="Types don't match for %s" % _dict_path_string(key_path),
         )
         assert_is_instance(
-            expected[k],
-            type(actual[k]),
+            expected_value,
+            type(actual_value),
             extra="Types don't match for %s" % _dict_path_string(key_path),
         )
 
-        if isinstance(actual[k], dict):
+        if isinstance(actual_value, dict):
             assert_dict_eq(
-                expected[k],
-                actual[k],
+                expected_value,
+                actual_value,
                 number_tolerance=number_tolerance,
                 dict_path=key_path,
             )
-        elif isinstance(actual[k], _number_types):
+        elif isinstance(actual_value, _number_types):
             assert_eq(
-                expected[k],
-                actual[k],
+                expected_value,
+                actual_value,
                 extra="Value doesn't match for %s" % _dict_path_string(key_path),
                 tolerance=number_tolerance,
             )
         else:
             assert_eq(
-                expected[k],
-                actual[k],
+                expected_value,
+                actual_value,
                 extra="Value doesn't match for %s" % _dict_path_string(key_path),
             )
 
