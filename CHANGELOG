@@ -1,3 +1,7 @@
+## Unreleased
+
+* Remove broken caching from qcore.inspection.get_full_name
+
 ## 1.7.0
 
 * Update mypy version
