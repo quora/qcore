@@ -1,8 +1,8 @@
 [tool.black]
-target_version = ['py36', 'py37', 'py38', 'py39']
+target_version = ['py36', 'py37', 'py38', 'py39', 'py310']
 include = '\.pyi?$'
 skip-magic-trailing-comma = true
-experimental-string-processing = true
+preview = true
 
 exclude = '''
 /(
