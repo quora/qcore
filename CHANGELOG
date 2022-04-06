@@ -1,6 +1,7 @@
 ## Unreleased
 
-- Add support for Python 3.10
+* Remove broken caching from qcore.inspection.get_full_name
+* Add support for Python 3.10
 
 ## 1.7.0
 
