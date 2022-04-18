@@ -271,6 +271,7 @@ def lru_cache(maxsize=128, key_fn=None):
                 return value
 
         wrapper.clear = cache.clear
+        wrapper.fn = fn
 
         return wrapper
 
@@ -313,6 +314,7 @@ def cached_per_instance():
 
         # just so unit tests can check that this is cleaned up correctly
         new_fun.__cached_per_instance_cache__ = cache
+        new_fun.fn = fun
         return new_fun
 
     return cache_fun
@@ -379,6 +381,7 @@ def memoize(fun):
 
     new_fun.__cache = {}
     new_fun.clear_cache = clear_cache
+    new_fun.fn = fun
     return new_fun
 
 
@@ -442,6 +445,7 @@ def memoize_with_ttl(ttl_secs=60 * 60 * 24):
         new_fun.__cache_times = {}
         new_fun.clear_cache = clear_cache
         new_fun.dirty = dirty
+        new_fun.fn = fun
         return new_fun
 
     return cache_fun
