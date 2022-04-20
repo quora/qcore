@@ -1,7 +1,13 @@
-## Unreleased
+## 1.8.0
 
+* Add `.fn` attributes to cache functions in `qcore.caching`,
+  enabling pyanalyze type checking
 * Remove broken caching from qcore.inspection.get_full_name
 * Add support for Python 3.10
+* Support dict subclasses in `qcore.asserts.assert_dict_eq`
+* Fix `**kwargs` support in `qcore.caching.cached_per_instance`
+* Use ASCII representation of objects in error messages
+* Fix type annotation for `qcore.caching.LRUCache.get`
 
 ## 1.7.0
 
