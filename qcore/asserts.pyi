@@ -102,6 +102,9 @@ def assert_unordered_list_eq(
 def assert_raises(
     fn: Callable[[], Any], *expected_exception_types: Type[BaseException]
 ) -> None: ...
+def assert_raises_exception(
+    fn: Callable[[], Any], *expected_exception_instances: BaseException
+) -> None: ...
 
 class AssertRaises(object):
     expected_exception_types: Set[Type[BaseException]]
@@ -113,6 +116,20 @@ class AssertRaises(object):
         extra: Optional[object] = ...,
     ) -> None: ...
     def __enter__(self) -> AssertRaises: ...
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> bool: ...
+
+class AssertRaisesInstance(object):
+    expected_exception_types: Set[BaseException]
+    extra: Optional[str]
+    def __init__(
+        self, *expected_exception_instances: Type[BaseException], extra: Optional[str] = ...
+    ) -> None: ...
+    def __enter__(self) -> AssertRaisesInstance: ...
     def __exit__(
         self,
         exc_type: Optional[Type[BaseException]],
