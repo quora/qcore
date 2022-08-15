@@ -43,7 +43,7 @@ import time
 from . import inspection
 
 
-class DecoratorBinder(object):
+class DecoratorBinder:
     def __init__(self, decorator, instance=None):
         self.decorator = decorator
         self.instance = instance
@@ -107,7 +107,7 @@ if not compiled:
     del __eq__
 
 
-class DecoratorBase(object):
+class DecoratorBase:
     binder_cls = DecoratorBinder
 
     def __init__(self, fn):

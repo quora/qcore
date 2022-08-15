@@ -371,7 +371,7 @@ class IntEnum(int, Enum):
         return Enum.__repr__(self)
 
 
-class EnumValueGenerator(object):
+class EnumValueGenerator:
     def __init__(self, start=1):
         self._next_value = start
 

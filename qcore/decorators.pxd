@@ -15,14 +15,14 @@
 import cython
 
 
-cdef class DecoratorBase(object):
+cdef class DecoratorBase:
     cdef public object fn
     cdef public object type
 
     cpdef str name(self)
     cpdef bint is_decorator(self) except -1
 
-cdef class DecoratorBinder(object):
+cdef class DecoratorBinder:
     cdef public DecoratorBase decorator
     cdef public object instance
 

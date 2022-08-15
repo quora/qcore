@@ -24,7 +24,7 @@ empty_dict: Dict[Any, Any]
 def true_fn() -> bool: ...
 def false_fn() -> bool: ...
 
-class MarkerObject(object):
+class MarkerObject:
     name: Text
     def __init__(self, name: Text) -> None: ...
 
@@ -33,7 +33,7 @@ miss: MarkerObject
 same: MarkerObject
 unspecified: MarkerObject
 
-class EmptyContext(object):
+class EmptyContext:
     def __enter__(self) -> None: ...
     def __exit__(
         self,
@@ -59,7 +59,7 @@ class ScopedValue(Generic[_T]):
     def override(self, value: _T) -> ContextManager[None]: ...
     def __call__(self) -> _T: ...
 
-class _PropertyOverrideContext(object):
+class _PropertyOverrideContext:
     def __init__(self, target: object, property_name: str, value: object) -> None: ...
     def __enter__(self) -> None: ...
     def __exit__(

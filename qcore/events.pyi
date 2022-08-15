@@ -3,7 +3,7 @@ from types import TracebackType
 
 _HandlerT = Callable[..., Any]
 
-class EventHook(object):
+class EventHook:
     def __init__(self, handlers: Optional[List[_HandlerT]] = ...) -> None: ...
     def subscribe(self, handler: _HandlerT) -> None: ...
     def unsubscribe(self, handler: _HandlerT) -> None: ...
@@ -17,7 +17,7 @@ class SinkingEventHook(EventHook): ...
 
 sinking_event_hook: SinkingEventHook
 
-class EventInterceptor(object):
+class EventInterceptor:
     source: object
     events: Dict[str, _HandlerT]
     def __init__(self, source: object, **events: _HandlerT) -> None: ...
@@ -31,7 +31,7 @@ class EventInterceptor(object):
 
 _HubT = TypeVar("_HubT", bound=EventHub)
 
-class EventHub(object):
+class EventHub:
     def __init__(self, source: Optional[Dict[Any, Any]] = ...) -> None: ...
     def on(self: _HubT, event: object, handler: _HandlerT) -> _HubT: ...
     def off(self: _HubT, event: object, handler: _HandlerT) -> _HubT: ...

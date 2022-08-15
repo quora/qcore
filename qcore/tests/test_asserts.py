@@ -226,7 +226,7 @@ class SpecificException2(Exception):
     pass
 
 
-class TestAssertRaises(object):
+class TestAssertRaises:
     def test_handles_specific_exceptions(self):
         with AssertRaises(SpecificException, SpecificException2):
             raise SpecificException("foo")

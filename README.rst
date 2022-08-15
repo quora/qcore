@@ -49,7 +49,7 @@ This provides helpers for caching data. Some examples include:
         # afterwards it will be cached
         return expensive_computation()
 
-    class SomeClass(object):
+    class SomeClass:
         @cached_per_instance()
         def some_method(self, a, b):
             # for any instance of SomeClass, this will only be executed once

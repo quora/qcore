@@ -60,7 +60,7 @@ def test_exception():
 
 
 def test_override():
-    class TestObject(object):
+    class TestObject:
         def __init__(self):
             self.v = None
 
@@ -121,7 +121,7 @@ def test_copy_public_attrs():
     assert_ne(g.__code__, f.__code__)
     assert_ne(g.__name__, f.__name__)
 
-    class A(object):
+    class A:
         pass
 
     a1 = A()
@@ -163,7 +163,7 @@ def test_copy_public_attrs():
 
 
 def test_cached_hash_wrapper():
-    class TestClass(object):
+    class TestClass:
         pass
 
     w1a = qcore.CachedHashWrapper(TestClass())
@@ -236,7 +236,7 @@ def test_ellipsis():
 
 
 def test_safe_representation():
-    class TestObject(object):
+    class TestObject:
         """A test object that has neither __str__ nor __repr__."""
 
         def __str__(self):

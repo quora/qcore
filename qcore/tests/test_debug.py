@@ -60,7 +60,7 @@ def test_debug_counter():
 
 
 def test_bool_by_mask():
-    class MaskObject(object):
+    class MaskObject:
         def __init__(self):
             self.TEST_MASK_1 = False
             self.TEST_MASK_2 = True

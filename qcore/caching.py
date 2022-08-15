@@ -47,7 +47,7 @@ globals()["miss"] = miss
 globals()["not_computed"] = not_computed
 
 
-class LazyConstant(object):
+class LazyConstant:
     """
     Describes lazy or rarely changing value.
 
@@ -122,7 +122,7 @@ class ThreadLocalLazyConstant(threading.local):
         self.value = not_computed
 
 
-class LRUCache(object):
+class LRUCache:
     """A dictionary-like object that stores only a certain number of items, and
     discards its least recently used item when full.
 
