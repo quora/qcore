@@ -19,7 +19,7 @@ Provides a base class overriding some useful dunder methods.
 """
 
 
-class InspectableClass(object):
+class InspectableClass:
     """Class that provides commonly useful dunder methods.
 
     This creates a useful repr/str representation, implements equality checking, and provides

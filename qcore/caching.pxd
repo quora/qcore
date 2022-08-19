@@ -21,7 +21,7 @@ cdef object miss
 cdef object not_computed
 
 
-cdef class LazyConstant(object):
+cdef class LazyConstant:
     cdef public object value_provider
     cdef public object value
 
@@ -30,7 +30,7 @@ cdef class LazyConstant(object):
     cpdef clear(self)
 
 
-cdef class LRUCache(object):
+cdef class LRUCache:
     cdef int _capacity
     cdef object _item_evicted
     cdef object _dict

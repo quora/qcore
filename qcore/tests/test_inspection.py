@@ -17,7 +17,7 @@ from qcore.asserts import assert_eq, assert_ne, assert_unordered_list_eq, Assert
 import inspect
 
 
-class NonCython(object):
+class NonCython:
     pass
 
 
@@ -32,7 +32,7 @@ def test_is_cython_class():
     assert not qcore.inspection.is_cython_class(InheritFromCython)
 
 
-class A(object):
+class A:
     pass
 
 
@@ -111,7 +111,7 @@ else:
             qcore.inspection.getargspec(fun_with_kwonly_args)
 
 
-class X(object):
+class X:
     @classmethod
     def myclassmethod(cls):
         pass
@@ -129,7 +129,7 @@ class OldStyle:
         pass
 
 
-class BoolConversionFails(object):
+class BoolConversionFails:
     def method(self):
         pass
 
@@ -160,7 +160,7 @@ def test_is_classmethod():
 
 
 def test_get_function_call_str():
-    class TestObject(object):
+    class TestObject:
         """A test object containing no __str__ implementation."""
 
         def __str__(self):

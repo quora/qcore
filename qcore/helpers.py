@@ -42,7 +42,7 @@ def false_fn():
     return False
 
 
-class MarkerObject(object):
+class MarkerObject:
     """Replaces None in cases when None value is also expected.
     Used mainly by caches to describe a cache miss.
 
@@ -70,7 +70,7 @@ globals()["same"] = same
 globals()["unspecified"] = unspecified
 
 
-class EmptyContext(object):
+class EmptyContext:
     def __enter__(self):
         pass
 
@@ -85,7 +85,7 @@ empty_context = EmptyContext()
 globals()["empty_context"] = empty_context
 
 
-class CythonCachedHashWrapper(object):
+class CythonCachedHashWrapper:
     def __init__(self, value):
         self._value = value
         self._hash = hash(value)
@@ -150,7 +150,7 @@ if hasattr(CythonCachedHashWrapper, "__richcmp__"):
     globals()["CachedHashWrapper"] = PythonCachedHashWrapper
 
 
-class ScopedValue(object):
+class ScopedValue:
     def __init__(self, default):
         self._value = default
 
@@ -178,7 +178,7 @@ class ScopedValue(object):
         return "ScopedValue(%r)" % (self._value,)
 
 
-class _ScopedValueOverrideContext(object):
+class _ScopedValueOverrideContext:
     def __init__(self, target, value):
         self._target = target
         self._value = value
@@ -192,7 +192,7 @@ class _ScopedValueOverrideContext(object):
         self._target._value = self._old_value
 
 
-class _PropertyOverrideContext(object):
+class _PropertyOverrideContext:
     def __init__(self, target, property_name, value):
         self._target = target
         self._property_name = property_name

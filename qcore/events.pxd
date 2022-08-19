@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cdef class EventHook(object):
+cdef class EventHook:
     cdef list handlers
 
 
@@ -22,6 +22,6 @@ cdef class SinkingEventHook(EventHook):
 cdef SinkingEventHook sinking_event_hook
 
 
-cdef class EventInterceptor(object):
+cdef class EventInterceptor:
     cdef object source
     cdef dict events

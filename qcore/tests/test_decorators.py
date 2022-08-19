@@ -34,7 +34,7 @@ def deprecated_fn():
 
 
 @deprecated("Deprecated.")
-class DeprecatedClass(object):
+class DeprecatedClass:
     pass
 
 
@@ -70,7 +70,7 @@ def retry_it():
     pass
 
 
-class TestRetry(object):
+class TestRetry:
     def create_generator_function(self, exception_type, max_tries):
         fn_body = mock.Mock()
         fn_body.return_value = range(3)
@@ -187,7 +187,7 @@ class TestRetry(object):
 def test_decorator_of_context_manager():
     data = []
 
-    class Context(object):
+    class Context:
         "Dummy context"
 
         def __init__(self, key):
@@ -211,7 +211,7 @@ def test_decorator_of_context_manager():
 
     assert_eq(["enter maras", "inside maras", "exit maras"], data)
 
-    class NoDocString(object):
+    class NoDocString:
         def __enter__(self):
             pass
 
@@ -290,7 +290,7 @@ def f(a, b):
     return a + b + i
 
 
-class CachedMethods(object):
+class CachedMethods:
     @cached
     def f(self, a, b):
         global i
@@ -326,7 +326,7 @@ class CachedMethods(object):
         return str(self)
 
 
-class TestDecorators(object):
+class TestDecorators:
     def setup(self):
         global i
         i = 0

@@ -103,7 +103,7 @@ def add_time_offset(offset):
     _time_offset += int(offset)
 
 
-class TimeOffset(object):
+class TimeOffset:
     """Temporarily applies specified offset (in microseconds) to time() function result."""
 
     def __init__(self, offset):

@@ -313,7 +313,7 @@ def assert_raises(fn, *expected_exception_types):
         fn()
 
 
-class AssertRaises(object):
+class AssertRaises:
     """With-context that asserts that the code within the context raises the specified exception."""
 
     def __init__(self, *expected_exception_types, **kwargs):

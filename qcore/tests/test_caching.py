@@ -40,7 +40,7 @@ from unittest.mock import MagicMock, call
 import pickle
 
 
-class TestLazyConstant(object):
+class TestLazyConstant:
     def test_decorator(self):
         self.is_computed = False
 
@@ -82,7 +82,7 @@ class TestLazyConstant(object):
         assert self.is_called, "test_function has not been called"
 
 
-class TestThreadLocalLazyConstant(object):
+class TestThreadLocalLazyConstant:
     def test_thread_locality(self):
         lazy_constant = ThreadLocalLazyConstant(threading.current_thread)
         results = []
@@ -127,7 +127,7 @@ class TestThreadLocalLazyConstant(object):
         assert self.is_called, "test_function has not been called"
 
 
-class TestLRUCache(object):
+class TestLRUCache:
     def test_deletion(self):
         # Zero capacity cache is not allowed
         with AssertRaises(ValueError):
@@ -345,7 +345,7 @@ def test_lru_cache_key_fn():
     assert_eq([1, 2, 3], calls)
 
 
-class TestClass(object):
+class TestClass:
     # not hashable
     __hash__ = None  # type: ignore
 
@@ -430,7 +430,7 @@ def test_cached_per_instance():
     assert_eq(8, object3.x)
 
 
-class PickleTestClass(object):
+class PickleTestClass:
     @cached_per_instance()
     def f(self, x):
         return x
@@ -461,7 +461,7 @@ def test_cached_per_instance_pickling():
 
     # make sure we can use this with a custom __getstate__
 
-    class X(object):
+    class X:
         @cached_per_instance()
         def f(self, x):
             return x

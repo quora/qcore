@@ -50,7 +50,7 @@ import inspect
 TEST_PREFIX = "test"
 
 
-class _Anything(object):
+class _Anything:
     def __eq__(self, other):
         return True
 
@@ -67,7 +67,7 @@ class _Anything(object):
 Anything = _Anything()
 
 
-class GreaterEq(object):
+class GreaterEq:
     """Greater than or equal to some value.
 
     For example, assert_eq(GreaterEq(2), 3) and assert_eq(GreaterEq(2), 2) succeed,

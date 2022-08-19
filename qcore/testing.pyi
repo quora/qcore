@@ -3,7 +3,7 @@ from typing import Any, Callable, Type
 TEST_PREFIX: str
 Anything: Any
 
-class GreaterEq(object):
+class GreaterEq:
     val: object
     def __init__(self, val: object) -> None: ...
 

@@ -46,7 +46,7 @@ class ObjectWithSlots(InspectableClass):
         self.oid = oid
 
 
-class TestObjectWithDictComparison(object):
+class TestObjectWithDictComparison:
     def _check_repr_and_str(self, expected, obj):
         assert_eq(expected, repr(obj))
         assert_eq(expected, str(obj))

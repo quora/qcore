@@ -70,7 +70,7 @@ def trace(enter=False, exit=True):
     return decorate
 
 
-class DebugCounter(object):
+class DebugCounter:
     def __init__(self, name, value=0):
         self.name = name
         self.value = value

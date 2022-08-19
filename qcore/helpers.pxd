@@ -21,7 +21,7 @@ cdef tuple empty_tuple
 cdef dict empty_dict
 
 
-cdef class MarkerObject(object):
+cdef class MarkerObject:
     cpdef unicode name
 
 cdef MarkerObject none
@@ -30,14 +30,14 @@ cdef MarkerObject same
 cdef MarkerObject unspecified
 
 
-cdef class EmptyContext(object):
+cdef class EmptyContext:
     cpdef __enter__(self)
     cpdef __exit__(self, exc_type, exc_val, exc_tb)
 
 cdef EmptyContext empty_context
 
 
-cdef class CythonCachedHashWrapper(object):
+cdef class CythonCachedHashWrapper:
     cdef object _value
     cdef int _hash
 
@@ -49,20 +49,20 @@ cdef object CachedHashWrapper
 
 cdef class _ScopedValueOverrideContext(object)  # Forward declaration
 
-cdef class ScopedValue(object):
+cdef class ScopedValue:
     cdef object _value
 
     cpdef object get(self)
     cpdef set(self, object value)
     cpdef object override(self, object value)
 
-cdef class _ScopedValueOverrideContext(object):
+cdef class _ScopedValueOverrideContext:
     cdef ScopedValue _target
     cdef object _value
     cdef object _old_value
 
 
-cdef class _PropertyOverrideContext(object):
+cdef class _PropertyOverrideContext:
     cdef object _target
     cdef object _property_name
     cdef object _value

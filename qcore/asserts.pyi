@@ -103,7 +103,7 @@ def assert_raises(
     fn: Callable[[], Any], *expected_exception_types: Type[BaseException]
 ) -> None: ...
 
-class AssertRaises(object):
+class AssertRaises:
     expected_exception_types: Set[Type[BaseException]]
     expected_exception_found: Any
     extra: Optional[str]

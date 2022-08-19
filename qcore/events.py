@@ -24,7 +24,7 @@ from .enum import EnumType, EnumBase
 from .errors import prepare_for_reraise, reraise
 
 
-class EventHook(object):
+class EventHook:
     """This type allows to implement event pattern.
 
     Allowed operations on EventHook objects:
@@ -163,7 +163,7 @@ sinking_event_hook = SinkingEventHook()
 globals()["sinking_event_hook"] = sinking_event_hook
 
 
-class EventInterceptor(object):
+class EventInterceptor:
     """A context object helping to temporarily intercept
     a set of events on an object exposing a set of event hooks.
 
@@ -195,7 +195,7 @@ class EventInterceptor(object):
             hook.unsubscribe(handler)
 
 
-class EventHub(object):
+class EventHub:
     """Provides named event hooks on demand.
 
     Use properties (or keys) of this object to access

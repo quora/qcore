@@ -25,7 +25,7 @@ cpdef inline object get_time_offset()
 cpdef inline object set_time_offset(object offset)
 cpdef inline object add_time_offset(object offset)
 
-cdef class TimeOffset(object):
+cdef class TimeOffset:
     cdef object offset
 
 

@@ -65,7 +65,7 @@ def test_disabled():
     _check_disabled(fn)
 
     @disabled
-    class TestCls(object):
+    class TestCls:
         def test_method(self):
             return marker
 
@@ -75,7 +75,7 @@ def test_disabled():
     _check_disabled(TestCls().test_method)
     assert_is(marker, TestCls().normal_method())
 
-    class TestCls2(object):
+    class TestCls2:
         def test_method(self):
             return marker
 
@@ -108,7 +108,7 @@ def decorator(method):
 
 
 def _get_decoratable_class():
-    class Cls(object):
+    class Cls:
         pass
 
     Cls.normal_method = normal_method
