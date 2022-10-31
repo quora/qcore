@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import (
     Any,
     Callable,
@@ -46,6 +47,25 @@ class TimeOffset:
 
 def utime() -> Utime: ...
 def true_utime() -> Utime: ...
+
+# ===================================================
+# Conversions to/from PY Date-Time
+# ===================================================
+
+def utime_as_datetime(utime: Utime, *, tz: timezone = timezone.utc) -> datetime: ...
+
+# ===================================================
+# Conversions to/from ISO 8601 Date-Time
+# ===================================================
+
+def format_utime_as_iso_8601(
+    utime: Utime, *, drop_subseconds: bool = False, tz: timezone = timezone.utc
+) -> str: ...
+
+# ===================================================
+# Timeout API
+# ===================================================
+
 def execute_with_timeout(
     fn: Callable[..., _T],
     args: Optional[Iterable[Any]] = ...,
