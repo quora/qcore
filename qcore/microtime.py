@@ -33,6 +33,7 @@ __all__ = [
     "TimeOffset",
     "Utime",
     "add_time_offset",
+    "datetime_as_utime",
     "execute_with_timeout",
     "format_utime_as_iso_8601",
     "get_time_offset",
@@ -139,6 +140,15 @@ def utime_as_datetime(utime, *, tz=timezone.utc):
     return datetime.fromtimestamp(utime / SECOND, tz=tz)
 
 
+def datetime_as_utime(dt):
+    """Get the microseconds time for given Python datetime instance.
+
+    This time refers to an absolute moment, given as microseconds from Unix Epoch.
+
+    """
+    return int(dt.timestamp() * SECOND)
+
+
 # ===================================================
 # Conversions to/from ISO 8601 Date-Time
 # ===================================================
@@ -148,12 +158,27 @@ def format_utime_as_iso_8601(utime, *, drop_subseconds=False, tz=timezone.utc):
     """Get ISO 8601 Time string for the given microseconds time.
 
     Example output for the default UTC timezone:
-    "2022-10-28T23:37:38+00:00"
+    "2022-10-31T18:02:03.123456+00:00"
 
     """
     if drop_subseconds:
         utime = int(utime / SECOND) * SECOND
     return utime_as_datetime(utime, tz=tz).isoformat()
+
+
+# datetime.fromisoformat() is new in Python 3.7.
+if hasattr(datetime, "fromisoformat"):
+
+    def iso_8601_as_utime(iso_datetime):
+        """Get the microseconds time for given ISO 8601 Time string.
+
+        Example input:
+        "2022-11-01T01:02:03.123456+07:00"
+
+        """
+        return datetime_as_utime(datetime.fromisoformat(iso_datetime))
+
+    __all__.append("iso_8601_as_utime")
 
 
 # ===================================================
