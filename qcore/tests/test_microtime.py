@@ -101,6 +101,16 @@ def test_format_utime_as_iso_8601():
         "2022-10-31T18:02:03.123456+00:00", qcore.format_utime_as_iso_8601(the_utime)
     )
 
+    # Separator...
+    assert_eq(
+        "2022-10-31 18:02:03.123456+00:00",
+        qcore.format_utime_as_iso_8601(the_utime, sep=" "),
+    )
+    assert_eq(
+        "2022-10-31_18:02:03.123456+00:00",
+        qcore.format_utime_as_iso_8601(the_utime, sep="_"),
+    )
+
     # Drop sub-seconds...
     assert_eq(
         "2022-10-31T18:02:03+00:00",
