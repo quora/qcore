@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime, timezone
 from typing import (
     Any,
@@ -53,6 +54,7 @@ def true_utime() -> Utime: ...
 # ===================================================
 
 def utime_as_datetime(utime: Utime, *, tz: timezone = timezone.utc) -> datetime: ...
+def datetime_as_utime(dt: datetime) -> Utime: ...
 
 # ===================================================
 # Conversions to/from ISO 8601 Date-Time
@@ -61,6 +63,10 @@ def utime_as_datetime(utime: Utime, *, tz: timezone = timezone.utc) -> datetime:
 def format_utime_as_iso_8601(
     utime: Utime, *, drop_subseconds: bool = False, tz: timezone = timezone.utc
 ) -> str: ...
+
+# datetime.fromisoformat() is new in Python 3.7.
+if sys.version_info >= (3, 7):
+    def iso_8601_as_utime(iso_datetime: str) -> Utime: ...
 
 # ===================================================
 # Timeout API

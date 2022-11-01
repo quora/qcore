@@ -48,24 +48,44 @@ def test_time_offset():
 # ===================================================
 
 
+PLUS_7_TZ = timezone(timedelta(hours=7))
+
+
 def test_utime_as_datetime():
-    now = 1667239323123456
+    the_utime = 1667239323_123456
 
     # No options...
-    actual_dt1 = qcore.utime_as_datetime(now)
+    actual_dt1 = qcore.utime_as_datetime(the_utime)
     # Defaults to UTC.
     assert_eq(actual_dt1.tzname(), "UTC")
     assert_eq(actual_dt1, datetime(2022, 10, 31, 18, 2, 3, 123456, tzinfo=timezone.utc))
 
     # With tz...
-    plus7_tz = timezone(timedelta(hours=7))
-    actual_dt2 = qcore.utime_as_datetime(now, tz=plus7_tz)
+    actual_dt2 = qcore.utime_as_datetime(the_utime, tz=PLUS_7_TZ)
     # Does have the timezone set.
     assert_eq(actual_dt2.tzname(), "UTC+07:00")
-    assert_eq(actual_dt2, datetime(2022, 11, 1, 1, 2, 3, 123456, tzinfo=plus7_tz))
+    assert_eq(actual_dt2, datetime(2022, 11, 1, 1, 2, 3, 123456, tzinfo=PLUS_7_TZ))
     # But still equivalent to the UTC-timezoned value.
     assert_eq(actual_dt2, actual_dt1)
     assert_eq(actual_dt2, datetime(2022, 10, 31, 18, 2, 3, 123456, tzinfo=timezone.utc))
+
+
+def test_datetime_as_utime():
+    the_utime = 1667239323_123456
+
+    assert_eq(
+        qcore.datetime_as_utime(
+            datetime(2022, 10, 31, 18, 2, 3, 123456, tzinfo=timezone.utc)
+        ),
+        the_utime,
+    )
+
+    assert_eq(
+        qcore.datetime_as_utime(
+            datetime(2022, 11, 1, 1, 2, 3, 123456, tzinfo=PLUS_7_TZ)
+        ),
+        the_utime,
+    )
 
 
 # ===================================================
@@ -74,23 +94,46 @@ def test_utime_as_datetime():
 
 
 def test_format_utime_as_iso_8601():
-    now = 1667239323123456
+    the_utime = 1667239323_123456
 
     # No options...
-    assert_eq("2022-10-31T18:02:03.123456+00:00", qcore.format_utime_as_iso_8601(now))
+    assert_eq(
+        "2022-10-31T18:02:03.123456+00:00", qcore.format_utime_as_iso_8601(the_utime)
+    )
 
     # Drop sub-seconds...
     assert_eq(
         "2022-10-31T18:02:03+00:00",
-        qcore.format_utime_as_iso_8601(now, drop_subseconds=True),
+        qcore.format_utime_as_iso_8601(the_utime, drop_subseconds=True),
     )
 
     # With tz...
     plus7_tz = timezone(timedelta(hours=7))
     assert_eq(
         "2022-11-01T01:02:03.123456+07:00",
-        qcore.format_utime_as_iso_8601(now, tz=plus7_tz),
+        qcore.format_utime_as_iso_8601(the_utime, tz=plus7_tz),
     )
+
+
+if hasattr(qcore, "iso_8601_as_utime"):
+
+    def test_iso_8601_as_utime():
+        the_utime = 1667239323_123456
+        the_utime_at_second = 1667239323_000000
+
+        assert_eq(
+            the_utime, qcore.iso_8601_as_utime("2022-10-31T18:02:03.123456+00:00")
+        )
+        assert_eq(
+            the_utime, qcore.iso_8601_as_utime("2022-11-01T01:02:03.123456+07:00")
+        )
+
+        assert_eq(
+            the_utime_at_second, qcore.iso_8601_as_utime("2022-10-31T18:02:03+00:00")
+        )
+        assert_eq(
+            the_utime_at_second, qcore.iso_8601_as_utime("2022-11-01T01:02:03+07:00")
+        )
 
 
 # ===================================================
