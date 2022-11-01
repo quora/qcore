@@ -277,7 +277,6 @@ class TestLRUCache:
 
 
 def test_lru_cache():
-
     calls = []
 
     @lru_cache(maxsize=3)
@@ -437,7 +436,6 @@ class PickleTestClass:
 
 
 def test_cached_per_instance_pickling():
-
     # make sure cached stuff doesn't appear in the pickled representation
 
     obj = PickleTestClass()

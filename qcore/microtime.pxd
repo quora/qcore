@@ -32,7 +32,7 @@ cdef class TimeOffset:
 cpdef object utime()
 cpdef object true_utime()
 
-# NOTE(alex): Can't cpdef this because fo nested function
+# NOTE: Can't cpdef this because of nested function.
 #
 # cpdef execute_with_timeout(fn, tuple args=?, dict kwargs=?, timeout=?,
 #         bool fail_if_no_timer=?,

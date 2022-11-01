@@ -14,41 +14,46 @@
 
 """
 
-Helpers for dealing with time.
+Helpers for dealing with sub-second time.
 
-Assume that time is represented as an integer of microseconds.
+Here, time is represented as an integer of microseconds, a.k.a. "Utime".
 
 """
 
 __all__ = [
+    "DAY",
+    "HOUR",
     "MICROSECOND",
     "MILLISECOND",
-    "SECOND",
     "MINUTE",
-    "HOUR",
-    "DAY",
+    "MONTH_APPROXIMATE",
+    "SECOND",
     "WEEK",
     "YEAR_APPROXIMATE",
-    "MONTH_APPROXIMATE",
-    "utime_delta",
+    "TimeOffset",
+    "Utime",
+    "add_time_offset",
+    "execute_with_timeout",
+    "format_utime_as_iso_8601",
     "get_time_offset",
     "set_time_offset",
-    "add_time_offset",
-    "TimeOffset",
-    "utime",
     "true_utime",
-    "execute_with_timeout",
-    "Utime",
+    "utime",
+    "utime_as_datetime",
+    "utime_delta",
 ]
 
-from functools import wraps
+
 import signal
-from time import time as _time
+from functools import wraps
+from time import time as _time_in_seconds
+from datetime import datetime, timezone
 from typing import NewType
 
 from . import inspection
 from .helpers import none, empty_tuple, empty_dict
 from .errors import TimeoutError, NotSupportedError
+
 
 Utime = NewType("Utime", int)
 
@@ -63,19 +68,11 @@ WEEK = DAY * 7
 YEAR_APPROXIMATE = int(DAY * 365.25)
 MONTH_APPROXIMATE = int(YEAR_APPROXIMATE // 12)
 
-_time_offset = 0  # In microseconds (us)
+
+_offset_utime = 0  # type: Utime
 
 
-def _keyword_arguments_only(fn):
-    @wraps(fn)
-    def new_fn(**kwargs):
-        return fn(**kwargs)
-
-    return new_fn
-
-
-@_keyword_arguments_only
-def utime_delta(days=0, hours=0, minutes=0, seconds=0):
+def utime_delta(*, days=0, hours=0, minutes=0, seconds=0):
     """Gets time delta in microseconds.
 
     Note: Do NOT use this function without keyword arguments.
@@ -87,20 +84,20 @@ def utime_delta(days=0, hours=0, minutes=0, seconds=0):
 
 def get_time_offset():
     """Gets the offset applied to time() function result in microseconds."""
-    global _time_offset
-    return _time_offset
+    global _offset_utime
+    return _offset_utime
 
 
 def set_time_offset(offset):
     """Sets the offset applied to time() function result in microseconds."""
-    global _time_offset
-    _time_offset = int(offset)
+    global _offset_utime
+    _offset_utime = int(offset)
 
 
 def add_time_offset(offset):
     """Adds specified number of microseconds to the offset applied to time() function result."""
-    global _time_offset
-    _time_offset += int(offset)
+    global _offset_utime
+    _offset_utime += int(offset)
 
 
 class TimeOffset:
@@ -110,27 +107,63 @@ class TimeOffset:
         self.offset = int(offset)
 
     def __enter__(self):
-        global _time_offset
-        _time_offset += self.offset
+        global _offset_utime
+        _offset_utime += self.offset
 
     def __exit__(self, typ, value, traceback):
-        global _time_offset
-        _time_offset -= self.offset
+        global _offset_utime
+        _offset_utime -= self.offset
 
 
 def utime():
     """Gets current time in microseconds from the epoch time w/applied offset."""
-    return _time_offset + int(_time() * 1000000)
+    return _offset_utime + int(_time_in_seconds() * SECOND)
 
 
 def true_utime():
     """Gets current time in microseconds from the epoch time."""
-    return int(_time() * 1000000)
+    return int(_time_in_seconds() * SECOND)
+
+
+# ===================================================
+# Conversions to/from PY Date-Time
+# ===================================================
+
+
+def utime_as_datetime(utime, *, tz=timezone.utc):
+    """Get Python datetime instance for the given microseconds time.
+
+    This time refers to an absolute moment, given as microseconds from Unix Epoch.
+
+    """
+    return datetime.fromtimestamp(utime / SECOND, tz=tz)
+
+
+# ===================================================
+# Conversions to/from ISO 8601 Date-Time
+# ===================================================
+
+
+def format_utime_as_iso_8601(utime, *, drop_subseconds=False, tz=timezone.utc):
+    """Get ISO 8601 Time string for the given microseconds time.
+
+    Example output for the default UTC timezone:
+    "2022-10-28T23:37:38+00:00"
+
+    """
+    if drop_subseconds:
+        utime = int(utime / SECOND) * SECOND
+    return utime_as_datetime(utime, tz=tz).isoformat()
+
+
+# ===================================================
+# Timeout API
+# ===================================================
 
 
 # Windows compatibility stuff
-_default_signal_type = signal.SIGALRM if hasattr(signal, "SIGALRM") else None
-_default_timer_type = signal.ITIMER_REAL if hasattr(signal, "ITIMER_REAL") else None
+_DEFAULT_SIGNAL_TYPE = signal.SIGALRM if hasattr(signal, "SIGALRM") else None
+_DEFAULT_TIMER_TYPE = signal.ITIMER_REAL if hasattr(signal, "ITIMER_REAL") else None
 
 
 def execute_with_timeout(
@@ -139,8 +172,8 @@ def execute_with_timeout(
     kwargs=None,
     timeout=None,
     fail_if_no_timer=True,
-    signal_type=_default_signal_type,
-    timer_type=_default_timer_type,
+    signal_type=_DEFAULT_SIGNAL_TYPE,
+    timer_type=_DEFAULT_TIMER_TYPE,
     timeout_exception_cls=TimeoutError,
 ):
     """
