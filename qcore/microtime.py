@@ -154,16 +154,15 @@ def datetime_as_utime(dt):
 # ===================================================
 
 
-def format_utime_as_iso_8601(utime, *, drop_subseconds=False, tz=timezone.utc):
+def format_utime_as_iso_8601(utime, *, sep="T", drop_subseconds=False, tz=timezone.utc):
     """Get ISO 8601 Time string for the given microseconds time.
 
     Example output for the default UTC timezone:
     "2022-10-31T18:02:03.123456+00:00"
 
     """
-    if drop_subseconds:
-        utime = int(utime / SECOND) * SECOND
-    return utime_as_datetime(utime, tz=tz).isoformat()
+    timespec = "seconds" if drop_subseconds else "auto"
+    return utime_as_datetime(utime, tz=tz).isoformat(sep=sep, timespec=timespec)
 
 
 # datetime.fromisoformat() is new in Python 3.7.

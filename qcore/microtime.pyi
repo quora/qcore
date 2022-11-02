@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, tzinfo
 from typing import (
     Any,
     Callable,
@@ -53,7 +53,7 @@ def true_utime() -> Utime: ...
 # Conversions to/from PY Date-Time
 # ===================================================
 
-def utime_as_datetime(utime: Utime, *, tz: timezone = timezone.utc) -> datetime: ...
+def utime_as_datetime(utime: Utime, *, tz: tzinfo = timezone.utc) -> datetime: ...
 def datetime_as_utime(dt: datetime) -> Utime: ...
 
 # ===================================================
@@ -61,7 +61,11 @@ def datetime_as_utime(dt: datetime) -> Utime: ...
 # ===================================================
 
 def format_utime_as_iso_8601(
-    utime: Utime, *, drop_subseconds: bool = False, tz: timezone = timezone.utc
+    utime: Utime,
+    *,
+    sep: str = "T",
+    drop_subseconds: bool = False,
+    tz: tzinfo = timezone.utc,
 ) -> str: ...
 
 # datetime.fromisoformat() is new in Python 3.7.
