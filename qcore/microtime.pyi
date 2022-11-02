@@ -35,7 +35,8 @@ def set_time_offset(offset: SupportsInt) -> None: ...
 def add_time_offset(offset: SupportsInt) -> None: ...
 
 class TimeOffset:
-    """Temporarily applies specified offset (in microseconds) to time() function result."""
+    """Temporarily applies specified offset (in microseconds) to time() function result.
+    """
 
     def __init__(self, offset: SupportsInt) -> None: ...
     def __enter__(self) -> None: ...
@@ -61,7 +62,11 @@ def datetime_as_utime(dt: datetime) -> Utime: ...
 # ===================================================
 
 def format_utime_as_iso_8601(
-    utime: Utime, *, sep: str = "T", drop_subseconds: bool = False, tz: tzinfo = timezone.utc
+    utime: Utime,
+    *,
+    sep: str = "T",
+    drop_subseconds: bool = False,
+    tz: tzinfo = timezone.utc,
 ) -> str: ...
 
 # datetime.fromisoformat() is new in Python 3.7.
