@@ -61,7 +61,7 @@ def datetime_as_utime(dt: datetime) -> Utime: ...
 # ===================================================
 
 def format_utime_as_iso_8601(
-    utime: Utime, *, sep: str, drop_subseconds: bool = False, tz: tzinfo = timezone.utc
+    utime: Utime, *, sep: str = "T", drop_subseconds: bool = False, tz: tzinfo = timezone.utc
 ) -> str: ...
 
 # datetime.fromisoformat() is new in Python 3.7.
