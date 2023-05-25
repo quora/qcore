@@ -88,16 +88,14 @@ def test_getargspec():
 
 
 try:
-    exec(
-        """
+    exec("""
 def fun_with_annotations(a: int, b: str, *args) -> None:
     pass
 
 
 def fun_with_kwonly_args(a=1, *, b, c=3):
     pass
-"""
-    )
+""")
 except SyntaxError:
     pass
 else:

@@ -368,8 +368,10 @@ class TestDecorators:
             (CachedMethods.f, "<@cached test_decorators.f unbound>"),
             (
                 CachedMethods.cached_classmethod,
-                "<@cached test_decorators.cached_classmethod bound to <class "
-                "'test_decorators.CachedMethods'>>",
+                (
+                    "<@cached test_decorators.cached_classmethod bound to <class "
+                    "'test_decorators.CachedMethods'>>"
+                ),
             ),
             (
                 CachedMethods.cached_staticmethod,

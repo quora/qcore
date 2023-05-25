@@ -123,6 +123,7 @@ def disabled(func_or_class):
 
 def decorate_all_test_methods(decorator):
     """Decorator to apply another decorator to all test methods of a class."""
+
     # in python 3, unbound methods are just functions, so we also need to check for functions
     def predicate(member):
         return inspect.ismethod(member) or inspect.isfunction(member)
