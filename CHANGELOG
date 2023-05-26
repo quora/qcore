@@ -1,6 +1,8 @@
-## Unreleased
+## 1.9.0
 
 * Drop support for Python 3.6; add support for Python 3.11
+* Add functions `utime_as_datetime`, `datetime_as_utime`,
+  `format_utime_as_iso_8601`, `iso_8601_as_utime`
 
 ## 1.8.0
 
