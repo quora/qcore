@@ -121,7 +121,7 @@ def get_function_call_repr(fn, args, kwargs):
 
 
 if sys.version_info >= (3, 10):
-    ArgSpec = namedtuple('ArgSpec', 'args varargs keywords defaults')
+    ArgSpec = namedtuple("ArgSpec", "args varargs keywords defaults")
 else:
     ArgSpec = inspect.ArgSpec
 

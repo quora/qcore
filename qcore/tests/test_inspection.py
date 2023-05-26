@@ -65,7 +65,9 @@ def fun_with_args(a, b, c, d="e", **f):
 
 
 def test_getargspec():
-    empty = qcore.inspection.ArgSpec(args=[], varargs=None, keywords=None, defaults=None)
+    empty = qcore.inspection.ArgSpec(
+        args=[], varargs=None, keywords=None, defaults=None
+    )
     assert_eq(empty, qcore.inspection.getargspec(test_get_subclass_tree))
     assert_eq(empty, qcore.inspection.getargspec(qcore.inspection.lazy_stack))
 
@@ -92,6 +94,7 @@ def fun_with_annotations(a: int, b: str, *args) -> None:
 
 def fun_with_kwonly_args(a=1, *, b, c=3):
     pass
+
 
 def test_getargspec_py3_only():
     spec = qcore.inspection.ArgSpec(

@@ -179,9 +179,7 @@ class TestRetry:
 
         decorated = retry(Exception)(fn)
 
-        assert_eq(
-            inspect.signature(fn), inspect.signature(get_original_fn(decorated))
-        )
+        assert_eq(inspect.signature(fn), inspect.signature(get_original_fn(decorated)))
 
 
 def test_decorator_of_context_manager():
