@@ -179,9 +179,7 @@ class TestRetry:
 
         decorated = retry(Exception)(fn)
 
-        assert_eq(
-            inspect.getargspec(fn), inspect.getargspec(get_original_fn(decorated))
-        )
+        assert_eq(inspect.signature(fn), inspect.signature(get_original_fn(decorated)))
 
 
 def test_decorator_of_context_manager():
@@ -368,8 +366,10 @@ class TestDecorators:
             (CachedMethods.f, "<@cached test_decorators.f unbound>"),
             (
                 CachedMethods.cached_classmethod,
-                "<@cached test_decorators.cached_classmethod bound to <class "
-                "'test_decorators.CachedMethods'>>",
+                (
+                    "<@cached test_decorators.cached_classmethod bound to <class "
+                    "'test_decorators.CachedMethods'>>"
+                ),
             ),
             (
                 CachedMethods.cached_staticmethod,
