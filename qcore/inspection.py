@@ -18,6 +18,7 @@ Code inspection helpers.
 
 """
 
+from collections import namedtuple
 import functools
 import inspect
 import sys
@@ -119,6 +120,12 @@ def get_function_call_repr(fn, args, kwargs):
     return result
 
 
+if sys.version_info >= (3, 10):
+    ArgSpec = namedtuple('ArgSpec', 'args varargs keywords defaults')
+else:
+    ArgSpec = inspect.ArgSpec
+
+
 def getargspec(func):
     """Variation of inspect.getargspec that works for more functions.
 
@@ -137,7 +144,7 @@ def getargspec(func):
     if hasattr(code, "co_kwonlyargcount") and code.co_kwonlyargcount > 0:
         raise ValueError("keyword-only arguments are not supported by getargspec()")
     args, varargs, varkw = inspect.getargs(code)
-    return inspect.ArgSpec(args, varargs, varkw, func.__defaults__)
+    return ArgSpec(args, varargs, varkw, func.__defaults__)
 
 
 def is_cython_or_generator(fn):
