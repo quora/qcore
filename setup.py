@@ -72,6 +72,6 @@ if __name__ == "__main__":
         packages=["qcore", "qcore.tests"],
         package_data={"qcore": DATA_FILES},
         ext_modules=EXTENSIONS,
-        setup_requires=["Cython"],
-        install_requires=["Cython"],
+        setup_requires=["Cython==0.29.36"],
+        install_requires=["Cython==0.29.36"],
     )
