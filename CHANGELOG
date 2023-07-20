@@ -1,3 +1,7 @@
+## 1.9.1
+
+* Pin to `Cython<3` to fix build
+
 ## 1.9.0
 
 * Drop support for Python 3.6; add support for Python 3.11
