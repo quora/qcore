@@ -325,7 +325,7 @@ class CachedMethods:
 
 
 class TestDecorators:
-    def setup(self):
+    def setup_method(self):
         global i
         i = 0
 
