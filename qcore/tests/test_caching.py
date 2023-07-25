@@ -344,7 +344,7 @@ def test_lru_cache_key_fn():
     assert_eq([1, 2, 3], calls)
 
 
-class TestClass:
+class CachingClass:
     # not hashable
     __hash__ = None  # type: ignore
 
@@ -369,13 +369,13 @@ class TestClass:
 
 
 def test_cached_per_instance():
-    get_x_cache = TestClass.get_x.__cached_per_instance_cache__
-    with_kwargs_cache = TestClass.with_kwargs.__cached_per_instance_cache__
+    get_x_cache = CachingClass.get_x.__cached_per_instance_cache__
+    with_kwargs_cache = CachingClass.with_kwargs.__cached_per_instance_cache__
     assert_eq(0, len(get_x_cache), extra=repr(get_x_cache))
     assert_eq(0, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
 
-    object1 = TestClass(1)
-    object2 = TestClass(2)
+    object1 = CachingClass(1)
+    object2 = CachingClass(2)
 
     assert_eq(object1.x, 0)
     assert_eq(object2.x, 0)
@@ -417,7 +417,7 @@ def test_cached_per_instance():
     assert_eq(0, len(get_x_cache), extra=repr(get_x_cache))
     assert_eq(0, len(with_kwargs_cache), extra=repr(with_kwargs_cache))
 
-    object3 = TestClass(0)
+    object3 = CachingClass(0)
     assert_eq(0, object3.x)
     object3.with_variable_kwargs(k1=2)
     assert_eq(2, object3.x)
@@ -429,7 +429,7 @@ def test_cached_per_instance():
     assert_eq(8, object3.x)
 
 
-class PickleTestClass:
+class PickleCachingClass:
     @cached_per_instance()
     def f(self, x):
         return x
@@ -438,22 +438,22 @@ class PickleTestClass:
 def test_cached_per_instance_pickling():
     # make sure cached stuff doesn't appear in the pickled representation
 
-    obj = PickleTestClass()
+    obj = PickleCachingClass()
     obj.attr = "spam"
-    assert_eq(set(), set(PickleTestClass.f.__cached_per_instance_cache__.keys()))
+    assert_eq(set(), set(PickleCachingClass.f.__cached_per_instance_cache__.keys()))
     obj.f("my hovercraft is full of eels")
-    assert_eq({id(obj)}, set(PickleTestClass.f.__cached_per_instance_cache__.keys()))
+    assert_eq({id(obj)}, set(PickleCachingClass.f.__cached_per_instance_cache__.keys()))
 
     serialized = pickle.dumps(obj)
     assert_not_in(b"my hovercraft is full of eels", serialized)
     assert_in(b"spam", serialized)
 
     restored = pickle.loads(serialized)
-    assert_eq({id(obj)}, set(PickleTestClass.f.__cached_per_instance_cache__.keys()))
+    assert_eq({id(obj)}, set(PickleCachingClass.f.__cached_per_instance_cache__.keys()))
     restored.f("my hovercraft is full of eels")
     assert_eq(
         {id(obj), id(restored)},
-        set(PickleTestClass.f.__cached_per_instance_cache__.keys()),
+        set(PickleCachingClass.f.__cached_per_instance_cache__.keys()),
     )
     assert_eq("spam", obj.attr)
 
