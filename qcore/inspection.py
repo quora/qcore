@@ -69,17 +69,18 @@ def get_full_name(src):
         return str(get_original_fn(src))
 
 
+def _str_converter(v):
+    try:
+        return str(v)
+    except Exception:
+        try:
+            return repr(v)
+        except Exception:
+            return "<n/a str raised>"
+
+
 def get_function_call_str(fn, args, kwargs):
     """Converts method call (function and its arguments) to a str(...)-like string."""
-
-    def str_converter(v):
-        try:
-            return str(v)
-        except Exception:
-            try:
-                return repr(v)
-            except Exception:
-                return "<n/a str raised>"
 
     result = get_full_name(fn) + "("
     first = True
@@ -88,13 +89,13 @@ def get_function_call_str(fn, args, kwargs):
             first = False
         else:
             result += ","
-        result += str_converter(v)
+        result += _str_converter(v)
     for k, v in kwargs.items():
         if first:
             first = False
         else:
             result += ","
-        result += str(k) + "=" + str_converter(v)
+        result += str(k) + "=" + _str_converter(v)
     result += ")"
     return result
 
@@ -194,6 +195,10 @@ def is_classmethod(fn):
     return isinstance(im_self, type)
 
 
+def _identity(wrapper):
+    return wrapper
+
+
 def wraps(
     wrapped, assigned=functools.WRAPPER_ASSIGNMENTS, updated=functools.WRAPPER_UPDATES
 ):
@@ -201,7 +206,7 @@ def wraps(
     if not is_cython_function(wrapped):
         return functools.wraps(wrapped, assigned, updated)
     else:
-        return lambda wrapper: wrapper
+        return _identity
 
 
 def get_subclass_tree(cls, ensure_unique=True):

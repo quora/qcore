@@ -46,6 +46,9 @@ EXTENSIONS = [
 
 
 if __name__ == "__main__":
+    for extension in EXTENSIONS:
+        extension.cython_directives = {"language_level": "3"}
+
     with open("./README.rst", encoding="utf-8") as f:
         long_description = f.read()
 
