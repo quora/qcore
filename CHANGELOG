@@ -1,3 +1,9 @@
+## Unreleased
+
+* Drop support for Python 3.7
+* Add support for Python 3.12
+* Support building with Cython 3
+
 ## 1.9.1
 
 * Pin to `Cython<3` to fix build

@@ -28,13 +28,6 @@ __all__ = [
     "decorator_of_context_manager",
 ]
 
-# make sure qcore is still importable if this module has not been compiled with Cython and Cython
-# is not installed
-try:
-    from cython import compiled
-except ImportError:
-    compiled = False
-
 import functools
 import inspect
 import sys
@@ -69,33 +62,6 @@ class DecoratorBinder:
     def __repr__(self):
         return self.__str__()
 
-    # This awkward implementation is necessary so that binders can be compared for equality across
-    # Cythonized and non-Cythonized Python 2 and 3. In pure-Python compiled classes, Cython only
-    # supports overriding __richcmp__, not __eq__ (https://github.com/cython/cython/issues/690),
-    # but if __eq__ is defined it throws an error.
-    if compiled:
-
-        def __richcmp__(self, other, op):
-            """Compare objects for equality (so we can run tests that do an equality check)."""
-            if op in (2, 3):  # ==, !=
-                if (
-                    self.__class__ is other.__class__
-                    and self.decorator == other.decorator
-                    and self.instance == other.instance
-                ):
-                    equal = True
-                else:
-                    equal = False
-                return equal if op == 2 else not equal
-            else:
-                return NotImplemented
-
-    def __hash__(self):
-        return hash(self.decorator) ^ hash(self.instance)
-
-
-if not compiled:
-
     def __eq__(self, other):
         return (
             self.__class__ is other.__class__
@@ -103,8 +69,8 @@ if not compiled:
             and self.instance == other.instance
         )
 
-    DecoratorBinder.__eq__ = __eq__
-    del __eq__
+    def __hash__(self):
+        return hash(self.decorator) ^ hash(self.instance)
 
 
 class DecoratorBase:

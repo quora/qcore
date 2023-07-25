@@ -22,7 +22,7 @@ cdef dict empty_dict
 
 
 cdef class MarkerObject:
-    cpdef unicode name
+    cdef unicode name
 
 cdef MarkerObject none
 cdef MarkerObject miss

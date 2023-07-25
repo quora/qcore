@@ -46,6 +46,9 @@ EXTENSIONS = [
 
 
 if __name__ == "__main__":
+    for extension in EXTENSIONS:
+        extension.cython_directives = {"language_level": "3"}
+
     with open("./README.rst", encoding="utf-8") as f:
         long_description = f.read()
 
@@ -62,16 +65,15 @@ if __name__ == "__main__":
         classifiers=[
             "License :: OSI Approved :: Apache Software License",
             "Programming Language :: Python",
-            "Programming Language :: Python :: 3.7",
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
         ],
         keywords="quora core common utility",
         packages=["qcore", "qcore.tests"],
         package_data={"qcore": DATA_FILES},
         ext_modules=EXTENSIONS,
-        setup_requires=["Cython==0.29.36"],
-        install_requires=["Cython"],
+        setup_requires=["Cython"],
     )
