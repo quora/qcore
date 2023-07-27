@@ -1,4 +1,4 @@
-## Unreleased
+## 1.10.0
 
 * Drop support for Python 3.7
 * Add support for Python 3.12
