@@ -43,7 +43,7 @@ _InputT = TypeVar("_InputT")
 _OutputT = TypeVar("_OutputT")
 
 def convert_result(
-    converter: Callable[[_InputT], _OutputT]
+    converter: Callable[[_InputT], _OutputT],
 ) -> Callable[[Callable[..., _InputT]], Callable[..., _OutputT]]: ...
 def retry(
     exception_cls: Union[Type[BaseException], Tuple[Type[BaseException], ...]],
@@ -51,5 +51,5 @@ def retry(
     sleep: float = ...,
 ) -> Callable[[_CallableT], _CallableT]: ...
 def decorator_of_context_manager(
-    ctxt: Callable[..., ContextManager[Any]]
+    ctxt: Callable[..., ContextManager[Any]],
 ) -> Callable[..., Callable[[_CallableT], _CallableT]]: ...

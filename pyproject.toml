@@ -21,3 +21,11 @@ warn_unused_configs = true
 [[tool.mypy.overrides]]
 module = "nose.plugins.skip"
 ignore_missing_imports = true
+
+[build-system]
+requires = ["setuptools>=64.0", "cython>=3"]
+build-backend = "setuptools.build_meta"
+requires-python = ">=3.8"
+
+[tool.cibuildwheel]
+build = "cp{38,39,310,311,312}-*"

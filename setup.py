@@ -36,7 +36,7 @@ DATA_FILES = (
 )
 
 
-VERSION = "1.10.0"
+VERSION = "1.10.1"
 
 
 EXTENSIONS = [
@@ -75,5 +75,4 @@ if __name__ == "__main__":
         packages=["qcore", "qcore.tests"],
         package_data={"qcore": DATA_FILES},
         ext_modules=EXTENSIONS,
-        setup_requires=["Cython"],
     )
