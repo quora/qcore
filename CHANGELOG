@@ -1,3 +1,8 @@
+## 1.10.1
+
+* Add minimum version requirement (Python 3.8) to metadata
+* Build Python 3.12 wheels
+
 ## 1.10.0
 
 * Drop support for Python 3.7

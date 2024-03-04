@@ -36,7 +36,7 @@ DATA_FILES = (
 )
 
 
-VERSION = "1.10.0"
+VERSION = "1.10.1"
 
 
 EXTENSIONS = [
