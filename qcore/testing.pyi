@@ -9,8 +9,8 @@ class GreaterEq:
 
 def disabled(func_or_class: Any) -> Any: ...
 def decorate_all_test_methods(
-    decorator: Callable[[Callable[..., Any]], Any]
+    decorator: Callable[[Callable[..., Any]], Any],
 ) -> Callable[[Type[object]], Type[object]]: ...
 def decorate_func_or_method_or_class(
-    decorator: Callable[[Callable[..., Any]], Any]
+    decorator: Callable[[Callable[..., Any]], Any],
 ) -> Callable[[Any], Any]: ...
