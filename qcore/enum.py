@@ -61,6 +61,9 @@ class EnumType(type):
                 k = k.decode("ascii")
             if isinstance(type(v), EnumType):
                 v = v.value  # For inherited members
+            # Ignore private names
+            if k.startswith("__") and k.endswith("__"):
+                continue
             if isinstance(v, int):
                 assert (
                     v not in value_to_member
