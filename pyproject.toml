@@ -2,6 +2,22 @@
 name = "qcore"
 version = "1.10.1"
 requires-python = ">=3.8"
+keywords = ["quora", "core", "common", "utility"]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+authors = [
+    {name = "Quora, Inc.", email = "asynq@quora.com"},
+]
+license = {text = "Apache Software License"}
+dynamic = ["readme"]
 
 [tool.black]
 target_version = ['py37', 'py38', 'py39', 'py310', 'py311']
