@@ -1,4 +1,10 @@
+## 1.11.1
+
+- Fix version number
+
 ## 1.11.0
+
+(Not released to PyPI because of a mistake.)
 
 - Drop support for Python 3.8; add support for Python 3.13
 
