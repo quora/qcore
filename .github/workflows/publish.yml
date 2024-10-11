@@ -42,8 +42,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install build
+        run: python -m pip install build==1.2.2.post1
+
       - name: Build sdist
-        run: python setup.py sdist
+        run: python -m buld --sdist
 
       - uses: actions/upload-artifact@v3
         with:
