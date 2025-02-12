@@ -43,9 +43,9 @@ __all__ = ["Anything", "GreaterEq"]
 # make the output more concise.
 # __unittest = 1
 
-
 import functools
 import inspect
+from unittest.case import SkipTest
 
 TEST_PREFIX = "test"
 
@@ -100,12 +100,7 @@ def disabled(func_or_class):
     def decorate_func(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            try:
-                from nose.plugins.skip import SkipTest
-            except ImportError:
-                return None  # do nothing, the test will show up as passed
-            else:
-                raise SkipTest
+            raise SkipTest
 
         return wrapper
 
