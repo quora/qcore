@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from unittest.case import SkipTest
+
 from qcore.asserts import assert_eq, assert_is, AssertRaises
 from qcore.testing import (
     Anything,
@@ -48,13 +50,8 @@ def test_GreaterEq():
 
 
 def _check_disabled(fn):
-    try:
-        from nose.plugins.skip import SkipTest
-    except ImportError:
-        assert_is(None, fn())
-    else:
-        with AssertRaises(SkipTest):
-            fn()
+    with AssertRaises(SkipTest):
+        fn()
 
 
 def test_disabled():
