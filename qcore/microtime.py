@@ -216,7 +216,7 @@ def execute_with_timeout(
     :param timeout: timeout, seconds; 0 or None means no timeout
 
     :type fail_if_no_timer: bool
-    :param fail_if_no_timer: fail, if timer is nor available; normally it's available only in the
+    :param fail_if_no_timer: fail, if timer is not available; normally it's available only in the
     main thread
 
     :type signal_type: signalnum
