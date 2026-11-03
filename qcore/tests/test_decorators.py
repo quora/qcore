@@ -181,6 +181,129 @@ class TestRetry:
 
         assert_eq(inspect.signature(fn), inspect.signature(get_original_fn(decorated)))
 
+    def test_retry_on_classmethod(self):
+        fn_body = mock.Mock()
+
+        class Target:
+            @retry(AnyException, sleep=0)
+            @classmethod
+            def method(cls, *args, **kwargs):
+                return fn_body(cls, *args, **kwargs)
+
+        class Subclass(Target):
+            pass
+
+        for owner, expected_cls in [
+            (Target, Target),
+            (Target(), Target),
+            (Subclass, Subclass),
+            (Subclass(), Subclass),
+        ]:
+            fn_body.reset_mock()
+            fn_body.side_effect = [AnyException(), AnyException(), "result"]
+
+            assert_eq("result", owner.method(1, foo=2))
+
+            assert_eq([mock.call(expected_cls, 1, foo=2)] * 3, fn_body.call_args_list)
+
+    def test_retry_on_staticmethod(self):
+        fn_body = mock.Mock()
+
+        class Target:
+            @retry(AnyException, sleep=0)
+            @staticmethod
+            def method(*args, **kwargs):
+                return fn_body(*args, **kwargs)
+
+        for owner in (Target, Target()):
+            fn_body.reset_mock()
+            fn_body.side_effect = [AnyException(), AnyException(), "result"]
+
+            assert_eq("result", owner.method(1, foo=2))
+
+            assert_eq([mock.call(1, foo=2)] * 3, fn_body.call_args_list)
+
+    def test_retry_on_classmethod_generator(self):
+        fn_body = mock.Mock()
+        fn_body.side_effect = [AnyException(), AnyException(), range(3)]
+
+        class Target:
+            @retry(AnyException, sleep=0)
+            @classmethod
+            def method(cls):
+                for it in fn_body(cls):
+                    yield it
+
+        assert_eq([0, 1, 2], list(Target.method()))
+        assert_eq([mock.call(Target)] * 3, fn_body.call_args_list)
+
+    def test_retry_on_classmethod_and_staticmethod_gives_up(self):
+        max_tries = 4
+        fn_body = mock.Mock()
+        fn_body.side_effect = AnyException
+
+        class Target:
+            @retry(AnyException, max_tries=max_tries, sleep=0)
+            @classmethod
+            def class_method(cls):
+                fn_body()
+
+            @retry(AnyException, max_tries=max_tries, sleep=0)
+            @staticmethod
+            def static_method():
+                fn_body()
+
+        for method in (Target.class_method, Target.static_method):
+            fn_body.reset_mock()
+
+            with AssertRaises(AnyException):
+                method()
+
+            assert_eq(max_tries, fn_body.call_count)
+
+    def test_retry_keeps_descriptor_type_and_original_fn(self):
+        def method(cls):
+            pass
+
+        for descriptor_cls in (classmethod, staticmethod):
+            decorated = retry(AnyException)(descriptor_cls(method))
+
+            assert_is(descriptor_cls, type(decorated))
+            assert_is(method, get_original_fn(decorated))
+
+    def test_retry_with_other_orders_and_methods(self):
+        fn_body = mock.Mock()
+
+        class Target:
+            @classmethod
+            @retry(AnyException, sleep=0)
+            def class_method(cls):
+                return fn_body(cls)
+
+            @staticmethod
+            @retry(AnyException, sleep=0)
+            def static_method():
+                return fn_body()
+
+            @retry(AnyException, sleep=0)
+            def method(self):
+                return fn_body(self)
+
+        target = Target()
+        for method, expected_call in [
+            (Target.class_method, mock.call(Target)),
+            (target.class_method, mock.call(Target)),
+            (Target.static_method, mock.call()),
+            (target.static_method, mock.call()),
+            (target.method, mock.call(target)),
+        ]:
+            fn_body.reset_mock()
+            fn_body.side_effect = [AnyException(), AnyException(), "result"]
+
+            assert_eq("result", method())
+
+            assert_eq([expected_call] * 3, fn_body.call_args_list)
+
 
 def test_decorator_of_context_manager():
     data = []

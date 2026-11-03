@@ -202,6 +202,10 @@ def retry(exception_cls, max_tries=10, sleep=0.05):
                 time.sleep(sleep)
 
     def outer(fn):
+        if isinstance(fn, (classmethod, staticmethod)):
+            # Retry the function inside the descriptor and wrap the result in the same kind of
+            # descriptor, so that cls (or no first argument) is still bound the way it was.
+            return type(fn)(outer(fn.__func__))
         is_generator = inspect.isgeneratorfunction(fn)
 
         @functools.wraps(fn)
